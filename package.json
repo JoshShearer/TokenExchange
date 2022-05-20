@@ -1,0 +1,58 @@
+{
+  "name": "tokenexchange",
+  "version": "0.1.0",
+  "description": "Decentralized Ethereum Token Exchange",
+  "author": "JoshShearer.org",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
+    "build": "next build",
+    "start": "next start",
+    "heroku": "npm install --save-dev typescript && npm run dev",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.5.0",
+    "@heroicons/react": "^1.0.6",
+    "@openzeppelin/contracts": "^4.6.0",
+    "@rematch/core": "^2.2.0",
+    "@truffle/hdwallet-provider": "^2.0.7",
+    "@types/react-redux": "^7.1.24",
+    "apexcharts": "^3.35.0",
+    "autoprefixer": "^10.4.4",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "dotenv": "^16.0.0",
+    "mocha": "^9.2.2",
+    "moment": "^2.29.3",
+    "next": "12.1.5",
+    "next-redux-wrapper": "^7.0.5",
+    "postcss": "^8.4.12",
+    "react": "18.0.0",
+    "react-apexcharts": "^1.4.0",
+    "react-dom": "18.0.0",
+    "react-redux": "^8.0.1",
+    "redux": "^4.2.0",
+    "redux-logger": "^3.0.6",
+    "reselect": "^4.1.5",
+    "solidity-coverage": "^0.7.21",
+    "tailwindcss": "^3.0.24",
+    "truffle": "^5.5.11",
+    "truffle-flattener": "^1.6.0",
+    "web3": "^1.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.25",
+    "@types/react": "18.0.6",
+    "@types/react-dom": "18.0.2",
+    "eslint": "8.13.0",
+    "eslint-config-next": "12.1.5",
+    "typescript": "4.6.3"
+  },
+  "engines": {
+    "node": "16.14.0",
+    "npm": "8.3.1"  
+  }
+}
