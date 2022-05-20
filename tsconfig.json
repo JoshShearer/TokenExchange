@@ -13,8 +13,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": "./",
+    "paths": {
+      "#src/*": ["./src/*"]
+    }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/Orderbook.js", "src/store/selectors.js", "src/components/App.js", "src/pages/_app.js", "src/pages/index.js", "src/components/Orders.js", "src/components/MTBApp.js", "src/components/Deposits.js"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "./src/**/*.ts", "./src/**/*.tsx", "src/pages/_app.js", "src/pages/index.js"],
+  "exclude": ["node_modules", "creditor", "test"]
 }
