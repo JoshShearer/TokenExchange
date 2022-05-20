@@ -9,10 +9,12 @@
     "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
     "build": "next build",
     "start": "next start",
+    "creditor": "creditor inquire --verbose",
     "heroku": "npm install --save-dev typescript && npm run dev",
     "lint": "next lint"
   },
   "dependencies": {
+    "@acolby/creditor": "^0.2.2",
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
     "@openzeppelin/contracts": "^4.6.0",
@@ -53,6 +55,6 @@
   },
   "engines": {
     "node": "16.14.0",
-    "npm": "8.3.1"  
+    "npm": "8.3.1"
   }
 }
