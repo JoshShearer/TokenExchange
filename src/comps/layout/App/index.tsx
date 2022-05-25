@@ -1,7 +1,7 @@
 import React from 'react';
-import { comps_layout_Navigation_Header } from 'src/comps/layout/Navigation/Header';
-import { comps_layout_Navigation_Footer } from 'src/comps/layout/Navigation/Footer';
-import MTBApp from 'src/comps/layout/MTBApp'
+import { Comps_layout_Navigation_Header } from '#src/Comps/layout/Navigation/Header';
+import { Comps_layout_Navigation_Footer } from '#src/Comps/layout/Navigation/Footer';
+import MTBApp from '#src/Comps/layout/MTBApp'
 
 // import { RootState, Dispatch } from '#src/stores/store'
 import { connect } from 'react-redux'
@@ -25,28 +25,28 @@ import { useDispatch } from 'react-redux'
 //    item: (root) => root.stores,
 // })
 
-// export const comps_layout_App = (_props: typeof defaultProps) => {
+// export const Comps_layout_App = (_props: typeof defaultProps) => {
 //   const props = { ...defaultProps, ..._props };
 //   // const selected = useSelector((state) => selector(state, props));
 
 //   return (
-//     <div className="comps_layout_App">
+//     <div className="Comps_layout_App">
 //       <Comps_misc_placeholder>
-//         <p>comps_layout_App</p>
+//         <p>Comps_layout_App</p>
 //       </Comps_misc_placeholder>
 //     </div>
 //   );
 // };
 
-class comps_layout_App extends React.PureComponent<Props> {
+class Comps_layout_App extends React.PureComponent<Props> {
 	render() {
 		const { countState } = this.props
 		return (
     <div>
-      <comps_layout_Navigation_Header/>
+      <Comps_layout_Navigation_Header/>
       {/* { this.props.contractsLoaded ? <MTBApp /> : <div className="content"></div> } */}
       <MTBApp/>
-      <comps_layout_Navigation_Footer/>
+      <Comps_layout_Navigation_Footer/>
 
     </div>
 
@@ -66,4 +66,4 @@ type StateProps = ReturnType<typeof mapState>
 type DispatchProps = ReturnType<typeof mapDispatch>
 type Props = StateProps & DispatchProps
  
-export default connect(mapState, mapDispatch)(comps_layout_App)
+export default connect(mapState, mapDispatch)(Comps_layout_App)

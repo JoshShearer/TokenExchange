@@ -1,5 +1,5 @@
 import React from 'react';
-import { RootState, Dispatch } from '#src/stores/store'
+import { RootState, Dispatch } from '#src/Stores/store'
 import react, { Fragment } from "react";
 import { connect } from 'react-redux'
 import { Disclosure, Menu, Transition } from "@headlessui/react";
@@ -8,7 +8,7 @@ import Image from "next/image";
 
 // import { useDispatch } from 'react-redux'
 
-import { Comps_misc_placeholder } from '#src/comps';
+import { Comps_misc_placeholder } from '#src/Comps';
 
 // import { createStructureSelector } from '#src/selectors/util'
 // import { userSelector } from '#src/stores/hooks';
@@ -30,7 +30,7 @@ function classNames(_props: typeof defaultProps) {
   return props.classes.filter(Boolean).join(" ");
 }
 
-export const comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
+export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   // const selected = useSelector((state) => selector(state, props));
 
@@ -145,10 +145,10 @@ export const comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
   );
 };
 
-// class comps_layout_Navigation_Header extends React.PureComponent<Props> {
+// class Comps_layout_Navigation_Header extends React.PureComponent<Props> {
 // 	render() {
 // 		const { countState } = this.props
-// 		return <div>comps_layout_Navigation_Header</div>
+// 		return <div>Comps_layout_Navigation_Header</div>
 // 	}
 // }
 
@@ -164,4 +164,4 @@ export const comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
  
-// export default connect(mapState)(comps_layout_Navigation_Header)
+// export default connect(mapState)(Comps_layout_Navigation_Header)

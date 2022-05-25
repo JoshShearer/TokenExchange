@@ -18,14 +18,14 @@ const defaultProps = {
 //    item: (root) => root.stores,
 // })
 
-export const comps_misc = (_props: typeof defaultProps) => {
+export const Comps_misc = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   // const selected = useSelector((state) => selector(state, props));
 
   return (
-    <div className="comps_misc">
+    <div className="Comps_misc">
       <Comps_misc_placeholder>
-        <p>comps_misc</p>
+        <p>Comps_misc</p>
       </Comps_misc_placeholder>
     </div>
   );

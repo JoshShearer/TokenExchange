@@ -3,7 +3,7 @@ import React from 'react';
 // import { connect } from 'react-redux'
 // import { useDispatch } from 'react-redux'
 
-import { Comps_misc_placeholder } from '#src/comps';
+import { Comps_misc_placeholder } from '#src/Comps';
 
 // import { createStructureSelector } from '#src/selectors/util'
 // import { userSelector } from '#src/stores/hooks';

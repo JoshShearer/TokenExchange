@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
-import Spinner from '#src/comps/misc/spinner';
+import Spinner from '#src/Comps/misc/spinner';
 
 // import { RootState, Dispatch } from '#src/stores/store'
 // import { connect } from 'react-redux'
@@ -24,23 +24,23 @@ const defaultProps = {
 //    item: (root) => root.stores,
 // })
 
-export const comps_layout_Balance = (_props: typeof defaultProps) => {
+export const Comps_layout_Balance = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   // const selected = useSelector((state) => selector(state, props));
 
   return (
-    <div className="comps_layout_Balance">
+    <div className="Comps_layout_Balance">
       <Comps_misc_placeholder>
-        <p>comps_layout_Balance</p>
+        <p>Comps_layout_Balance</p>
       </Comps_misc_placeholder>
     </div>
   );
 };
 
-// class comps_layout_Balance extends React.PureComponent<Props> {
+// class Comps_layout_Balance extends React.PureComponent<Props> {
 // 	render() {
 // 		const { countState } = this.props
-// 		return <div>comps_layout_Balance</div>
+// 		return <div>Comps_layout_Balance</div>
 // 	}
 // }
 
@@ -56,4 +56,4 @@ export const comps_layout_Balance = (_props: typeof defaultProps) => {
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
  
-// export default connect(mapState, mapDispatch)(comps_layout_Balance)
+// export default connect(mapState, mapDispatch)(Comps_layout_Balance)

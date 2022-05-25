@@ -3,7 +3,7 @@ import React from 'react';
 // import { connect } from 'react-redux'
 // import { useDispatch } from 'react-redux'
 
-import { Comps_misc_placeholder } from '#src/comps';
+import { Comps_misc_placeholder } from '#src/Comps';
 
 // import { createStructureSelector } from '#src/selectors/util'
 // import { userSelector } from '#src/stores/hooks';
@@ -21,23 +21,23 @@ const defaultProps = {
 //    item: (root) => root.stores,
 // })
 
-export const comps_layout = (_props: typeof defaultProps) => {
+export const Comps_layout = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   // const selected = useSelector((state) => selector(state, props));
 
   return (
-    <div className="comps_layout">
+    <div className="Comps_layout">
       <Comps_misc_placeholder>
-        <p>comps_layout</p>
+        <p>Comps_layout</p>
       </Comps_misc_placeholder>
     </div>
   );
 };
 
-// class comps_layout extends React.PureComponent<Props> {
+// class Comps_layout extends React.PureComponent<Props> {
 // 	render() {
 // 		const { countState } = this.props
-// 		return <div>comps_layout</div>
+// 		return <div>Comps_layout</div>
 // 	}
 // }
 
@@ -53,4 +53,4 @@ export const comps_layout = (_props: typeof defaultProps) => {
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
  
-// export default connect(mapState, mapDispatch)(comps_layout)
+// export default connect(mapState, mapDispatch)(Comps_layout)

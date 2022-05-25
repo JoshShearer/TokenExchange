@@ -1,7 +1,5 @@
-const path = require('path');
-
 module.exports = ({ paths = [] }) => {
-  const filtered = paths.filter((item) => item.split(path.sep).length > 1).sort();
+  const filtered = paths.filter((item) => item.split('/').length > 1).sort();
 
   const imports = filtered.map(
     (item) => `import { ${item.replace(/\//g, '_')} } from '#src/${item}';`

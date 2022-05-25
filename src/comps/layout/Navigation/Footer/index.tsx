@@ -50,7 +50,7 @@ const defaultProps = {
 //    item: (root) => root.stores,
 // })
 
-export const comps_layout_Navigation_Footer = (_props: typeof defaultProps) => {
+export const Comps_layout_Navigation_Footer = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   // const selected = useSelector((state) => selector(state, props));
 
@@ -80,10 +80,10 @@ export const comps_layout_Navigation_Footer = (_props: typeof defaultProps) => {
   )
 };
 
-// class comps_layout_Navigation_Footer extends React.PureComponent<Props> {
+// class Comps_layout_Navigation_Footer extends React.PureComponent<Props> {
 // 	render() {
 // 		const { countState } = this.props
-// 		return <div>comps_layout_Navigation_Footer</div>
+// 		return <div>Comps_layout_Navigation_Footer</div>
 // 	}
 // }
 
@@ -99,4 +99,4 @@ export const comps_layout_Navigation_Footer = (_props: typeof defaultProps) => {
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
  
-// export default connect(mapState, mapDispatch)(comps_layout_Navigation_Footer)
+// export default connect(mapState, mapDispatch)(Comps_layout_Navigation_Footer)

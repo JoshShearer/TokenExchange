@@ -1,4 +1,3 @@
-
 module.exports = ({ paths = [] }) => {
   const imports = paths.map(
     (item) =>
@@ -19,6 +18,6 @@ module.exports = ({ paths = [] }) => {
       ...navigations,
       ']',
       '',
-    ].join(eol) + ';'
+    ].join('\n') + ';'
   );
 };

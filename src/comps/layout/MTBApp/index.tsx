@@ -3,11 +3,11 @@ import React from 'react';
 // import { connect } from 'react-redux'
 // import { useDispatch } from 'react-redux'
 
-import { comps_layout_Balance } from '#src/comps/layout/Balance';
-// import { comps_layout_Orders } from '#src/comps/layout/Orders'; 
-// import { comps_layout_Orderbook } from '#src/comps/layout/Orderbook';
-// import { comps_layout_Pricechart } from '#src/comps/layout/Pricechart';
-// import { comps_layout_Trades } from '#src/comps/layout/Trades';
+import { Comps_layout_Balance } from '#src/Comps/layout/Balance';
+// import { Comps_layout_Orders } from '#src/Comps/layout/Orders'; 
+// import { Comps_layout_Orderbook } from '#src/Comps/layout/Orderbook';
+// import { Comps_layout_Pricechart } from '#src/Comps/layout/Pricechart';
+// import { Comps_layout_Trades } from '#src/Comps/layout/Trades';
 
 
 // import { createStructureSelector } from '#src/selectors/util'
@@ -26,26 +26,26 @@ const defaultProps = {
 //    item: (root) => root.stores,
 // })
 
-// export const comps_layout_MTBApp = (_props: typeof defaultProps) => {
+// export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
 //   const props = { ...defaultProps, ..._props };
 //   // const selected = useSelector((state) => selector(state, props));
 
 //   return (
-//     <div className="comps_layout_MTBApp">
+//     <div className="Comps_layout_MTBApp">
 //       <Comps_misc_placeholder>
-//         <p>comps_layout_MTBApp</p>
+//         <p>Comps_layout_MTBApp</p>
 //       </Comps_misc_placeholder>
 //     </div>
 //   );
 // };
 
-class comps_layout_MTBApp extends React.PureComponent<Props> {
+class Comps_layout_MTBApp extends React.PureComponent<Props> {
 	render() {
 		const { countState } = this.props
 		return (
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 pl-4 pr-4 ">
         <div className='sm:col-span-2 md:col-span-1 lg:col-span-1'>
-          <div className="pb-4"><comps_layout_Balance /></div>
+          <div className="pb-4"><Comps_layout_Balance /></div>
           {/* <div><Orders /></div>
         </div>
         <div>
@@ -75,4 +75,4 @@ type StateProps = ReturnType<typeof mapState>
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
  
-export default connect(mapState, mapDispatch)(comps_layout_MTBApp)
+export default connect(mapState, mapDispatch)(Comps_layout_MTBApp)
