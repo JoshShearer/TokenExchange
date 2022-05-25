@@ -1,5 +1,5 @@
 import React from 'react';
-import { RootState, Dispatch } from '#src/Stores/store'
+import { RootState, Dispatch } from '#src/stores/store'
 import react, { Fragment } from "react";
 import { connect } from 'react-redux'
 import { Disclosure, Menu, Transition } from "@headlessui/react";

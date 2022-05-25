@@ -1,21 +1,12 @@
 import React from 'react';
 
-import { Comps_misc_placeholder } from '#src/Comps';
-
-// import { createStructureSelector } from '#src/selectors/util'
-// import { userSelector } from '#src/stores/hooks';
-
 const defaultProps = {
   type: '',
 } as {
   type?: string;
 };
 
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
-
-export const comps_misc_spinner = (_props: typeof defaultProps) => {
+export const Comps_misc_spinner = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   // const selected = useSelector((state) => selector(state, props));
 
