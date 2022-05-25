@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "test": "node ./test",
-    "creditor": "creditor inquire --verbose",
+    "creditor": "creditor inquire --verbose --repeat",
     "heroku": "npm install --save-dev typescript && npm run dev",
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",

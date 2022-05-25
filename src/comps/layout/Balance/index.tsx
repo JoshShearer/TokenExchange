@@ -1,9 +1,12 @@
 import React from 'react';
+import { Tab } from '@headlessui/react';
+import Spinner from '#src/comps/misc/spinner';
+
 // import { RootState, Dispatch } from '#src/stores/store'
 // import { connect } from 'react-redux'
 // import { useDispatch } from 'react-redux'
 
-import { Comps_misc_placeholder } from '#src/comps';
+import { Comps_misc_placeholder } from '#src/Comps';
 
 // import { createStructureSelector } from '#src/selectors/util'
 // import { userSelector } from '#src/stores/hooks';
@@ -21,23 +24,23 @@ const defaultProps = {
 //    item: (root) => root.stores,
 // })
 
-export const CREDITOR_UNDERSCORE_NAME = (_props: typeof defaultProps) => {
+export const comps_layout_Balance = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   // const selected = useSelector((state) => selector(state, props));
 
   return (
-    <div className="CREDITOR_UNDERSCORE_NAME">
+    <div className="comps_layout_Balance">
       <Comps_misc_placeholder>
-        <p>CREDITOR_UNDERSCORE_NAME</p>
+        <p>comps_layout_Balance</p>
       </Comps_misc_placeholder>
     </div>
   );
 };
 
-// class CREDITOR_UNDERSCORE_NAME extends React.PureComponent<Props> {
+// class comps_layout_Balance extends React.PureComponent<Props> {
 // 	render() {
 // 		const { countState } = this.props
-// 		return <div>CREDITOR_UNDERSCORE_NAME</div>
+// 		return <div>comps_layout_Balance</div>
 // 	}
 // }
 
@@ -53,4 +56,4 @@ export const CREDITOR_UNDERSCORE_NAME = (_props: typeof defaultProps) => {
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
  
-// export default connect(mapState, mapDispatch)(CREDITOR_UNDERSCORE_NAME)
+// export default connect(mapState, mapDispatch)(comps_layout_Balance)

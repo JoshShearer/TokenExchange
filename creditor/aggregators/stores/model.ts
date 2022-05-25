@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = ({ paths = [] }) => {
   const filtered = paths.filter((item) => item.split(path.sep).length > 1).sort();
 
@@ -28,5 +30,5 @@ module.exports = ({ paths = [] }) => {
     '',
     'export type RootState = RematchRootState<RootModel>;',
     'export type Actions = RematchDispatch<RootModel>;',
-  ].join(eol);
+  ].join('\n');
 };
