@@ -1,9 +1,10 @@
-import { createModel, init } from '@rematch/core';
+import { createModel } from '@rematch/core';
 import type { RootModel } from '#src/stores/model';
 
 const defaultState = {
   name: '',
 };
+
 
 export const stores_store = createModel<RootModel>()({
   state: defaultState,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { RootState, Dispatch } from '#src/stores/store'
+// import { RootState, Dispatch } from '#src/stores/store'
 import react, { Fragment } from "react";
 import { connect } from 'react-redux'
 import { Disclosure, Menu, Transition } from "@headlessui/react";
@@ -8,7 +8,7 @@ import Image from "next/image";
 
 // import { useDispatch } from 'react-redux'
 
-import { Comps_misc_placeholder } from '#src/Comps';
+// import { Comps_misc_placeholder } from '#src/Comps';
 
 // import { createStructureSelector } from '#src/selectors/util'
 // import { userSelector } from '#src/stores/hooks';

@@ -1,6 +1,6 @@
 import React from 'react';
-// import { RootState, Dispatch } from '#src/stores/store'
-// import { connect } from 'react-redux'
+import { RootState, Dispatch } from '#src/stores/model'
+import { connect } from 'react-redux'
 // import { useDispatch } from 'react-redux'
 
 // import { Comps_layout_Balance } from '#src/Comps/layout/Balance';
@@ -13,14 +13,14 @@ import { Comps_misc_spinner } from '#src/Comps/misc/spinner';
 // import { createStructureSelector } from '#src/selectors/util'
 // import { userSelector } from '#src/stores/hooks';
 
-const defaultProps = {
-  key: 'default',
-  name: '',
-} as {
-  name: string;
-  key?: string;
-  children?: JSX.Element;
-};
+// const defaultProps = {
+//   key: 'default',
+//   name: '',
+// } as {
+//   name: string;
+//   key?: string;
+//   children?: JSX.Element;
+// };
 
 // const selector = createStructuredSelector({
 //    item: (root) => root.stores,
@@ -41,11 +41,11 @@ const defaultProps = {
 
 class Comps_layout_MTBApp extends React.PureComponent<Props> {
 	render() {
-		const { countState } = this.props
+		// const { countState } = this.props
 		return (
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 pl-4 pr-4 ">
         <div className='sm:col-span-2 md:col-span-1 lg:col-span-1'>
-          <div className="pb-4"><Comps_layout_spinner /></div>
+          <div className="pb-4"><Comps_misc_spinner /></div>
           {/* <div><Orders /></div>
         </div>
         <div>
@@ -63,9 +63,9 @@ class Comps_layout_MTBApp extends React.PureComponent<Props> {
 	}
 }
 
-// const mapState = (state: RootState) => ({
-// 	countState: state.count,
-// })
+const mapState = (state: RootState) => ({
+	countState: state.count,
+})
  
 // const mapDispatch = (dispatch: Dispatch) => ({
 // 	count: dispatch.count,
@@ -75,4 +75,4 @@ type StateProps = ReturnType<typeof mapState>
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
  
-export default connect(mapState, mapDispatch)(Comps_layout_MTBApp)
+export default connect(mapState)(Comps_layout_MTBApp)

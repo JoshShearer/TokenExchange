@@ -1,11 +1,11 @@
 import React from 'react';
 import { Comps_layout_Navigation_Header } from '#src/Comps/layout/Navigation/Header';
 import { Comps_layout_Navigation_Footer } from '#src/Comps/layout/Navigation/Footer';
-import MTBApp from '#src/Comps/layout/MTBApp'
+import MTBApp from '#src/Comps/layout/MTBApp';
 
-// import { RootState, Dispatch } from '#src/stores/store'
-import { connect } from 'react-redux'
-import { useDispatch } from 'react-redux'
+import { RootState, Dispatch } from '#src/stores/model';
+import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 // import { Comps_misc_placeholder } from '#src/Comps';
 
@@ -40,7 +40,7 @@ import { useDispatch } from 'react-redux'
 
 class Comps_layout_App extends React.PureComponent<Props> {
 	render() {
-		const { countState } = this.props
+		// const { countState } = this.props
 		return (
     <div>
       <Comps_layout_Navigation_Header/>
