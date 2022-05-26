@@ -1,5 +1,5 @@
 import React from 'react';
-// import { RootState, Dispatch } from '#src/stores/store'
+import { RootState } from '#src/stores/store'
 import react, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
@@ -14,10 +14,8 @@ import Image from 'next/image';
 // import { userSelector } from '#src/stores/hooks';
 
 const defaultProps = {
-  account: 0,
   classes: [],
 } as {
-  account: number;
   classes: Array<string>;
 };
 
@@ -30,8 +28,7 @@ function classNames(_props: typeof defaultProps) {
   return props.classes.filter(Boolean).join(' ');
 }
 
-export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
-  const props = { ...defaultProps, ..._props };
+export const Comps_layout_Navigation_Header = (props: Props) => {
   // const selected = useSelector((state) => selector(state, props));
 
   return (
@@ -155,16 +152,13 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
 // 	}
 // }
 
-// const mapState = (state: RootState) => ({
-// account: accountSelector(state),
-// })
+const mapState = (state: RootState) => ({
+  account: state.account,
+})
 
-// const mapDispatch = (dispatch: Dispatch) => ({
-// 	count: dispatch.count,
-// })
 
-// type StateProps = ReturnType<typeof mapState>
-// type DispatchProps = ReturnType<typeof mapDispatch>
-// type Props = StateProps & DispatchProps
+type StateProps = ReturnType<typeof mapState>
 
-// export default connect(mapState)(Comps_layout_Navigation_Header)
+type Props = StateProps
+
+export default connect(mapState)(Comps_layout_Navigation_Header)

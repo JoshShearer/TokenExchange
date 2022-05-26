@@ -1,12 +1,10 @@
 import type { NextPage } from 'next'
 import Head from 'next/head';
-import { init } from '@rematch/core';
 import { Provider } from 'react-redux';
 import Comps_layout_App from '#src/Comps/layout/App';
-import {stores_store} from '#src/stores/store';
+import { store } from '#src/models/store';
 import * as serviceWorker from '../serviceWorker';
 
-const store = init() 
 
 const Exchange: NextPage = () => {
     return (

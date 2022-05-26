@@ -14,7 +14,7 @@ module.exports = ({ paths = [] }) => {
 
   return [
     '/* CREDITOR_GENERATED */',
-    "import { RematchRootState, RematchDispatch, Models } from '@rematch/core';",
+    "import { Models } from '@rematch/core';",
     '',
     ...imports,
     '',
@@ -26,7 +26,5 @@ module.exports = ({ paths = [] }) => {
     ...models,
     '}',
     '',
-    'export type RootState = RematchRootState<RootModel>;',
-    'export type Actions = RematchDispatch<RootModel>;',
   ].join('\n');
 };

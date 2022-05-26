@@ -1,4 +1,4 @@
-import { createModel, init } from '@rematch/core';
+import { createModel, init, RematchDispatch } from '@rematch/core';
 import type { RootModel } from '#src/stores/model';
 
 const defaultState = {
@@ -15,7 +15,10 @@ export const CREDITOR_UNDERSCORE_NAME = createModel<RootModel>()({
       };
     },
   },
-  effects: (dispatch) => ({
+  selectors: (slice, createSelector, hasProps) => ({
+
+  }),
+  effects: (dispatch: RematchDispatch) => ({
     // async renameAsync(payload: string, state) {
     //   dispatch.CREDITOR_UNDERSCORE_NAME.rename(payload);
     // },
