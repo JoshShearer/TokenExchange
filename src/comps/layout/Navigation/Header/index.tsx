@@ -1,10 +1,10 @@
 import React from 'react';
 // import { RootState, Dispatch } from '#src/stores/store'
-import react, { Fragment } from "react";
-import { connect } from 'react-redux'
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import Image from "next/image";
+import react, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { MenuIcon, XIcon } from '@heroicons/react/outline';
+import Image from 'next/image';
 
 // import { useDispatch } from 'react-redux'
 
@@ -27,7 +27,7 @@ const defaultProps = {
 
 function classNames(_props: typeof defaultProps) {
   const props = { ...defaultProps, ..._props };
-  return props.classes.filter(Boolean).join(" ");
+  return props.classes.filter(Boolean).join(' ');
 }
 
 export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
@@ -39,13 +39,12 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
       {({ open }) => (
         <>
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 mb-4">
-
             <div className="flex items-center justify-between h-16">
-
               <div className="flex items-center">
-
                 <div className="flex-shrink-0 grid grid-cols-3 gap-4">
-                  <div className="text-2xl flex-shrink font-bold text-white sm:text-md">MTB DApp Token Exchange</div>
+                  <div className="text-2xl flex-shrink font-bold text-white sm:text-md">
+                    MTB DApp Token Exchange
+                  </div>
                   <div className="relative flex w-12 h-12 overflow-hidden rounded-full ">
                     <Image
                       objectFit="cover"
@@ -59,7 +58,6 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex items-center">
-
                   <Menu as="div" className="relative ml-3">
                     <div>
                       <Menu.Button className="flex text-sm ">
@@ -88,8 +86,8 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
                             <a
                               href="joshshearer.org"
                               className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
+                                active ? 'bg-gray-100' : '',
+                                'block px-4 py-2 text-sm text-gray-700'
                               )}
                             >
                               Your Profile
@@ -106,9 +104,15 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
                 <Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XIcon className="block w-6 h-6 text-white" aria-hidden="true" />
+                    <XIcon
+                      className="block w-6 h-6 text-white"
+                      aria-hidden="true"
+                    />
                   ) : (
-                    <MenuIcon className="block w-6 h-6 text-white" aria-hidden="true" />
+                    <MenuIcon
+                      className="block w-6 h-6 text-white"
+                      aria-hidden="true"
+                    />
                   )}
                 </Disclosure.Button>
               </div>
@@ -116,7 +120,6 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
           </div>
 
           <Disclosure.Panel className="sm:hidden">
-
             <div className="pt-4 pb-3 ">
               <div className="flex items-center px-3">
                 <a
@@ -153,15 +156,15 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
 // }
 
 // const mapState = (state: RootState) => ({
-	// account: accountSelector(state),
+// account: accountSelector(state),
 // })
- 
+
 // const mapDispatch = (dispatch: Dispatch) => ({
 // 	count: dispatch.count,
 // })
- 
+
 // type StateProps = ReturnType<typeof mapState>
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
- 
+
 // export default connect(mapState)(Comps_layout_Navigation_Header)
