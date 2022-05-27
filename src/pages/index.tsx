@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head';
 import { Provider } from 'react-redux';
-import Comps_layout_App from '#src/Comps/layout/App';
+import { Comps_layout_App } from '#src/Comps/layout/App';
 import { store } from '#src/models/store';
 import * as serviceWorker from '../serviceWorker';
 

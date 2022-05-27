@@ -1,11 +1,12 @@
 import React from 'react';
 import { Comps_layout_Navigation_Header } from '#src/Comps/layout/Navigation/Header';
 import { Comps_layout_Navigation_Footer } from '#src/Comps/layout/Navigation/Footer';
-import MTBApp from '#src/Comps/layout/MTBApp';
+import { Comps_layout_MTBApp } from '#src/Comps/layout/MTBApp';
 
-import { RootState, Dispatch } from '#src/stores/model';
+import { RootState, Actions } from '#src/models/store';
 import { connect } from 'react-redux';
-import { useDispatch } from 'react-redux';
+
+import { loadWeb3 } from '#src/models/interactions';
 
 // import { Comps_misc_placeholder } from '#src/Comps';
 
@@ -38,14 +39,38 @@ import { useDispatch } from 'react-redux';
 //   );
 // };
 
-class Comps_layout_App extends React.PureComponent<Props> {
+export class Comps_layout_App extends React.PureComponent<Props> {
+  componentDidMount() {
+    this.loadBlockchainData()
+  }
+  // console.log("🚀 ~ file: index.tsx ~ line 43 ~ Comps_layout_App ~ //componentDidMount ~ props", this.props.state)
+
+  async loadBlockchainData() {
+  // console.log("🚀 ~ file: index.tsx ~ line 47 ~ Comps_layout_App ~ loadBlockchainData ~ dispatch", dispatch)
+    const myWeb3 = await loadWeb3(this.props.web3Loader)
+    // props.WebLoader(myWeb3)
+    console.log("🚀 ~ file: index.tsx ~ line 52 ~ Comps_layout_App ~ loadBlockchainData ~ state Connection", this.props.state.models_WebB.connection)
+    const networkId = await myWeb3.eth.net.getId()
+  //   await loadAccount(web3, dispatch)
+  //   const token = await loadToken(web3, networkId, dispatch)
+  //   if (!token) {
+  //     window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
+  //     return
+  //   }
+  //   const exchange = await loadExchange(web3, networkId, dispatch)
+  //   if (!exchange) {
+  //     window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask.')
+  //     return
+  //   }
+  }
+
 	render() {
 		// const { countState } = this.props
 		return (
     <div>
       <Comps_layout_Navigation_Header/>
       {/* { this.props.contractsLoaded ? <MTBApp /> : <div className="content"></div> } */}
-      <MTBApp/>
+      <Comps_layout_MTBApp/>
       <Comps_layout_Navigation_Footer/>
 
     </div>
@@ -54,16 +79,22 @@ class Comps_layout_App extends React.PureComponent<Props> {
 	}
 }
 
+// const selection = store.select((models) => ({
+//   total: models.cart.total,
+//   eligibleItems: models.cart.wouldGetFreeShipping,
+// }));
+
 const mapState = (state: RootState) => ({
-	countState: state.count,
+	state: state,
 })
  
-const mapDispatch = (dispatch: Dispatch) => ({
-	count: dispatch.count,
+const mapDispatch = (dispatch: Actions) => ({
+	dispatch: dispatch.models_WebB,
+  web3Loader: dispatch.models_WebB.web3Loader,
 })
  
 type StateProps = ReturnType<typeof mapState>
 type DispatchProps = ReturnType<typeof mapDispatch>
 type Props = StateProps & DispatchProps
  
-export default connect(mapState, mapDispatch)(Comps_layout_App)
+connect(mapState, mapDispatch)(Comps_layout_App)

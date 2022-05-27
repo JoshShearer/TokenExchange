@@ -2,25 +2,27 @@ import { createModel, RematchDispatch } from '@rematch/core';
 import type { RootModel } from '#src/models/model';
 
 const defaultState = {
-  name: '',
+  TOKEN_LOADED: false,
+  TOKEN_BALANCE_LOADED: false,
+  contract: '',
 };
 
-export const CREDITOR_UNDERSCORE_NAME = createModel<RootModel>()({
+export const models_Token = createModel<RootModel>()({
   state: defaultState,
   reducers: {
     rename(state, payload: string): typeof defaultState {
       return {
         ...state,
-        name: payload,
+        TOKEN_LOADED: payload,
       };
     },
   },
-  // selectors: (slice, createSelector, hasProps) => ({
+  selectors: (slice, createSelector, hasProps) => ({
 
-  // }),
+  }),
   effects: (dispatch: RematchDispatch) => ({
     // async renameAsync(payload: string, state) {
-    //   dispatch.CREDITOR_UNDERSCORE_NAME.rename(payload);
+    //   dispatch.models_Token.rename(payload);
     // },
   }),
 });

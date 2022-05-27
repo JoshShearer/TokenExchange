@@ -1,7 +1,6 @@
 import React from 'react';
-import { RootState, Dispatch } from '#src/stores/model'
+import { RootState, Actions } from '#src/models/store'
 import { connect } from 'react-redux'
-// import { useDispatch } from 'react-redux'
 
 // import { Comps_layout_Balance } from '#src/Comps/layout/Balance';
 // import { Comps_layout_Orders } from '#src/Comps/layout/Orders'; 
@@ -39,10 +38,20 @@ import { Comps_misc_spinner } from '#src/Comps/misc/spinner';
 //   );
 // };
 
-class Comps_layout_MTBApp extends React.PureComponent<Props> {
+export class Comps_layout_MTBApp extends React.PureComponent<Props> {
+  componentDidMount() {
+    this.loadBlockchainData(this.props)
+  }
+
+  async loadBlockchainData(props: Props) {
+    const { dispatch, exchange } = props
+    // await loadAllOrders(exchange, dispatch)
+    // await subscribeToEvents(exchange, dispatch)
+  }
+
 	render() {
-		// const { countState } = this.props
-		return (
+
+    return (
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 pl-4 pr-4 ">
         <div className='sm:col-span-2 md:col-span-1 lg:col-span-1'>
           <div className="pb-4"><Comps_misc_spinner /></div>
@@ -62,17 +71,21 @@ class Comps_layout_MTBApp extends React.PureComponent<Props> {
     );
 	}
 }
+// const selection = store.select((models) => ({
+//   exchange: models.exchange.exchangeSelector,
+// }));
 
 const mapState = (state: RootState) => ({
-	countState: state.count,
+	// exchange: exchangeSelector(RootState)
 })
  
-// const mapDispatch = (dispatch: Dispatch) => ({
-// 	count: dispatch.count,
-// })
+const mapActions = (dispatch: Actions) => ({
+	// count: dispatch.count,
+})
  
+type SelectionProps = ReturnType<typeof selection>
 type StateProps = ReturnType<typeof mapState>
-// type DispatchProps = ReturnType<typeof mapDispatch>
-// type Props = StateProps & DispatchProps
+type ActionsProps = ReturnType<typeof mapActions>
+type Props = StateProps & ActionsProps & SelectionProps
  
-export default connect(mapState)(Comps_layout_MTBApp)
+connect(mapState)(Comps_layout_MTBApp)

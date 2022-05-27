@@ -1,6 +1,5 @@
-import React from 'react';
-import { RootState } from '#src/stores/store'
-import react, { Fragment } from 'react';
+import React, { Fragment } from 'react';
+import { RootState } from '#src/models/store'
 import { connect } from 'react-redux';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
@@ -24,7 +23,7 @@ const defaultProps = {
 // })
 
 function classNames(_props: typeof defaultProps) {
-  const props = { ...defaultProps, ..._props };
+  const props = { ..._props };
   return props.classes.filter(Boolean).join(' ');
 }
 
@@ -153,7 +152,7 @@ export const Comps_layout_Navigation_Header = (props: Props) => {
 // }
 
 const mapState = (state: RootState) => ({
-  account: state.account,
+  account: state.Account,
 })
 
 
@@ -161,4 +160,4 @@ type StateProps = ReturnType<typeof mapState>
 
 type Props = StateProps
 
-export default connect(mapState)(Comps_layout_Navigation_Header)
+connect(mapState)(Comps_layout_Navigation_Header)

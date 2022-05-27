@@ -34,12 +34,17 @@ export const CREDITOR_UNDERSCORE_NAME = (_props: typeof defaultProps) => {
   );
 };
 
-// class CREDITOR_UNDERSCORE_NAME extends React.PureComponent<Props> {
+// export class CREDITOR_UNDERSCORE_NAME extends React.PureComponent<Props> {
 // 	render() {
 // 		const { countState } = this.props
 // 		return <div>CREDITOR_UNDERSCORE_NAME</div>
 // 	}
 // }
+
+// const selection = store.select((models) => ({
+//   total: models.cart.total,
+//   eligibleItems: models.cart.wouldGetFreeShipping,
+// }));
 
 // const mapState = (state: RootState) => ({
 // 	countState: state.count,
@@ -53,4 +58,4 @@ export const CREDITOR_UNDERSCORE_NAME = (_props: typeof defaultProps) => {
 // type DispatchProps = ReturnType<typeof mapDispatch>
 // type Props = StateProps & DispatchProps
  
-// export default connect(mapState, mapDispatch)(CREDITOR_UNDERSCORE_NAME)
+// connect(mapState, mapDispatch, selection)(CREDITOR_UNDERSCORE_NAME)

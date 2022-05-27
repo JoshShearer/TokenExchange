@@ -13,7 +13,7 @@ module.exports = ({ paths = [] }) => {
       "   models,",
       "   // add selectPlugin to your store",
       "   plugins: [",      
-      "   selectPlugin<RootModel()",
+      "   selectPlugin<RootModel>()",
       "   //...",
       "   ],",
       '})',
