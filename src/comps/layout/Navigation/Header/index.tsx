@@ -12,22 +12,23 @@ import Image from 'next/image';
 // import { createStructureSelector } from '#src/selectors/util'
 // import { userSelector } from '#src/stores/hooks';
 
-const defaultProps = {
-  classes: [],
-} as {
-  classes: Array<string>;
-};
+// const defaultProps = {
+//   classes: [],
+// } as {
+//   classes: Array<string>;
+// };
 
 // const selector = createStructuredSelector({
 //    item: (root) => root.stores,
 // })
 
-function classNames(_props: typeof defaultProps) {
-  const props = { ..._props };
-  return props.classes.filter(Boolean).join(' ');
-}
+// function classNames(_props: Array<string>) {
+//   const props = { ..._props };
+//   return props.filter(Boolean).join(' ');
+// }
 
 export const Comps_layout_Navigation_Header = (props: Props) => {
+console.log("🚀 ~ file: index.tsx ~ line 31 ~ props account", props.account)
   // const selected = useSelector((state) => selector(state, props));
 
   return (
@@ -81,10 +82,9 @@ export const Comps_layout_Navigation_Header = (props: Props) => {
                           {({ active }) => (
                             <a
                               href="joshshearer.org"
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
+                              className={
                                 'block px-4 py-2 text-sm text-gray-700'
-                              )}
+                              }
                             >
                               Your Profile
                             </a>
@@ -152,7 +152,7 @@ export const Comps_layout_Navigation_Header = (props: Props) => {
 // }
 
 const mapState = (state: RootState) => ({
-  account: state.Account,
+  account: state.models_WebB.account,
 })
 
 

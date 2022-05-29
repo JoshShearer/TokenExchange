@@ -40,11 +40,11 @@ import { Comps_misc_spinner } from '#src/Comps/misc/spinner';
 
 export class Comps_layout_MTBApp extends React.PureComponent<Props> {
   componentDidMount() {
+    
     this.loadBlockchainData(this.props)
   }
 
   async loadBlockchainData(props: Props) {
-    const { dispatch, exchange } = props
     // await loadAllOrders(exchange, dispatch)
     // await subscribeToEvents(exchange, dispatch)
   }

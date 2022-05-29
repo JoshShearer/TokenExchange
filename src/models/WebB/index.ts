@@ -1,36 +1,36 @@
 import { createModel, RematchDispatch } from '@rematch/core';
 import type { RootModel } from '#src/models/model';
-import { get, groupBy, reject, maxBy, minBy } from 'lodash';
 import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from 'web3_eth/helpers'
 import Web3 from 'web3';
 
 
 const defaultState = {
-  account: ETHER_ADDRESS,
-  connection: typeof Web3,
-  balance: '', 
+  account: 'account',
+  // connection: typeof Web3,
+  connection: {},
+  balance: 'notmuch', 
 };
 
 export const models_WebB = createModel<RootModel>()({
-  name: "web3",
+  name: "web3Model",
   state: defaultState,
   reducers: {
-    web3Loader: (state: typeof defaultState, payload: Web3)  => {
+    web3Loader: (state, payload: {})  => {
       return {
         ...state,
-        connection: payload
+        connection: payload,
       };
     },
-    accountLoader: (state, payload: string): typeof defaultState => {
+    accountLoader: (state, payload: string) => {
       return {
         ...state,
-        account: payload
+        account: payload,
       };
     },
-    balanceLoader: (state, payload: string): typeof defaultState => {
+    balanceLoader: (state, payload: string) => {
       return {
         ...state,
-        balance: formatBalance(payload)
+        balance: formatBalance(payload),
       };
     },
   },
@@ -47,9 +47,9 @@ export const models_WebB = createModel<RootModel>()({
   //   }
   // }),
   effects: (dispatch) => ({
-    async Web3LoaderAsync(payload: Web3, state: typeof defaultState) : Promise<void> {
-      dispatch.models_WebB.Web3Loader(payload);
-      return state.models_WebB
-    }
+    // async Web3LoaderAsync(payload: Web3, state: typeof defaultState) : Promise<void> {
+    //   dispatch.models_WebB.web3Loader(payload);
+    //   return state.models_WebB
+    // }
   }),
 });

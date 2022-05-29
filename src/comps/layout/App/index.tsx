@@ -6,9 +6,13 @@ import { Comps_layout_MTBApp } from '#src/Comps/layout/MTBApp';
 import { RootState, Actions } from '#src/models/store';
 import { connect } from 'react-redux';
 
-import { loadWeb3 } from '#src/models/interactions';
+import {
+  loadWeb3,
+  loadAccount,
+  loadToken,
+  loadExchange
+} from '#src/models/interactions';
 
-// import { Comps_misc_placeholder } from '#src/Comps';
 
 // import { createStructureSelector } from '#src/selectors/util'
 // import { userSelector } from '#src/stores/hooks';
@@ -44,12 +48,12 @@ export class Comps_layout_App extends React.PureComponent<Props> {
     this.loadBlockchainData()
   }
   // console.log("🚀 ~ file: index.tsx ~ line 43 ~ Comps_layout_App ~ //componentDidMount ~ props", this.props.state)
-
   async loadBlockchainData() {
-  // console.log("🚀 ~ file: index.tsx ~ line 47 ~ Comps_layout_App ~ loadBlockchainData ~ dispatch", dispatch)
-    const myWeb3 = await loadWeb3(this.props.web3Loader)
-    // props.WebLoader(myWeb3)
-    console.log("🚀 ~ file: index.tsx ~ line 52 ~ Comps_layout_App ~ loadBlockchainData ~ state Connection", this.props.state.models_WebB.connection)
+    const { account, loadConn } = this.props
+
+  console.log("🚀 ~ file: index.tsx ~ line 47 ~ Comps_layout_App ~ loadBlockchainData ~ account", account)
+    const myWeb3 = await loadWeb3()
+    // loadConn(myWeb3)
     const networkId = await myWeb3.eth.net.getId()
   //   await loadAccount(web3, dispatch)
   //   const token = await loadToken(web3, networkId, dispatch)
@@ -69,8 +73,8 @@ export class Comps_layout_App extends React.PureComponent<Props> {
 		return (
     <div>
       <Comps_layout_Navigation_Header/>
-      {/* { this.props.contractsLoaded ? <MTBApp /> : <div className="content"></div> } */}
-      <Comps_layout_MTBApp/>
+      { this.props.contractsLoaded ? <MTBApp /> : <div className="content"></div> }
+      {/* <Comps_layout_MTBApp/> */}
       <Comps_layout_Navigation_Footer/>
 
     </div>
@@ -85,12 +89,13 @@ export class Comps_layout_App extends React.PureComponent<Props> {
 // }));
 
 const mapState = (state: RootState) => ({
-	state: state,
+	account: state.models_WebB.account,
 })
  
 const mapDispatch = (dispatch: Actions) => ({
-	dispatch: dispatch.models_WebB,
-  web3Loader: dispatch.models_WebB.web3Loader,
+	loadAccount : dispatch.models_WebB.accountLoader,
+  loadConn: dispatch.web3Model.web3Loader,
+  loadBal: dispatch.models_WebB.balanceLoader
 })
  
 type StateProps = ReturnType<typeof mapState>
