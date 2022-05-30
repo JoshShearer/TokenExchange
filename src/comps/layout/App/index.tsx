@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
 
 import {
   loadWeb3,
-  loadAccount,
-  loadToken,
-  loadExchange
+  // loadAccount,
+  // loadToken,
+  // loadExchange
 } from '#src/models/interactions';
 
 
@@ -74,7 +74,6 @@ export class Comps_layout_App extends React.PureComponent<Props> {
     <div>
       <Comps_layout_Navigation_Header/>
       { this.props.contractsLoaded ? <MTBApp /> : <div className="content"></div> }
-      {/* <Comps_layout_MTBApp/> */}
       <Comps_layout_Navigation_Footer/>
 
     </div>
@@ -90,6 +89,7 @@ export class Comps_layout_App extends React.PureComponent<Props> {
 
 const mapState = (state: RootState) => ({
 	account: state.models_WebB.account,
+  contractsLoaded: state.models_Exchange.contractsLoaded
 })
  
 const mapDispatch = (dispatch: Actions) => ({

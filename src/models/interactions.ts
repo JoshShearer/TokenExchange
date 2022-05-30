@@ -26,7 +26,7 @@ import Token from '../../web3_eth/abis/Token.json'
 import Exchange from '../../web3_eth/abis/Exchange.json'
 import { ETHER_ADDRESS } from '../../web3_eth/test/helpers'
 
-export const loadWeb3 = async (dispatch) => {
+export const loadWeb3 = async () => {
   if(typeof window.ethereum!=='undefined'){
     const web3 = new Web3(window.ethereum)
     // dispatch(web3Loaded(web3))

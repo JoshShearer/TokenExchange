@@ -18,9 +18,7 @@ const Exchange: NextPage = () => {
                 />
             </Head>
             <main>
-                <Provider store={store}>
-                    <Comps_layout_App />
-                </Provider>
+                <Comps_layout_App />
             </main>
         </div>
     )

@@ -8,7 +8,7 @@ const defaultState = {
 export const CREDITOR_UNDERSCORE_NAME = createModel<RootModel>()({
   state: defaultState,
   reducers: {
-    rename(state, payload: string): typeof defaultState {
+    reducerRename(state, payload: string): typeof defaultState {
       return {
         ...state,
         name: payload,
@@ -19,8 +19,8 @@ export const CREDITOR_UNDERSCORE_NAME = createModel<RootModel>()({
 
   // }),
   effects: (dispatch: RematchDispatch) => ({
-    // async renameAsync(payload: string, state) {
-    //   dispatch.CREDITOR_UNDERSCORE_NAME.rename(payload);
+    // async reducerRenameAsync(payload: string, state) {
+    //   dispatch.CREDITOR_UNDERSCORE_NAME.reducerRename(payload);
     // },
   }),
 });

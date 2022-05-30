@@ -9,18 +9,21 @@ module.exports = ({ paths = [] }) => {
       '',
 
       '',
-      'export const store = init({',
+      'export const store = init<RootModel>({',
       "   models,",
       "   // add selectPlugin to your store",
       "   plugins: [",      
-      "   selectPlugin<RootModel>()",
+      "   selectPlugin()",
       "   //...",
       "   ],",
       '})',
       '',
+      'export const { dispatch } = store',
+      '',
       'export type Store = typeof store;',
       'export type RootState = RematchRootState<RootModel>;',
-      'export type Actions = RematchDispatch<RootModel>;',
+      'export type Actions = RematchDispatch<RootModel>;',,
+      'export type Selector<R> = (rootState: RootState) => R;'
     ].join('\n');
   };
   

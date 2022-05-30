@@ -9,7 +9,7 @@ import { models } from "#src/models/model";
 const store = init({
   models,
 })
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <Component {...pageProps} />
@@ -17,9 +17,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       )
 }
 
-MyApp.getInitialProps = async (appContext) => {
-	const appProps = await App.getInitialProps(appContext)
-	return { ...appProps }
-}
+// MyApp.getInitialProps = async (appContext) => {
+// 	const appProps = await App.getInitialProps(appContext)
+// 	return { ...appProps }
+// }
 
-export default MyApp
