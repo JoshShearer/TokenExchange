@@ -6,9 +6,8 @@ const defaultProps = {
   type?: string;
 };
 
-export const Comps_misc_spinner = (_props: typeof defaultProps) => {
+export const Comps_misc_Spinner = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
-  // const selected = useSelector((state) => selector(state, props));
 
   if(props.type === 'table') {
     return(<tbody className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-white"></tbody>)

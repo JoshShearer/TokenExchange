@@ -1,28 +1,29 @@
 import { createModel, RematchDispatch } from '@rematch/core';
 import type { RootModel } from '#src/models/model';
+import { Contract } from 'web3_eth';
 
-const defaultState = {
-  TOKEN_LOADED: false,
-  TOKEN_BALANCE_LOADED: false,
-  contract: '',
+type defaultState = {
+  Token: Contract,
 };
 
 export const models_Token = createModel<RootModel>()({
-  state: defaultState,
+  state: {
+    Token : {},
+  } as defaultState,
   reducers: {
-    rename(state, payload: string): typeof defaultState {
+    loadToken(state, payload: Contract) {
       return {
         ...state,
-        TOKEN_LOADED: payload,
+        Token: payload,
       };
     },
   },
-  selectors: (slice, createSelector, hasProps) => ({
+  // selectors: (slice, createSelector, hasProps) => ({
 
-  }),
-  effects: (dispatch: RematchDispatch) => ({
-    // async renameAsync(payload: string, state) {
-    //   dispatch.models_Token.rename(payload);
-    // },
+  // }),
+  effects: (dispatch) => ({
+    async loadTokenAsync(payload: Contract, state) {
+      dispatch.models_Token.loadToken(payload);
+    },
   }),
 });

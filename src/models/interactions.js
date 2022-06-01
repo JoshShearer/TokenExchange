@@ -26,10 +26,10 @@ import Token from '../../web3_eth/abis/Token.json'
 import Exchange from '../../web3_eth/abis/Exchange.json'
 import { ETHER_ADDRESS } from '../../web3_eth/test/helpers'
 
-export const loadWeb3 = async () => {
+export const web3Loader = async (dispatch) => {
   if(typeof window.ethereum!=='undefined'){
     const web3 = new Web3(window.ethereum)
-    // dispatch(web3Loaded(web3))
+    dispatch.loadWeb3Async(web3)
     return web3
   } else {
     window.alert('Please install MetaMask')
@@ -44,51 +44,57 @@ export const loadWeb3 = async () => {
 //   return account
 // }
 
-// //Check for metamask before dispatching the token   
-// export const loadToken = async (web3, networkId, dispatch) => {
-//   try {
-//     const token = new web3.eth.Contract(Token.abi, Token.networks[networkId].address)
-//     dispatch(tokenLoaded(token))
-//     return token
-//   } catch (error) {
-//     console.log('Contract not deployed to the current network. Please select another network with Metamask.')
-//     return null
-//   }
-// }
+//Check for metamask before dispatching the token   
+export const loadToken = async (web3, networkId, dispatch) => {
+  try {
+    const token = new web3.eth.Contract(Token.abi, Token.networks[networkId].address)
+    console.log("🚀 ~ file: interactions.js ~ line 51 ~ loadToken ~ Token.networks[networkId].address", Token.networks[networkId].address)
+    console.log("🚀 ~ file: interactions.js ~ line 51 ~ loadToken ~ Token.abi", Token.abi)
+    dispatch.loadTokenAsync(token)
+    return token
+  } catch (error) {
+    console.log('Contract not deployed to the current network. Please select another network with Metamask.')
+    return null
+  }
+}
 
-// export const loadExchange = async (web3, networkId, dispatch) => {
-//   try {
-//     const exchange = new web3.eth.Contract(Exchange.abi, Exchange.networks[networkId].address)
-//     dispatch(exchangeLoaded(exchange))
-//     return exchange
-//   } catch (error) {
-//     console.log('Contract not deployed to the current network. Please select another network with Metamask.')
-//     return null
-//   }
-// }
+export const loadExchange = async (web3, networkId, dispatch) => {
+  try {
+    const exchange = new web3.eth.Contract(Exchange.abi, Exchange.networks[networkId].address)
+    console.log("🚀 ~ file: interactions.js ~ line 64 ~ loadExchange ~ networkId", networkId)
+    console.log("🚀 ~ file: interactions.js ~ line 64 ~ loadExchange ~ Exchange.networks[networkId].address", Exchange.networks[networkId].address)
+    console.log("🚀 ~ file: interactions.js ~ line 62 ~ loadExchange ~ Exchange.abi", Exchange.abi)
+    console.log("🚀 ~ file: interactions.js ~ line 62 ~ loadExchange ~ exchange", exchange)
+    dispatch.loadExchangeAsync(exchange);
+    return exchange
+  } catch (error) {
+    console.log('Contract not deployed to the current network. Please select another network with Metamask.')
+    return null
+  }
+}
 
-// export const loadAllOrders = async (exchange, dispatch) => {
-//   // Fetch cancelled orders with the "Cancel" event stream
-//   const cancelStream = await exchange.getPastEvents('Cancel', { fromBlock: 0, toBlock: 'latest' })
-//   // Format cancelled orders
-//   const cancelledOrders = cancelStream.map((event) => event.returnValues)
-//   // Add cancelled orders to the redux store
-//   dispatch(cancelledOrdersLoaded(cancelledOrders))
+export const loadAllOrders = async (exchange, dispatch) => {
+  // Fetch cancelled orders with the "Cancel" event stream
+  const cancelStream = await exchange.getPastEvents('Cancel', { fromBlock: 0, toBlock: 'latest' })
+  // Format cancelled orders
+  const cancelledOrders = cancelStream.map((event) => event.returnValues)
+  // Add cancelled orders to the redux store
+  dispatch(cancelledOrdersLoaded(cancelledOrders))
 
-//   // Fetch filled orders with the "Trade" event stream
-//   const tradeStream = await exchange.getPastEvents('Trade', { fromBlock: 0, toBlock: 'latest' })
-//   // Format filled orders
-//   const filledOrders = tradeStream.map((event) => event.returnValues)
-//   // Add cancelled orders to the redux store
-//   dispatch(filledOrdersLoaded(filledOrders))
+  // Fetch filled orders with the "Trade" event stream
+  const tradeStream = await exchange.getPastEvents('Trade', { fromBlock: 0, toBlock: 'latest' })
+  // Format filled orders
+  const filledOrders = tradeStream.map((event) => event.returnValues)
+  // Add cancelled orders to the redux store
+  dispatch(filledOrdersLoaded(filledOrders))
 
-//   // Load order stream
-//   const orderStream = await exchange.getPastEvents('Order', { fromBlock: 0,  toBlock: 'latest' })
-//   // Format order stream
-//   const allOrders = orderStream.map((event) => event.returnValues)
-//   // Add open orders to the redux store
-//   dispatch(allOrdersLoaded(allOrders))
-// }
+  // Load order stream
+  const orderStream = await exchange.getPastEvents('Order', { fromBlock: 0,  toBlock: 'latest' })
+  // Format order stream
+  const allOrders = orderStream.map((event) => event.returnValues)
+  // Add open orders to the redux store
+  dispatch(allOrdersLoaded(allOrders))
+}
 
 // export const subscribeToEvents = async (exchange, dispatch) => {
 //   exchange.events.Cancel({}, (error, event) => {

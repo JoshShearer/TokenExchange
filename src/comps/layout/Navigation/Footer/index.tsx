@@ -34,25 +34,8 @@ const navigation = {
   ],
 }   
 
-// import { createStructureSelector } from '#src/selectors/util'
-// import { userSelector } from '#src/stores/hooks';
-
-// const defaultProps = {
-//   key: 'default',
-//   name: '',
-// } as {
-//   name: string;
-//   key?: string;
-//   children?: JSX.Element;
-// };
-
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
 
 export const Comps_layout_Navigation_Footer = () => {
-  // const props = { ...defaultProps, ..._props };
-  // const selected = useSelector((state) => selector(state, props));
 
   return (
     <footer className="bg-stone-800">
@@ -80,23 +63,5 @@ export const Comps_layout_Navigation_Footer = () => {
   )
 };
 
-// class Comps_layout_Navigation_Footer extends React.PureComponent<Props> {
-// 	render() {
-// 		const { countState } = this.props
-// 		return <div>Comps_layout_Navigation_Footer</div>
-// 	}
-// }
 
-// const mapState = (state: RootState) => ({
-// 	countState: state.count,
-// })
  
-// const mapDispatch = (dispatch: Dispatch) => ({
-// 	count: dispatch.count,
-// })
- 
-// type StateProps = ReturnType<typeof mapState>
-// type DispatchProps = ReturnType<typeof mapDispatch>
-// type Props = StateProps & DispatchProps
- 
-// export default connect(mapState, mapDispatch)(Comps_layout_Navigation_Footer)

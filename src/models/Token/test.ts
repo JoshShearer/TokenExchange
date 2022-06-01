@@ -4,18 +4,18 @@ require('chai')
     .should()
 const expect = require('chai').expect
 
-const getmodels_Token = () => store.getState().models_Token;
+const get_models_Token = () => store.getState().models_Token;
 
 describe("models_Token", () => {
-  beforeEach(() => dispatch({ type: "RESET" }));
+  // beforeEach(() => dispatch({ type: "RESET" }));
 
-  it("should return the initial state correctly", () => {
-   expect( getmodels_Token()).toEqual({ defaultState });
-  });
-  it("test each reducer", () => {
-    dispatch.models_Token.reducerfunction({ stateKey: "expectedvalue" });
-    expect(getmodels_Token()).toEqual({
+  // it("should return the initial state correctly", () => {
+  //  expect( get_models_Token()).toEqual({ defaultState });
+  // });
+  // it("test each reducer", () => {
+  //   dispatch.models_Token.reducerfunction({ stateKey: "expectedvalue" });
+  //   expect(get_models_Token()).toEqual({
      
-    });
-  });
+  //   });
+  // });
 })

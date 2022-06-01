@@ -1,91 +1,88 @@
-import React from 'react';
-import { RootState, Actions } from '#src/models/store'
-import { connect } from 'react-redux'
+import React, { useEffect } from 'react';
+// import Deposits from "./Deposits";
+// import Orders from "./Orders";
+// import OrderBook from "./Orderbook";
+// import PriceChart from "./PriceChart";
+// import MyTransactions from "./MyTransactions";
+// import Trades from "./Trades";
 
-// import { Comps_layout_Balance } from '#src/Comps/layout/Balance';
-// import { Comps_layout_Orders } from '#src/Comps/layout/Orders'; 
-// import { Comps_layout_Orderbook } from '#src/Comps/layout/Orderbook';
-// import { Comps_layout_Pricechart } from '#src/Comps/layout/Pricechart';
-// import { Comps_layout_Trades } from '#src/Comps/layout/Trades';
-import { Comps_misc_spinner } from '#src/Comps/misc/spinner';
+import { RootState, Actions, dispatch } from '#src/models/store';
 
-// import { createStructureSelector } from '#src/selectors/util'
-// import { userSelector } from '#src/stores/hooks';
 
-// const defaultProps = {
-//   key: 'default',
-//   name: '',
-// } as {
-//   name: string;
-//   key?: string;
-//   children?: JSX.Element;
-// };
+import { 
+  loadAllOrders, 
+  // subscribeToEvents 
+} from '#src/models/interactions';
 
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
+import useSelector from 'reselect';
 
-// export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
-//   const props = { ...defaultProps, ..._props };
-//   // const selected = useSelector((state) => selector(state, props));
+import { createStructuredSelector } from '#src/models/util'
+// import { useSelector } from '#src/models/hooks';
 
-//   return (
-//     <div className="Comps_layout_MTBApp">
-//       <Comps_misc_placeholder>
-//         <p>Comps_layout_MTBApp</p>
-//       </Comps_misc_placeholder>
-//     </div>
-//   );
-// };
 
-export class Comps_layout_MTBApp extends React.PureComponent<Props> {
-  componentDidMount() {
-    
-    this.loadBlockchainData(this.props)
-  }
+// import { RootState, Actions, dispatch, store } from '#src/models/store'
+// import { models_Exchange } from '../../../models/Exchange/index';
 
-  async loadBlockchainData(props: Props) {
-    // await loadAllOrders(exchange, dispatch)
+
+const defaultProps = {
+  idKey: 'default',
+} as {
+  idKey?: string;
+  children?: JSX.Element;
+};
+
+const selector = createStructuredSelector({
+   exchange: (root) => root.models_Exchange.Exchange,
+})
+
+export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
+  const props = { ...defaultProps, ..._props };
+
+  useEffect(() => {
+    loadBlockchainData()
+  },[]);
+  const selected = useSelector((state) => selector(state, props));
+  
+  // const selected = useSelector(
+  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
+  // );
+  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
+  const loadBlockchainData = async () => {
+    await dispatch.models_Exchange.loadAllOrdersAsync(selected.exchange)
     // await subscribeToEvents(exchange, dispatch)
   }
 
-	render() {
 
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 pl-4 pr-4 ">
-        <div className='sm:col-span-2 md:col-span-1 lg:col-span-1'>
-          <div className="pb-4"><Comps_misc_spinner /></div>
-          {/* <div><Orders /></div>
-        </div>
-        <div>
-          <OrderBook />
-        </div>
-        <div className='col-span-2 '>
-          <div className="pb-4"><PriceChart /></div>
-          <div ><MyTransactions /></div>
-        </div>
-        <div>
-          <Trades /> */}
-        </div>
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 pl-4 pr-4 ">
+      <div className='sm:col-span-2 md:col-span-1 lg:col-span-1'>
+        {/* <div className="pb-4"><Deposits /></div>
+        <div><Orders /></div>
       </div>
-    );
-	}
-}
+      <div>
+        <OrderBook />
+      </div>
+      <div className='col-span-2 '>
+        <div className="pb-4"><PriceChart /></div>
+        <div ><MyTransactions /></div>
+      </div>
+      <div>
+        <Trades /> */}
+      </div>
+    </div>
+  );
+};
+
+// export class Comps_layout_MTBApp extends React.PureComponent<Props> {
+// 	render() {
+// 		const { countState } = this.props
+// 		return <div>Comps_layout_MTBApp</div>
+// 	}
+// }
+
 // const selection = store.select((models) => ({
-//   exchange: models.exchange.exchangeSelector,
+//   total: models.cart.total,
+//   eligibleItems: models.cart.wouldGetFreeShipping,
 // }));
 
-const mapState = (state: RootState) => ({
-	// exchange: exchangeSelector(RootState)
-})
  
-const mapActions = (dispatch: Actions) => ({
-	// count: dispatch.count,
-})
- 
-type SelectionProps = ReturnType<typeof selection>
-type StateProps = ReturnType<typeof mapState>
-type ActionsProps = ReturnType<typeof mapActions>
-type Props = StateProps & ActionsProps & SelectionProps
- 
-connect(mapState)(Comps_layout_MTBApp)

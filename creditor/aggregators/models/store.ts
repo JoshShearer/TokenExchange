@@ -3,9 +3,10 @@ module.exports = ({ paths = [] }) => {
   
     return [
       '/* CREDITOR_GENERATED */',
-      'import selectPlugin from "@rematch/select";',
-      "import { RematchRootState, RematchDispatch, init } from '@rematch/core';",
-      'import { models, RootModel } from "#src/models/model";',
+      'import createSelectPlugin from "@rematch/select";',
+      "import { RematchRootState, RematchDispatch, init as initStore} from '@rematch/core';",
+      'import { models, RootModel, Actions } from "#src/models/model";',
+      'import { RootState '
       '',
 
       '',
@@ -13,7 +14,7 @@ module.exports = ({ paths = [] }) => {
       "   models,",
       "   // add selectPlugin to your store",
       "   plugins: [",      
-      "   selectPlugin()",
+      "   createSelectPlugin()",
       "   //...",
       "   ],",
       '})',
@@ -23,7 +24,32 @@ module.exports = ({ paths = [] }) => {
       'export type Store = typeof store;',
       'export type RootState = RematchRootState<RootModel>;',
       'export type Actions = RematchDispatch<RootModel>;',,
-      'export type Selector<R> = (rootState: RootState) => R;'
+      'export type Selector<R> = (rootState: RootState) => R;',
+
+      "import { RootState, RootModel, Actions, models } from '#src/stores/model';",
+      '',
+      'export const actions = {} as Actions;',
+      '',
+      'let _getState = (): RootState => {',
+      '  return {} as RootState;',
+      '};',
+      'export function getState(): RootState {',
+      '  return _getState();',
+      '}',
+      '',
+      'export const stores = {',
+      '  init: (initial: any = {}) => {',
+      '    const _store = initStore<RootModel>({',
+      '      models,',
+      '    }); // TODO join immer',
+      '    // add the dispatch metthods to the dispatcher',
+      '    Object.keys(_store.dispatch).forEach((key) => {',
+      '      actions[key] = _store.dispatch[key];',
+      '    });',
+      '    _getState = _store.getState;',
+      '    return _store;',
+      '  },',
+      '};',
     ].join('\n');
   };
   

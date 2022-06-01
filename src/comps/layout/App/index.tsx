@@ -1,105 +1,84 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Comps_layout_Navigation_Header } from '#src/Comps/layout/Navigation/Header';
 import { Comps_layout_Navigation_Footer } from '#src/Comps/layout/Navigation/Footer';
 import { Comps_layout_MTBApp } from '#src/Comps/layout/MTBApp';
 
-import { RootState, Actions } from '#src/models/store';
-import { connect } from 'react-redux';
+import { RootState, Actions, dispatch } from '#src/models/store';
 
 import {
-  loadWeb3,
-  // loadAccount,
-  // loadToken,
-  // loadExchange
-} from '#src/models/interactions';
+  web3Loader,
+  loadToken,
+  loadExchange
+} from '#src/models/interactions'
+// import useSelector from 'reselect';
+
+import { createStructuredSelector } from '#src/models/util'
+import { useSelector } from '#src/models/hooks';
 
 
-// import { createStructureSelector } from '#src/selectors/util'
-// import { userSelector } from '#src/stores/hooks';
+// import { RootState, Actions, dispatch, store } from '#src/models/store'
 
-// const defaultProps = {
-//   key: 'default',
-//   name: '',
-// } as {
-//   name: string;
-//   key?: string;
-//   children?: JSX.Element;
-// };
+const defaultProps = {
+  idKey: 'default', 
+  } as {
+  idKey?: string;
+  children?: JSX.Element;
+};
 
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
+const selector = createStructuredSelector({
+   contractsLoaded: (root) => root.models_Exchange.contractsLoaded,
+})
 
-// export const Comps_layout_App = (_props: typeof defaultProps) => {
-//   const props = { ...defaultProps, ..._props };
-//   // const selected = useSelector((state) => selector(state, props));
+export const Comps_layout_App = (_props: typeof defaultProps) => {
+  const props = { ...defaultProps, ..._props };
 
-//   return (
-//     <div className="Comps_layout_App">
-//       <Comps_misc_placeholder>
-//         <p>Comps_layout_App</p>
-//       </Comps_misc_placeholder>
-//     </div>
-//   );
-// };
+  useEffect(() => {
+    loadBlockchainData()
+  },[]);
 
-export class Comps_layout_App extends React.PureComponent<Props> {
-  componentDidMount() {
-    this.loadBlockchainData()
-  }
-  // console.log("🚀 ~ file: index.tsx ~ line 43 ~ Comps_layout_App ~ //componentDidMount ~ props", this.props.state)
-  async loadBlockchainData() {
-    const { account, loadConn } = this.props
 
-  console.log("🚀 ~ file: index.tsx ~ line 47 ~ Comps_layout_App ~ loadBlockchainData ~ account", account)
-    const myWeb3 = await loadWeb3()
-    // loadConn(myWeb3)
-    const networkId = await myWeb3.eth.net.getId()
-  //   await loadAccount(web3, dispatch)
-  //   const token = await loadToken(web3, networkId, dispatch)
-  //   if (!token) {
-  //     window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
-  //     return
-  //   }
-  //   const exchange = await loadExchange(web3, networkId, dispatch)
-  //   if (!exchange) {
-  //     window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask.')
-  //     return
-  //   }
+  const selected = useSelector((state) => selector(state, props));
+  
+  // const selected = useSelector(
+  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
+  // );
+  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
+  const loadBlockchainData = async () => {
+    const web3 = await web3Loader(dispatch.models_WebB)
+    const networkId = await web3.eth.net.getId()
+    const token = await loadToken(web3, networkId, dispatch.models_Token)
+    if (!token) {
+      window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
+      return
+    }
+    const exchange = await loadExchange(web3, networkId, dispatch)
+    if (!exchange) {
+      window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask.')
+      return
+    }
   }
 
-	render() {
-		// const { countState } = this.props
-		return (
+
+  return (
     <div>
       <Comps_layout_Navigation_Header/>
-      { this.props.contractsLoaded ? <MTBApp /> : <div className="content"></div> }
+      { selected.contractsLoaded ? <Comps_layout_MTBApp /> : <div className="content"></div> }
       <Comps_layout_Navigation_Footer/>
-
     </div>
 
     )
-	}
-}
+};
+
+// export class Comps_layout_App extends React.PureComponent<Props> {
+// 	render() {
+// 		const { countState } = this.props
+// 		return <div>Comps_layout_App</div>
+// 	}
+// }
 
 // const selection = store.select((models) => ({
 //   total: models.cart.total,
 //   eligibleItems: models.cart.wouldGetFreeShipping,
 // }));
 
-const mapState = (state: RootState) => ({
-	account: state.models_WebB.account,
-  contractsLoaded: state.models_Exchange.contractsLoaded
-})
  
-const mapDispatch = (dispatch: Actions) => ({
-	loadAccount : dispatch.models_WebB.accountLoader,
-  loadConn: dispatch.web3Model.web3Loader,
-  loadBal: dispatch.models_WebB.balanceLoader
-})
- 
-type StateProps = ReturnType<typeof mapState>
-type DispatchProps = ReturnType<typeof mapDispatch>
-type Props = StateProps & DispatchProps
- 
-connect(mapState, mapDispatch)(Comps_layout_App)

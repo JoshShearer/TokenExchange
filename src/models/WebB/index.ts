@@ -1,55 +1,55 @@
 import { createModel, RematchDispatch } from '@rematch/core';
 import type { RootModel } from '#src/models/model';
-import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from 'web3_eth/helpers'
 import Web3 from 'web3';
+import { Eth } from 'web3';
+import { RootState } from 'react-redux';
 
+// type Web3Connection = typeof( new Web3(''));
+// const conn = new Web3('ws://localhost:8545')
+// const web3c = typeof conn;
+// console.log("🚀 ~ file: index.ts ~ line 9 ~ web3c", web3c)
 
-const defaultState = {
-  account: 'account',
-  // connection: typeof Web3,
-  connection: {},
-  balance: 'notmuch', 
+type defaultState = {
+  account: string,
+  balance: string,
+  Web3Conn: Eth,
 };
 
 export const models_WebB = createModel<RootModel>()({
-  name: "web3Model",
-  state: defaultState,
+  state: {
+    account: 'unknown',
+    balance: 'empty',
+    Web3Conn: {},
+  } as defaultState,
   reducers: {
-    web3Loader: (state, payload: {})  => {
+    loadWeb3(state, payload: defaultState) {
       return {
         ...state,
-        connection: payload,
-      };
+       payload,
+      }
     },
-    accountLoader: (state, payload: string) => {
+    loadAcc(state, payload: string){
       return {
         ...state,
-        account: payload,
-      };
+       account: payload,
+      }
     },
-    balanceLoader: (state, payload: string) => {
+    loadBal(state, payload: string){
       return {
         ...state,
-        balance: formatBalance(payload),
-      };
+        balance: payload,
+      }
+    }
     },
-  },
   // selectors: (slice, createSelector, hasProps) => ({
-  //   accountSelector(){
-  //     return slice((web3) =>  get(web3.account, 'web3.account'))
-  //   };
-  //   web3Selector(){
-  //     return slice((web3) => get(web3.connection, 'web3.connection'))
-  //   };
-  //   etherBalanceSelector(){
-  //     return slice((web3) => 
-  //     get(web3, 'web3.balance', 0)
-  //   }
+
   // }),
   effects: (dispatch) => ({
-    // async Web3LoaderAsync(payload: Web3, state: typeof defaultState) : Promise<void> {
-    //   dispatch.models_WebB.web3Loader(payload);
-    //   return state.models_WebB
-    // }
+    async loadWeb3Async(Web3: Eth, state) { 
+      const aData = await Web3.eth.getAccounts()
+      const account = aData[0]
+      dispatch.models_WebB.loadAcc(account);
+      dispatch.models_WebB.loadWeb3(Web3);
+    },
   }),
 });

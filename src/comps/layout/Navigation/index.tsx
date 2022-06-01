@@ -1,34 +1,37 @@
 import React, { Fragment } from 'react';
 import { RootState } from '#src/models/store'
+import { connect } from 'react-redux';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 // import useSelector from 'reselect';
 
-import { createStructuredSelector } from '#src/models/util'
-import { useSelector } from '#src/models/hooks';
+// import { createStructureSelector } from '#src/models/util'
+// import { userSelector } from '#src/models/hooks';
 
 
 // import { RootState, Actions, dispatch, store } from '#src/models/store'
-// import { models_WebB } from '../../../../models/WebB/index';
+
 
 const defaultProps = {
-  idKey: 'default',
+  key: 'default',
+  name: '',
 } as {
-  idKey?: string;
+  name: string;
+  key?: string;
   children?: JSX.Element;
 };
 
-const selector = createStructuredSelector({
-   account: (root) => root.models_WebB.account,
-})
+// const selector = createStructuredSelector({
+//    item: (root) => root.stores,
+// })
 
 export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
-  const selected = useSelector((state) => selector(state, props));
+  // const selected = useSelector((state) => selector(state, props));
   
-  // const selected = userSelector(
-  //   (rootState: RootState) => rootState.models_WebB.account //capturing state slice (not internal selector)
+  // const selected = useSelector(
+  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
   // );
   // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
 
@@ -62,11 +65,11 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
                       <Menu.Button className="flex text-sm ">
                         <a
                           className="text-white"
-                          href={`https://rinkeby.etherscan.io/address/${selected.account}`}
+                          href={`https://rinkeby.etherscan.io/address/${props.account}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {selected.account}
+                          {props.account}
                         </a>
                       </Menu.Button>
                     </div>
@@ -122,11 +125,11 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
               <div className="flex items-center px-3">
                 <a
                   className="text-white"
-                  href={`https://rinkeby.etherscan.io/address/${selected.account}`}
+                  href={`https://rinkeby.etherscan.io/address/${props.account}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {selected.account}
+                  {props.account}
                 </a>
               </div>
               <div className="px-2 mt-3 space-y-1">
@@ -143,13 +146,13 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
         </>
       )}
     </Disclosure>
-  );
+  
 };
 
-// export class Comps_layout_Navigation_Header extends React.PureComponent<Props> {
+// export class Comps_Navigation_Header extends React.PureComponent<Props> {
 // 	render() {
 // 		const { countState } = this.props
-// 		return <div>Comps_layout_Navigation_Header</div>
+// 		return <div>Comps_Navigation_Header</div>
 // 	}
 // }
 
