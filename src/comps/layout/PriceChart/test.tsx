@@ -3,33 +3,33 @@ import { screen } from "@testing-library/react";
 const expect = require('chai').expect
 import userEvent from "@testing-library/user-event";
 import { renderWithRematchStore } from "../../../test/utils";
-import { Comps_layout_Navigation } from ".";
+import { Comps_layout_PriceChart } from ".";
 import { store, dispatch } from "#src/models/store";
 
-describe("Comps_layout_Navigation", () => {
+describe("Comps_layout_PriceChart", () => {
   beforeEach(() => dispatch({ type: "RESET" })); //clear the state
   // it("should render the 'rename' component", () => {
-  //   renderWithRematchStore(<Comps_layout_Navigation />, store);
+  //   renderWithRematchStore(<Comps_layout_PriceChart />, store);
   //   expect(screen.queryByText("Clear")).toBeInTheDocument();
   //   expect(screen.queryByText("Your total cart:")).toBeInTheDocument();
   //   expect(screen.queryByText("$0.00")).toBeInTheDocument();
   // });
   
-  // it("should render a '' on the Comps_layout_Navigation and adjust the ''", async () => {
+  // it("should render a '' on the Comps_layout_PriceChart and adjust the ''", async () => {
   //   await dispatch.shop.getProducts();
   //   const [oneThing] = store.getState().rename;
-  //   dispatch.Comps_layout_Navigation.rename(oneProduct);
-  //   renderWithRematchStore(<Comps_layout_Navigation />, store);
+  //   dispatch.Comps_layout_PriceChart.rename(oneProduct);
+  //   renderWithRematchStore(<Comps_layout_PriceChart />, store);
   //   expect(await screen.findByRole("list")).toBeInTheDocument();
   //   expect(screen.queryByRole("listitem")).toBeInTheDocument();
   //   expect(screen.getAllByText("$43.00")).toHaveLength(2);
   // });
 
-  // it("should reset the Comps_layout_Navigation to his initial state", async () => {
+  // it("should reset the Comps_layout_PriceChart to his initial state", async () => {
   //   await dispatch.shop.getProducts();
   //   const [otherProduct] = store.getState().modelData;
-  //   dispatch.Comps_layout_Navigation.rename(otherProduct);
-  //   renderWithRematchStore(<Comps_layout_Navigation />, store);
+  //   dispatch.Comps_layout_PriceChart.rename(otherProduct);
+  //   renderWithRematchStore(<Comps_layout_PriceChart />, store);
   //   expect(await screen.findByRole("list")).toBeInTheDocument();
   //   expect(screen.queryByRole("listitem")).toBeInTheDocument();
   //   expect(screen.getAllByText("$43.00")).toHaveLength(2);

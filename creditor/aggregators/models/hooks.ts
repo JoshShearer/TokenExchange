@@ -8,7 +8,7 @@ return [
 "useDispatch as useReduxDispatch,",
 "} from 'react-redux';",
 "",
-"import { RootState, Actions } from './model';",
+"import { RootState, Actions } from './store';",
 "",
 "type EqualityFn<T> = (a: T, b: T) => boolean;",
 "type Selector = <TState = RootState, Selected = unknown>(",

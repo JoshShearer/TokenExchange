@@ -4,10 +4,6 @@ import Web3 from 'web3';
 import { Eth } from 'web3';
 import { RootState } from 'react-redux';
 
-// type Web3Connection = typeof( new Web3(''));
-// const conn = new Web3('ws://localhost:8545')
-// const web3c = typeof conn;
-// console.log("🚀 ~ file: index.ts ~ line 9 ~ web3c", web3c)
 
 type defaultState = {
   account: string,

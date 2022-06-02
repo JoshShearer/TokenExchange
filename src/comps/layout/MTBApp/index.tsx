@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-// import Deposits from "./Deposits";
-// import Orders from "./Orders";
-// import OrderBook from "./Orderbook";
-// import PriceChart from "./PriceChart";
-// import MyTransactions from "./MyTransactions";
-// import Trades from "./Trades";
+import { Comps_layout_Deposits } from "#src/Comps/layout/Deposits";
+// import { Comps_layout_Orders } from "#src/Comps/layout/Orders";
+// import { Comps_layout_OrderBook } from "#src/Comps/layout/Orderbook";
+// import { Comps_layout_PriceChart } from "#src/Comps/layout/PriceChart";
+// import { Comps_layout_MyTransactions } from "#src/Comps/layout/MyTransactions";
+// import { Comps_layout_Trades } from "#src/Comps/layout/Trades";
 
 import { RootState, Actions, dispatch } from '#src/models/store';
 
@@ -51,25 +51,25 @@ export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
   const loadBlockchainData = async () => {
     
     await dispatch.models_Exchange.loadAllOrdersAsync(selected.exchange)
-    await subscribeToEvents(exchange, dispatch)
+    // await subscribeToEvents(exchange, dispatch)
   }
 
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 pl-4 pr-4 ">
       <div className='sm:col-span-2 md:col-span-1 lg:col-span-1'>
-        {/* <div className="pb-4"><Deposits /></div>
-        <div><Orders /></div>
+        <div className="pb-4"><Comps_layout_Deposits /></div>
+        {/* <div><Comps_layout_Orders /></div>
       </div>
       <div>
-        <OrderBook />
+        <Comps_layout_OrderBook />
       </div>
       <div className='col-span-2 '>
-        <div className="pb-4"><PriceChart /></div>
-        <div ><MyTransactions /></div>
+        <div className="pb-4"><Comps_layout_PriceChart /></div>
+        <div ><Comps_layout_MyTransactions /></div>
       </div>
       <div>
-        <Trades /> */}
+        <Comps_layout_Trades /> */}
       </div>
     </div>
   );
