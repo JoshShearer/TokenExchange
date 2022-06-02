@@ -26,7 +26,7 @@ const defaultProps = {
 };
 
 const selector = createStructuredSelector({
-   contractsLoaded: (root) => root.models_Exchange.contractsLoaded,
+   contractsLoaded: (root) => root.models_Exchange.exchangeLoaded && root.models_Token.tokenLoaded
 })
 
 export const Comps_layout_App = (_props: typeof defaultProps) => {
@@ -51,11 +51,12 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
       window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
       return
     }
-    const exchange = await loadExchange(web3, networkId, dispatch)
+    const exchange = await loadExchange(web3, networkId, dispatch.models_Exchange)
     if (!exchange) {
       window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask.')
       return
     }
+
   }
 
 
@@ -63,6 +64,7 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
     <div>
       <Comps_layout_Navigation_Header/>
       { selected.contractsLoaded ? <Comps_layout_MTBApp /> : <div className="content"></div> }
+      {/* <Comps_layout_MTBApp /> */}
       <Comps_layout_Navigation_Footer/>
     </div>
 

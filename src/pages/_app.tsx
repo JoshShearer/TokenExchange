@@ -2,13 +2,9 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import App from 'next/app'
 import { Provider } from 'react-redux';
-// import { store } from '#src/models/store';
-import { init } from '@rematch/core';
-import { models } from "#src/models/model";
+import { store } from "#src/models/store";
 
-const store = init({
-  models,
-})
+
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>

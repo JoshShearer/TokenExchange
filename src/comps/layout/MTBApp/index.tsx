@@ -10,14 +10,14 @@ import { RootState, Actions, dispatch } from '#src/models/store';
 
 
 import { 
-  loadAllOrders, 
+  // loadAllOrders, 
   // subscribeToEvents 
 } from '#src/models/interactions';
 
-import useSelector from 'reselect';
+// import useSelector from 'reselect';
 
 import { createStructuredSelector } from '#src/models/util'
-// import { useSelector } from '#src/models/hooks';
+import { useSelector } from '#src/models/hooks';
 
 
 // import { RootState, Actions, dispatch, store } from '#src/models/store'
@@ -41,6 +41,7 @@ export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
   useEffect(() => {
     loadBlockchainData()
   },[]);
+
   const selected = useSelector((state) => selector(state, props));
   
   // const selected = useSelector(
@@ -48,8 +49,9 @@ export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
   // );
   // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
   const loadBlockchainData = async () => {
+    
     await dispatch.models_Exchange.loadAllOrdersAsync(selected.exchange)
-    // await subscribeToEvents(exchange, dispatch)
+    await subscribeToEvents(exchange, dispatch)
   }
 
 

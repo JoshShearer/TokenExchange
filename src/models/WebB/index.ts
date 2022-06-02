@@ -25,7 +25,7 @@ export const models_WebB = createModel<RootModel>()({
     loadWeb3(state, payload: defaultState) {
       return {
         ...state,
-       payload,
+       Web3Conn: payload,
       }
     },
     loadAcc(state, payload: string){
