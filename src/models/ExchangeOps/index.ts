@@ -5,12 +5,12 @@ type defaultState = {
   name: string,
 };
 
-export const CREDITOR_UNDERSCORE_NAME = createModel<RootModel>()({
+export const models_ExchangeOps = createModel<RootModel>()({
   state: {
     name: 'initial'
   } as defaultState,
   reducers: {
-    reducerRename(state, payload: string){
+    reducerRename(state, payload: string) {
       return {
         ...state,
         name: payload,
@@ -22,7 +22,8 @@ export const CREDITOR_UNDERSCORE_NAME = createModel<RootModel>()({
   // }),
   effects: (dispatch) => ({
     // async reducerRenameAsync(payload: string, state) {
-    //   dispatch.CREDITOR_UNDERSCORE_NAME.reducerRename(payload);
+    //   dispatch.models_ExchangeLoadOps.reducerRename(payload);
     // },
+    
   }),
 });

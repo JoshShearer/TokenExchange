@@ -1,7 +1,7 @@
 /* CREDITOR_GENERATED */
-import createSelectPlugin from "@rematch/select";
+import createSelectPlugin from '@rematch/select';
 import { RematchRootState, RematchDispatch, init } from '@rematch/core';
-import { models, RootModel } from "#src/models/model";
+import { models, RootModel } from '#src/models/model';
 
 
 export const store = init<RootModel>({

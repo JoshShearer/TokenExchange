@@ -1,41 +1,32 @@
 import React, { useEffect } from 'react';
-
-// import useSelector from 'reselect';
-
-// import { createStructureSelector } from '#src/models/util'
-// import { userSelector } from '#src/models/hooks';
-
-
-// import { RootState, Actions, dispatch, store } from '#src/models/store'
-
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
+import { RootState, Actions, dispatch, store } from '#src/models/store'
+
+import { createStructuredSelector } from '#src/models/util'
+import { useSelector } from '#src/models/hooks';
+
+import type { Order } from '../../../../web3_eth/web3Types/Exchange';
 
 
 const defaultProps = {
+  ordersFilled: [],
   idKey: 'default',
 } as {
+  ordersFilled: Array<Order>;
   idKey?: string;
   children?: JSX.Element;
 };
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
+const selector = createStructuredSelector({
+   filledLoaded: (root) => root.models_ExchangeLoad.filledLoaded,
+  //  filledOrders: (root) => store.select.models_ExchangeLoad.filledOrdersSelector
+})
 
 export const Comps_layout_Trades = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
-  
-  // useEffect(() => {
-    
-  // },[]);
-
-  // const selected = useSelector((state) => selector(state, props));
-
-  // const selected = useSelector(
-  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
-  // );
-  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
-
+  const selected = useSelector((state) => selector(state, props));
+  var ordersFilled = props.ordersFilled
+  ordersFilled = useSelector(store.select.models_ExchangeLoad.filledOrdersSelector)
 
   return (
 
@@ -68,7 +59,7 @@ export const Comps_layout_Trades = (_props: typeof defaultProps) => {
                       </th>
                     </tr>
                   </thead>
-                  {props.filledOrdersLoaded ? showFilledOrders(props.filledOrders) : <Comps_misc_Spinner type="table" />}
+                  {selected.filledLoaded ? showFilledOrders(ordersFilled) : <Comps_misc_Spinner type="table" />}
                 </table>
                 <br />
               </div>
@@ -90,10 +81,10 @@ export const Comps_layout_Trades = (_props: typeof defaultProps) => {
 //   eligibleItems: models.cart.wouldGetFreeShipping,
 // }));
 
-const showFilledOrders = (filledOrders) => {
+const showFilledOrders = (filledOrders: Array<Order>) => {
   return (
     <tbody className='divide-y divide-grey-400'>
-      {filledOrders.map((order) => {
+      {filledOrders.map((order: Order) => {
         return (
           <tr className={`order-${order.id}`} key={order.id}>
             <td className="text-stone-500">{order.formattedTimestamp}</td>

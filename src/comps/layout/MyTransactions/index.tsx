@@ -19,7 +19,7 @@ const defaultProps = {
 // const selector = createStructuredSelector({
 //    item: (root) => root.stores,
 // })
-function classNames(...classes) {
+function classNames(...classes:Array<Strings>) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -104,8 +104,8 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
                           </th>
                         </tr>
                       </thead>
-                      {this.props.showMyFilledOrders ? (
-                        showMyFilledOrders(this.props)
+                      {selected.showMyFilledOrders ? (
+                        showMyFilledOrders(selected.FilledOrders)
                       ) : (
                         <Comps_misc_Spinner type="table" />
                       )}
@@ -142,7 +142,7 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
                           </th>
                         </tr>
                       </thead>
-                      {this.props.showMyOpenOrders ? (
+                      {selected.showMyOpenOrders ? (
                         showMyOpenOrders(this.props)
                       ) : (
                         <Comps_misc_Spinner type="table" />

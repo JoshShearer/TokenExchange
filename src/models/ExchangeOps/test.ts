@@ -4,17 +4,17 @@ require('chai')
     .should()
 const expect = require('chai').expect
 
-const get_models_Exchange = () => store.getState().models_Exchange;
+const get_models_ExchangeLoadOps = () => store.getState().models_ExchangeLoadOps;
 
-describe("models_Exchange", () => {
+describe("models_ExchangeLoadOps", () => {
   // beforeEach(() => dispatch({ type: "RESET" }));
 
   // it("should return the initial state correctly", () => {
-  //  expect( get_models_Exchange()).toEqual({ defaultState });
+  //  expect( get_models_ExchangeLoadOps()).toEqual({ defaultState });
   // });
   // it("test each reducer", () => {
-  //   dispatch.models_Exchange.reducerfunction({ stateKey: "expectedvalue" });
-  //   expect(get_models_Exchange()).toEqual({
+  //   dispatch.models_ExchangeLoadOps.reducerfunction({ stateKey: "expectedvalue" });
+  //   expect(get_models_ExchangeLoadOps()).toEqual({
      
   //   });
   // });

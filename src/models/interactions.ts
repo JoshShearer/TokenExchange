@@ -1,16 +1,18 @@
 import { RootState, Actions, dispatch } from '#src/models/store';
+import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from '../../web3_eth/test/helpers'
 
 //TS Types
 import type { Exchange as ExCon, Order } from '../../web3_eth/web3Types/Exchange';
 import type { Token as Tokentype } from '../../web3_eth/web3Types/Token';
 import { Eth } from 'web3';
 
-
-import Web3 from 'web3'
-
 import Token from '../../web3_eth/abis/Token.json'
 import Exchange from '../../web3_eth/abis/Exchange.json'
-import { ETHER_ADDRESS } from '../../web3_eth/test/helpers'
+
+
+import Web3 from 'web3'
+import moment from 'moment'
+
 
 export const web3Loader = async () => {
   if(typeof window.ethereum!=='undefined'){
@@ -38,7 +40,7 @@ export const loadToken = async (web3: Eth, networkId:string) => {
 export const loadExchange = async (web3, networkId ) => {
   try {
     const exchange = new web3.eth.Contract(Exchange.abi, Exchange.networks[networkId].address)
-    dispatch.models_Exchange.loadExchangeAsync(exchange);
+    dispatch.models_ExchangeLoad.loadExchangeAsync(exchange);
     return exchange
   } catch (error) {
     console.log('Exchange Contract not deployed to the current network. Please select another network with Metamask.')
@@ -195,3 +197,63 @@ export const subscribeToEvents = async (exchange, dispatch) => {
 //     window.alert(`There was an error!`)
 //   })
 // }
+
+export const decorateFilledOrders = (orders: Array<Order>) => {
+  // Track previous order to compare history
+  let previousOrder = orders[0]
+  return(
+    orders.map((order) => {
+      order = decorateOrder(order)
+      order = decorateFilledOrder(order, previousOrder)
+      previousOrder = order // Update the previous order once it's decorated
+      return order
+    })
+  )
+}
+
+const decorateOrder = (order: Order) => {
+  let etherAmount
+  let tokenAmount
+
+  if(order.tokenGive === ETHER_ADDRESS) {
+    etherAmount = order.amountGive
+    tokenAmount = order.amountGet
+  } else {
+    etherAmount = order.amountGet
+    tokenAmount = order.amountGive
+  }
+
+  // Calculate token price to 5 decimal places
+  const precision = 100000
+  let tokenPrice = (etherAmount / tokenAmount)
+  tokenPrice = Math.round(tokenPrice * precision) / precision
+
+  return({
+    ...order,
+    etherAmount: ether(etherAmount),
+    tokenAmount: tokens(tokenAmount),
+    tokenPrice,
+    formattedTimestamp: moment.unix(order.timestamp).format('h:mm:ss a M/D')
+  })
+}
+
+const decorateFilledOrder = (order: Order, previousOrder: Order) => {
+  return({
+    ...order,
+    tokenPriceClass: tokenPriceClass(order.tokenPrice, order.id, previousOrder)
+  })  
+}
+const tokenPriceClass = (tokenPrice: Number, orderId: String, previousOrder: Order) => {
+  // Show green price if only one order exists
+  if(previousOrder.id === orderId) {
+    return GREEN
+  }
+
+  // Show green price if order price higher than previous order
+  // Show red price if order price lower than previous order
+  if(previousOrder.tokenPrice <= tokenPrice) {
+    return GREEN // success
+  } else {
+    return RED // danger
+  }
+}

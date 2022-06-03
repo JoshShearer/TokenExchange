@@ -26,5 +26,5 @@
     }
   },
   "include": ["next-env.d.ts", "./src/**/*.ts", "./src/**/*.tsx"],
-  "exclude": ["node_modules", "creditor", "test", "./src/**/*.js", "./src/**/*.jsx", "./src/stores/store/index.ts"]
+  "exclude": ["node_modules", "creditor", "test", "./src/**/*.js", "./src/**/*.jsx"]
 }

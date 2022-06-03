@@ -3,6 +3,7 @@ import type { RootModel } from '#src/models/model';
 import Web3 from 'web3';
 import { Eth } from 'web3';
 import { RootState } from 'react-redux';
+import { models_ExchangeLoad } from '#src/models/ExchangeLoad';
 
 
 type defaultState = {
@@ -38,7 +39,7 @@ export const models_WebB = createModel<RootModel>()({
     }
     },
   // selectors: (slice, createSelector, hasProps) => ({
-
+    
   // }),
   effects: (dispatch) => ({
     async loadWeb3Async(Web3: Eth, state) { 
