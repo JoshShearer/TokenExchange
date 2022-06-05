@@ -3,12 +3,13 @@ import { Tab } from "@headlessui/react";
 
 // import useSelector from 'reselect';
 
-// import { createStructureSelector } from '#src/models/util'
+// import { createStructureSelector } from '#src/models/utils'
 // import { userSelector } from '#src/models/hooks';
 
 // import { RootState, Actions, dispatch, store } from '#src/models/store'
 
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
+import { Order } from '../../../../web3_eth/web3Types/Exchange';
 
 const defaultProps = {
   idKey: 'default',
@@ -19,7 +20,7 @@ const defaultProps = {
 // const selector = createStructuredSelector({
 //    item: (root) => root.stores,
 // })
-function classNames(...classes:Array<Strings>) {
+function classNames(...classes:Array<String>) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -171,12 +172,12 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
 //   eligibleItems: models.cart.wouldGetFreeShipping,
 // }));
 
-const showMyFilledOrders = (props) => {
+const showMyFilledOrders = (props: Array<Order>) => {
   const { myFilledOrders } = props;
 
   return (
     <tbody className="divide-y divide-grey-400">
-      {myFilledOrders.map((order) => {
+      {myFilledOrders.map((order: Order) => {
         return (
           <tr key={order.id}>
             <td className="text-stone-500">{order.formattedTimestamp}</td>

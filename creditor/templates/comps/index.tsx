@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 // import useSelector from 'reselect';
 
-// import { createStructuredSelector } from '#src/models/util'
+// import { createStructuredSelector } from '#src/models/utils'
 // import { useSelector } from '#src/models/hooks';
 
 

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { RootState, Actions, dispatch, store } from '#src/models/store'
 
-import { createStructuredSelector } from '#src/models/util'
+import { createStructuredSelector } from '#src/models/utils'
 import { useSelector } from '#src/models/hooks';
 
 import type { Order } from '../../../../web3_eth/web3Types/Exchange';
@@ -17,14 +17,14 @@ const defaultProps = {
   children?: JSX.Element;
 };
 const selector = createStructuredSelector({
-   filledLoaded: (root) => root.models_ExchangeLoad.filledLoaded,
+  //  filledLoaded: (root) => root.models_ExchangeLoad.filledLoaded,
   //  filledOrders: (root) => store.select.models_ExchangeLoad.filledOrdersSelector
 })
 
 export const Comps_layout_Trades = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
-  const selected = useSelector((state) => selector(state, props));
+  const selected = useSelector((state: RootState) => selector(state, props));
   var ordersFilled = props.ordersFilled
   ordersFilled = useSelector(store.select.models_ExchangeLoad.filledOrdersSelector)
 
@@ -68,18 +68,6 @@ export const Comps_layout_Trades = (_props: typeof defaultProps) => {
         </div>
 )
 };
-
-// export class Comps_layout_Trades extends React.PureComponent<Props> {
-// 	render() {
-// 		const { countState } = props
-// 		return <div>Comps_layout_Trades</div>
-// 	}
-// }
-
-// const selection = store.select((models) => ({
-//   total: models.cart.total,
-//   eligibleItems: models.cart.wouldGetFreeShipping,
-// }));
 
 const showFilledOrders = (filledOrders: Array<Order>) => {
   return (

@@ -2,6 +2,7 @@
 import createSelectPlugin from '@rematch/select';
 import { RematchRootState, RematchDispatch, init } from '@rematch/core';
 import { models, RootModel } from '#src/models/model';
+import { useSelector as useWrappedSelector } from './hooks';
 
 
 export const store = init<RootModel>({

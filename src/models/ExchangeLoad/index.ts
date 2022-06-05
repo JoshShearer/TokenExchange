@@ -5,7 +5,7 @@ import type {
   Order,
 } from '../../../web3_eth/web3Types/Exchange';
 import _ from 'lodash';
-import { decorateFilledOrders } from "#src/models/interactions";
+import { decorateFilledOrders } from "#src/models/model_overflow";
 
 
 type defaultState = {
@@ -17,20 +17,46 @@ type defaultState = {
   filledLoaded: boolean;
   allOrders: Array<Order>;
   allLoaded: boolean;
+  //Operations
+  orderCancelling: boolean;
+  orderFilling: boolean;
+  balancesLoading:boolean;
+  etherBalance: String;
+  tokenBalance: String;
+  etherDepositAmount: String;
+  etherWithdrawAmount: String;
+  tokenDepositAmount: String;
+  tokenWithdrawAmount: String;
+  buyOrder: Order;
+  sellOrder: Order;
 };
 
 export const models_ExchangeLoad = createModel<RootModel>()({
   state: {
     Exchange: {},
     exchangeLoaded: false,
-    cancelledOrders: [], //Array<Order>
+    cancelledOrders: [], 
     cancelledLoaded: false,
     filledOrders: [],
     filledLoaded: false,
     allOrders: [],
     allLoaded: false,
+    //Operations
+    orderCancelling:false,
+    orderFilling: false,
+    balancesLoading: false,
+    etherBalance: "",
+    tokenBalance: "",
+    etherDepositAmount: "",
+    etherWithdrawAmount: "",
+    tokenDepositAmount: "",
+    tokenWithdrawAmount: "",
+    buyOrder: {},
+    sellOrder: {}
+    
   } as defaultState,
   reducers: {
+    //Initial Data Loading from Blockchain
     loadExchange(state, payload: ExCon) {
       return {
         ...state,
@@ -79,27 +105,112 @@ export const models_ExchangeLoad = createModel<RootModel>()({
         filledLoaded: payload,
       };
     },
+    //Blockchain events = State updates
+    setCancelling(state, payload: boolean) {
+      return {
+        ...state,
+        orderCancelling: payload,
+      };
+    },
+    orderCancelled(state, order: Order) {
+      return {
+        ...state,
+        orderCancelling: false,
+        cancelledOrders: {
+          ...state.cancelledOrders,
+          order
+        }
+      };
+    },
+    setFilling(state, payload: boolean) {
+      return {
+        orderFilling: payload
+      }
+    },
+    orderFilled(state, order: Order) {
+      const index = state.filledOrders.findIndex(orders => orders.id === order.id);
+      if(index === -1) {
+        const data = [...state.filledOrders, order]
+      } else {
+        const data = state.filledOrders
+      }
+      return {
+        ...state,
+        orderFilling: false,
+        filledOrders: {
+          ...state.filledOrders,
+          data
+        }
+      }
+    },
+    BalancesLoading(state, payload: boolean) {
+      return {
+        ...state,
+        balancesLoading: payload
+      }
+    },
+    exEthBalLoaded(state) {
+      return {
+
+      }
+    },
+    exTokenBalLoaded(state) {
+      return {
+
+      }
+    },
+    orderMade(state, order: Order) {
+       // Prevent duplicate orders
+       index = state.allOrders.data.findIndex(order => order.id === action.order.id);
+
+       if(index === -1) {
+         data = [...state.allOrders, order]
+       } else {
+         data = state.allOrders.data
+       }
+ 
+       return {
+         ...state,
+         allOrders: {
+           ...state.allOrders,
+           data
+         },
+         buyOrder: {
+           ...state.buyOrder,
+           making: false
+         },
+         sellOrder: {
+           ...state.sellOrder,
+           making: false
+         }
+       }
+    }
   },
-  selectors: (slice, createSelector, dispatch) => ({
+  selectors: (slice, createSelector) => ({
+    // exchangeSelector(){
+
+    // },
+    // filledOrdersLoadedSelector(){
+    //   // return createSelector
+    // },
     filledOrdersSelector(){
       return createSelector(
         [slice, (rootState) => rootState.models_ExchangeLoad.filledOrders],
         (defaultState, orders) => {
-        // console.log("🚀 ~ file: index.ts ~ line 88 ~ filledOrdersSelector ~ orders", orders)
           // Sort orders by date ascending for price comparison
           orders = orders.sort((a,b) => a.timestamp - b.timestamp)
           // Decorate the orders
           orders = decorateFilledOrders(orders)
           // Sort orders by date descending for display
           orders = orders.sort((a,b) => b.timestamp - a.timestamp)
-          return orders
+          return orders as Array<Order>
         }
       )
     }
   }),
   effects: (dispatch) => ({
-    async loadExchangeAsync(payload: ExCon, state) {
-      dispatch.models_ExchangeLoad.loadExchange(payload);
+    async loadExchangeAsync(exchange: ExCon, state) {
+      dispatch.models_ExchangeLoad.loadExchange(exchange);
       dispatch.models_ExchangeLoad.exLoaded(true);
     },
     async loadAllOrdersAsync(exchange: ExCon, state) {
@@ -136,29 +247,26 @@ export const models_ExchangeLoad = createModel<RootModel>()({
       dispatch.models_ExchangeLoad.loadAllOrders(allOrders);
       dispatch.models_ExchangeLoad.setAllLoaded(true);
     },
-    async subscribeToEventsAsync(exchange: ExCon, state) {
-      const anonymous = async (exchange: ExCon) => {
-        exchange.events.Cancel({}, (error, event) => {
-          dispatch.models_ExchangeLoad.orderCancelled(event.returnValues);
-        });
-
-        exchange.events.Trade({}, (error, event) => {
-          dispatch.models_ExchangeLoad.orderFilled(event.returnValues);
-        });
-
-        exchange.events.Deposit({}, (error, event) => {
-          dispatch.models_ExchangeLoad.balancesLoaded();
-        });
-
-        exchange.events.Withdraw({}, (error, event) => {
-          dispatch.models_ExchangeLoad.balancesLoaded();
-        });
-
-        exchange.events.Order({}, (error, event) => {
-          dispatch.models_ExchangeLoad.orderMade(event.returnValues);
-        });
-      };
-      await anonymous(exchange);
-    },
+    // async subscribeToEventsAsync( state) {
+    //   state.Exchange.events.Cancel({}, (error, event) => {
+    //     dispatch.models_ExchangeLoad.orderCancelled(event.returnValues));
+    //   })
+    
+    //   state.Exchange.events.Trade({}, (error, event) => {
+    //     dispatch.models_ExchangeLoad.orderFilled(event.returnValues));
+    //   })
+    
+    //   state.Exchange.events.Deposit({}, (error, event) => {
+    //     dispatch.models_ExchangeLoad.balancesLoaded());
+    //   })
+    
+    //   state.Exchange.events.Withdraw({}, (error, event) => {
+    //     dispatch.models_ExchangeLoad.balancesLoaded());
+    //   })
+    
+    //   state.Exchange.events.Order({}, (error, event) => {
+    //     dispatch.models_ExchangeLoad.orderMade(event.returnValues));
+    //   })
+    // },
   }),
 });

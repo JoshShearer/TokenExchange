@@ -9,10 +9,10 @@ import {
   web3Loader,
   loadToken,
   loadExchange
-} from '#src/models/interactions'
+} from '#src/models/model_overflow'
 // import useSelector from 'reselect';
 
-import { createStructuredSelector } from '#src/models/util'
+import { createStructuredSelector } from '#src/models/utils'
 import { useSelector } from '#src/models/hooks';
 
 
@@ -44,14 +44,14 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
   // );
   // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
   const loadBlockchainData = async () => {
-    const web3 = await web3Loader(dispatch.models_WebB)
+    const web3 = await web3Loader()
     const networkId = await web3.eth.net.getId()
-    const token = await loadToken(web3, networkId, dispatch.models_Token)
+    const token = await loadToken(web3, networkI)
     if (!token) {
       window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
       return
     }
-    const exchange = await loadExchange(web3, networkId, dispatch.models_ExchangeLoad)
+    const exchange = await loadExchange(web3, networkId)
     if (!exchange) {
       window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask.')
       return
@@ -64,7 +64,6 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
     <div>
       <Comps_layout_Navigation_Header/>
       { selected.contractsLoaded ? <Comps_layout_MTBApp /> : <div className="content"></div> }
-      {/* <Comps_layout_MTBApp /> */}
       <Comps_layout_Navigation_Footer/>
     </div>
 

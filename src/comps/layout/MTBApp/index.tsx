@@ -8,13 +8,11 @@ import { Comps_layout_Trades } from '#src/Comps/layout/Trades';
 
 import { RootState, Actions, dispatch } from '#src/models/store';
 
-import // loadAllOrders,
-// subscribeToEvents
-'#src/models/interactions';
+import { subscribeToEvents } from '#src/models/model_overflow';
 
 // import useSelector from 'reselect';
 
-import { createStructuredSelector } from '#src/models/util';
+import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
 // import { RootState, Actions, dispatch, store } from '#src/models/store'
@@ -47,9 +45,7 @@ export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
   // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
   const loadBlockchainData = async () => {
     await dispatch.models_ExchangeLoad.loadAllOrdersAsync(selected.exchange);
-    await dispatch.models_ExchangeLoad.subscribeToEventsAsync(
-      selected.exchange
-    );
+    await subscribeToEvents(selected.exchange);
   };
 
   return (

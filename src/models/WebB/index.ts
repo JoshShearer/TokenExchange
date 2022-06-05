@@ -4,6 +4,7 @@ import Web3 from 'web3';
 import { Eth } from 'web3';
 import { RootState } from 'react-redux';
 import { models_ExchangeLoad } from '#src/models/ExchangeLoad';
+import { models_Token } from '../Token/index';
 
 
 type defaultState = {
@@ -36,10 +37,17 @@ export const models_WebB = createModel<RootModel>()({
         ...state,
         balance: payload,
       }
-    }
     },
-  // selectors: (slice, createSelector, hasProps) => ({
-    
+  },
+  // selectors: (slice, createSelector) => ({
+  //   accountSelector(){
+  //     return createSelector(
+  //       [slice, (rootState) => rootState.models_webB.account],
+  //         (defaultState, account) => {
+  //           return account as String;
+  //         },
+  //     )
+  //       }
   // }),
   effects: (dispatch) => ({
     async loadWeb3Async(Web3: Eth, state) { 
