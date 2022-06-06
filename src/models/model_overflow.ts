@@ -260,9 +260,37 @@ const tokenPriceClass = (tokenPrice: Number, orderId: String, previousOrder: Ord
   }
 }
 
-const decorateMyOpenOrders = (orders, account) => {
+export const decorateMyFilledOrders = (orders: Array<Order>, account: String) => {
   return(
     orders.map((order) => {
+      order = decorateOrder(order)
+      order = decorateMyFilledOrder(order, account)
+      return(order)
+    })
+  )
+}
+
+const decorateMyFilledOrder = (order: Array<Order>, account: String) => {
+  const myOrder = order.user === account
+
+  let orderType
+  if(myOrder) {
+    orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
+  } else {
+    orderType = order.tokenGive === ETHER_ADDRESS ? 'sell' : 'buy'
+  }
+
+  return({
+    ...order,
+    orderType,
+    orderTypeClass: (orderType === 'buy' ? GREEN : RED),
+    orderSign: (orderType === 'buy' ? '+' : '-')
+  })
+}
+
+export const decorateMyOpenOrders = (orders: Array<Order>, account: String) => {
+  return(
+    orders.map((order: Order) => {
       order = decorateOrder(order)
       order = decorateMyOpenOrder(order, account)
       return(order)
@@ -270,7 +298,7 @@ const decorateMyOpenOrders = (orders, account) => {
   )
 }
                                         
-const decorateMyOpenOrder = (order, account) => {
+const decorateMyOpenOrder = (order: Array<Order>, account: String) => {
   let orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
 
   return({
@@ -280,7 +308,7 @@ const decorateMyOpenOrder = (order, account) => {
   })
 }
 
-const decorateOrderBookOrders = (orders) => {
+const decorateOrderBookOrders = (orders: Array<Order>) => {
   return(
     orders.map((order) => {
       order = decorateOrder(order)
@@ -290,7 +318,7 @@ const decorateOrderBookOrders = (orders) => {
   )
 }
 
-const decorateOrderBookOrder = (order) => {
+const decorateOrderBookOrder = (order: Order) => {
   const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
   return({
     ...order,

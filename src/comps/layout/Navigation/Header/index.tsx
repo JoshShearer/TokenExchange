@@ -3,16 +3,9 @@ import { dispatch, RootState, store } from '#src/models/store'
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
-// import useSelector from 'reselect';
 
 import { createStructuredSelector } from '#src/models/utils'
 import { useSelector } from '#src/models/hooks';
-
-import {accountSelector} from '#src/models/selectors'
-
-
-// import { RootState, Actions, dispatch, store } from '#src/models/store'
-// import { models_WebB } from '../../../../models/WebB/index';
 
 const defaultProps = {
   account: 'empty',
@@ -25,20 +18,11 @@ const defaultProps = {
 
 const selector = createStructuredSelector({
   account: (root) => root.models_WebB.account,
-  test: accountSelector,
 })
 
 export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   const selected = useSelector((state) => selector(state, props));
-  // const account = useSelector(store.select.models_WebB.accountSelector)
-  // const account = useSelector({account: accountSelector})
-  
-  // const selected = userSelector(
-  //   (rootState: RootState) => rootState.models_WebB.account //capturing state slice (not internal selector)
-  // );
-  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
-
 
   return (
     <Disclosure as="nav" className="bg-stone-600">

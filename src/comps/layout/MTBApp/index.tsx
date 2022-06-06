@@ -67,7 +67,7 @@ export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
             {/* <Comps_layout_PriceChart /> */}
           </div>
           <div>
-            {/* <Comps_layout_MyTransactions /> */}
+            <Comps_layout_MyTransactions />
           </div>
         </div>
         <div>

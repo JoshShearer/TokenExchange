@@ -3,10 +3,11 @@ import { Tab } from "@headlessui/react";
 
 // import useSelector from 'reselect';
 
-// import { createStructureSelector } from '#src/models/utils'
-// import { userSelector } from '#src/models/hooks';
+import { createStructuredSelector } from '#src/models/utils'
+import { useSelector } from '#src/models/hooks';
 
-// import { RootState, Actions, dispatch, store } from '#src/models/store'
+import { RootState, Actions, dispatch, store } from '#src/models/store'
+import { cancelOrder } from '#src/models/model_overflow';
 
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { Order } from '../../../../web3_eth/web3Types/Exchange';
@@ -17,9 +18,17 @@ const defaultProps = {
   idKey?: string;
   children?: JSX.Element;
 };
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
+
+const selector = createStructuredSelector({
+  filledLoaded: (root) => root.models_Exchange.filledLoaded,
+  showMyOpenOrders: (root) => root.models_Exchange.cancelledLoaded && root.models_Exchange.filledLoaded && root.models_Exchange.allLoaded && root.models_Exchange.orderCancelling,
+  myFilledOrders: store.select.models_Exchange.myFilledOrdersSelector,
+  myOpenOrders: store.select.models_Exchange.myOpenOrdersSelector,
+  exchange: (root) => root.models_Exchange.Exchange,
+  account: (root) => root.models_WebB.account,
+  orderCancelling: (root) => root.models_Exchange.orderCancelling,
+})
+
 function classNames(...classes:Array<String>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -28,16 +37,7 @@ function classNames(...classes:Array<String>) {
 export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
-  // useEffect(() => {
-
-  // },[]);
-
-  // const selected = useSelector((state) => selector(state, props));
-
-  // const selected = useSelector(
-  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
-  // );
-  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
+  const selected = useSelector((state) => selector(state, props));
 
   return (
     <div className="w-full max-w-lg p-2 mx-auto bg-stone-700 rounded">
@@ -105,8 +105,7 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
                           </th>
                         </tr>
                       </thead>
-                      {selected.showMyFilledOrders ? (
-                        showMyFilledOrders(selected.FilledOrders)
+                      {selected.filledLoaded ? (showMyFilledOrders(selected.myFilledOrders)
                       ) : (
                         <Comps_misc_Spinner type="table" />
                       )}
@@ -143,8 +142,7 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
                           </th>
                         </tr>
                       </thead>
-                      {selected.showMyOpenOrders ? (
-                        showMyOpenOrders(this.props)
+                      {selected.filledLoaded ? (showMyOpenOrders(selected)
                       ) : (
                         <Comps_misc_Spinner type="table" />
                       )}
@@ -160,24 +158,12 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
   );
 };
 
-// export class Comps_layout_MyTransactions extends React.PureComponent<Props> {
-// 	render() {
-// 		const { countState } = this.props
-// 		return <div>Comps_layout_MyTransactions</div>
-// 	}
-// }
-
-// const selection = store.select((models) => ({
-//   total: models.cart.total,
-//   eligibleItems: models.cart.wouldGetFreeShipping,
-// }));
-
 const showMyFilledOrders = (props: Array<Order>) => {
-  const { myFilledOrders } = props;
+  const filledOrders = props;
 
   return (
     <tbody className="divide-y divide-grey-400">
-      {myFilledOrders.map((order: Order) => {
+      {filledOrders.map((order: Order) => {
         return (
           <tr key={order.id}>
             <td className="text-stone-500">{order.formattedTimestamp}</td>
@@ -206,7 +192,7 @@ const showMyFilledOrders = (props: Array<Order>) => {
 };
 
 const showMyOpenOrders = (props) => {
-  const { myOpenOrders, dispatch, exchange, account } = props;
+  const { myOpenOrders, exchange, account }  = props;
 
   return (
     <tbody>

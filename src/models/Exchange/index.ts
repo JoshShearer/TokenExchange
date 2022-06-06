@@ -5,7 +5,8 @@ import type {
   Order,
 } from '../../../web3_eth/web3Types/Exchange';
 import _ from 'lodash';
-import { decorateFilledOrders } from "#src/models/model_overflow";
+import { decorateFilledOrders, decorateMyFilledOrders, decorateMyOpenOrders } from "#src/models/model_overflow";
+import { models_WebB } from '../WebB/index';
 
 
 type defaultState = {
@@ -187,17 +188,6 @@ export const models_Exchange = createModel<RootModel>()({
     }
   },
   selectors: (slice, createSelector) => ({
-    // exchangeSelector(){
-
-    // },
-    filledOrdersLoadedSelector(){
-      return createSelector(
-        [slice, (rootState) => rootState.models_Exchange.filledLoaded],
-        (defaultState, filledLoaded) => {
-          return filledLoaded as boolean
-        }
-      )
-    },
     filledOrdersSelector(){
       return createSelector(
         [slice, (rootState) => rootState.models_Exchange.filledOrders],
@@ -211,7 +201,35 @@ export const models_Exchange = createModel<RootModel>()({
           return orders as Array<Order>
         }
       )
-    }
+    },
+    myFilledOrdersSelector(){
+      return createSelector(
+        [slice, (rootState) => rootState.models_WebB.account],
+        (defaultState, account) => {
+          // Sort orders by date ascending for price comparison
+          var orders = defaultState.filledOrders.filter((o) => o.user === account || o.userFill === account)
+          // Sort by date ascending
+          orders = orders.sort((a,b) => a.timestamp - b.timestamp)
+          // Decorate orders - add display attributes
+          orders = decorateMyFilledOrders(orders, account)
+          return orders as Array<Order>
+        }
+      )
+    },
+    myOpenOrdersSelector(){
+      return createSelector(
+        [slice, (rootState) => rootState.models_WebB.account],
+        (defaultState, account) => {
+          // Sort orders by date ascending for price comparison
+          var orders = defaultState.filledOrders.filter((o) => o.user === account)
+          // Decorate orders - add display attributes
+          orders = decorateMyOpenOrders(orders)
+          // Sort orders by date descending
+          orders = orders.sort((a,b) => b.timestamp - a.timestamp)
+          return orders as Array<Order>
+        }
+      )
+    },
   }),
   effects: (dispatch) => ({
     async loadExchangeAsync(exchange: ExCon, state) {

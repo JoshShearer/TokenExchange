@@ -7,7 +7,6 @@ import { useSelector } from '#src/models/hooks';
 
 import type { Order } from '../../../../web3_eth/web3Types/Exchange';
 
-
 const defaultProps = {
   ordersFilled: [],
   idKey: 'default',
@@ -17,8 +16,8 @@ const defaultProps = {
   children?: JSX.Element;
 };
 const selector = createStructuredSelector({
-  // filledLoaded: (root) => root.models_Exchange.filledLoaded,
-  filledLoaded: store.select.models_Exchange.filledOrdersLoadedSelector,
+  filledLoaded: (root) => root.models_Exchange.filledLoaded,
+  // filledLoaded: store.select.models_Exchange.filledOrdersLoadedSelector,
   filledOrders: store.select.models_Exchange.filledOrdersSelector,
 })
 
