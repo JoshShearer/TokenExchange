@@ -26,7 +26,7 @@ const defaultProps = {
 };
 
 const selector = createStructuredSelector({
-   contractsLoaded: (root) => root.models_ExchangeLoad.exchangeLoaded && root.models_Token.tokenLoaded
+   contractsLoaded: (root) => root.models_Exchange.exchangeLoaded && root.models_Token.tokenLoaded
 })
 
 export const Comps_layout_App = (_props: typeof defaultProps) => {
@@ -46,7 +46,7 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
   const loadBlockchainData = async () => {
     const web3 = await web3Loader()
     const networkId = await web3.eth.net.getId()
-    const token = await loadToken(web3, networkI)
+    const token = await loadToken(web3, networkId)
     if (!token) {
       window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
       return

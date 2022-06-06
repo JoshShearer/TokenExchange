@@ -3,7 +3,7 @@ import type { RootModel } from '#src/models/model';
 import Web3 from 'web3';
 import { Eth } from 'web3';
 import { RootState } from 'react-redux';
-import { models_ExchangeLoad } from '#src/models/ExchangeLoad';
+import { models_Exchange } from '#src/models/Exchange';
 import { models_Token } from '../Token/index';
 
 

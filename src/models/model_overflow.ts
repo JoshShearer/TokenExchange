@@ -41,7 +41,7 @@ export const loadToken = async (web3: Eth, networkId: Number) => {
 export const loadExchange = async (web3: Eth, networkId: Number ) => {
   try {
     const exchange = new web3.eth.Contract(Exchange.abi, Exchange.networks[networkId].address)
-    dispatch.models_ExchangeLoad.loadExchangeAsync(exchange);
+    dispatch.models_Exchange.loadExchangeAsync(exchange);
     return exchange
   } catch (error) {
     console.log('Exchange Contract not deployed to the current network. Please select another network with Metamask.')
@@ -51,30 +51,30 @@ export const loadExchange = async (web3: Eth, networkId: Number ) => {
 
 export const subscribeToEvents = async (exchange: ExCon) => {
   exchange.events.Cancel({}, (error, event) => {
-    dispatch.models_ExchangeLoad.orderCancelled(event.returnValues)
+    dispatch.models_Exchange.orderCancelled(event.returnValues)
   })
 
   exchange.events.Trade({}, (error, event) => {
-    dispatch.models_ExchangeLoad.orderFilled(event.returnValues)
+    dispatch.models_Exchange.orderFilled(event.returnValues)
   })
 
   exchange.events.Deposit({}, (error, event) => {
-    dispatch.models_ExchangeLoad.balancesLoading(false)
+    dispatch.models_Exchange.balancesLoading(false)
   })
 
   exchange.events.Withdraw({}, (error, event) => {
-    dispatch.models_ExchangeLoad.balancesLoading(false)
+    dispatch.models_Exchange.balancesLoading(false)
   })
 
   exchange.events.Order({}, (error, event) => {
-    dispatch.models_ExchangeLoad.orderMade(event.returnValues)
+    dispatch.models_Exchange.orderMade(event.returnValues)
   })
 }
 
 export const cancelOrder = (exchange, order, account) => {
   exchange.methods.cancelOrder(order.id).send({ from: account })
   .on('transactionHash', (hash) => {
-     dispatch.models_ExchangeLoad.orderCancelling()
+     dispatch.models_Exchange.orderCancelling()
   })
   .on('error', (error) => {
     console.log(error)
@@ -85,7 +85,7 @@ export const cancelOrder = (exchange, order, account) => {
 export const fillOrder = (dispatch, exchange, order, account) => {
   exchange.methods.fillOrder(order.id).send({ from: account })
   .on('transactionHash', (hash) => {
-     dispatch.models_ExchangeLoad.orderFilling()
+     dispatch.models_Exchange.orderFilling()
   })
   .on('error', (error) => {
     console.log(error)
@@ -97,22 +97,22 @@ export const loadBalances = async (dispatch, web3, exchange, token, account) => 
   if(typeof account !== 'undefined') {
       // Ether balance in wallet
       const etherBalance = await web3.eth.getBalance(account)
-      dispatch.models_ExchangeLoad.etherBalanceLoaded(etherBalance)
+      dispatch.models_Exchange.etherBalanceLoaded(etherBalance)
 
       // Token balance in wallet
       const tokenBalance = await token.methods.balanceOf(account).call()
-      dispatch.models_ExchangeLoad.tokenBalanceLoaded(tokenBalance)
+      dispatch.models_Exchange.tokenBalanceLoaded(tokenBalance)
 
       // Ether balance in exchange
       const exchangeEtherBalance = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call()
-      dispatch.models_ExchangeLoad.exchangeEtherBalanceLoaded(exchangeEtherBalance)
+      dispatch.models_Exchange.exchangeEtherBalanceLoaded(exchangeEtherBalance)
 
       // Token balance in exchange
       const exchangeTokenBalance = await exchange.methods.balanceOf(token.options.address, account).call()
-      dispatch.models_ExchangeLoad.exchangeTokenBalanceLoaded(exchangeTokenBalance)
+      dispatch.models_Exchange.exchangeTokenBalanceLoaded(exchangeTokenBalance)
 
       // Trigger all balances loaded
-      dispatch.models_ExchangeLoad.balancesLoaded()
+      dispatch.models_Exchange.balancesLoaded()
     } else {
       window.alert('Please login with MetaMask')
     }
@@ -121,7 +121,7 @@ export const loadBalances = async (dispatch, web3, exchange, token, account) => 
 export const depositEther = (dispatch, exchange, web3, amount, account) => {
   exchange.methods.depositEther().send({ from: account,  value: web3.utils.toWei(amount, 'ether') })
   .on('transactionHash', (hash) => {
-    dispatch.models_ExchangeLoad.balancesLoading()
+    dispatch.models_Exchange.balancesLoading()
   })
   .on('error',(error) => {
     console.error(error)
@@ -132,7 +132,7 @@ export const depositEther = (dispatch, exchange, web3, amount, account) => {
 export const withdrawEther = (dispatch, exchange, web3, amount, account) => {
   exchange.methods.withdrawEther(web3.utils.toWei(amount, 'ether')).send({ from: account })
   .on('transactionHash', (hash) => {
-    dispatch.models_ExchangeLoad.balancesLoading()
+    dispatch.models_Exchange.balancesLoading()
   })
   .on('error',(error) => {
     console.error(error)
@@ -147,7 +147,7 @@ export const depositToken = (dispatch, exchange, web3, token, amount, account) =
   .on('transactionHash', (hash) => {
     exchange.methods.depositToken(token.options.address, amount).send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_ExchangeLoad.balancesLoading()
+      dispatch.models_Exchange.balancesLoading()
     })
     .on('error',(error) => {
       console.error(error)
@@ -159,7 +159,7 @@ export const depositToken = (dispatch, exchange, web3, token, amount, account) =
 export const withdrawToken = (dispatch, exchange, web3, token, amount, account) => {
   exchange.methods.withdrawToken(token.options.address, web3.utils.toWei(amount, 'ether')).send({ from: account })
   .on('transactionHash', (hash) => {
-    dispatch.models_ExchangeLoad.balancesLoading()
+    dispatch.models_Exchange.balancesLoading()
   })
   .on('error',(error) => {
     console.error(error)
@@ -175,7 +175,7 @@ export const makeBuyOrder = (dispatch, exchange, token, web3, order, account) =>
 
   exchange.methods.makeOrder(tokenGet, amountGet, tokenGive, amountGive).send({ from: account })
   .on('transactionHash', (hash) => {
-    dispatch.models_ExchangeLoad.buyOrderMaking()
+    dispatch.models_Exchange.buyOrderMaking()
   })
   .on('error',(error) => {
     console.error(error)
@@ -191,7 +191,7 @@ export const makeSellOrder = (dispatch, exchange, token, web3, order, account) =
 
   exchange.methods.makeOrder(tokenGet, amountGet, tokenGive, amountGive).send({ from: account })
   .on('transactionHash', (hash) => {
-    dispatch.models_ExchangeLoad.sellOrderMaking()
+    dispatch.models_Exchange.sellOrderMaking()
   })
   .on('error',(error) => {
     console.error(error)

@@ -5,8 +5,10 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 // import useSelector from 'reselect';
 
-import { createSelector } from '#src/models/utils'
+import { createStructuredSelector } from '#src/models/utils'
 import { useSelector } from '#src/models/hooks';
+
+import {accountSelector} from '#src/models/selectors'
 
 
 // import { RootState, Actions, dispatch, store } from '#src/models/store'
@@ -21,13 +23,16 @@ const defaultProps = {
   children?: JSX.Element;
 };
 
-// const selected = createSelector((root) => root.models_WebB.account)
+const selector = createStructuredSelector({
+  account: (root) => root.models_WebB.account,
+  test: accountSelector,
+})
 
 export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
-  // const account = useSelector((state) => store.select.models_WebB.accountSelector(state, props));
+  const selected = useSelector((state) => selector(state, props));
   // const account = useSelector(store.select.models_WebB.accountSelector)
-  const account = "testing"
+  // const account = useSelector({account: accountSelector})
   
   // const selected = userSelector(
   //   (rootState: RootState) => rootState.models_WebB.account //capturing state slice (not internal selector)
@@ -64,11 +69,11 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
                       <Menu.Button className="flex text-sm ">
                         <a
                           className="text-white"
-                          href={`https://rinkeby.etherscan.io/address/${account}`}
+                          href={`https://rinkeby.etherscan.io/address/${selected.account}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {account}
+                          {selected.account}
                         </a>
                       </Menu.Button>
                     </div>
@@ -124,11 +129,11 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
               <div className="flex items-center px-3">
                 <a
                   className="text-white"
-                  href={`https://rinkeby.etherscan.io/address/${account}`}
+                  href={`https://rinkeby.etherscan.io/address/${selected.account}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {account}
+                  {selected.account}
                 </a>
               </div>
               <div className="px-2 mt-3 space-y-1">

@@ -31,7 +31,7 @@ type defaultState = {
   sellOrder: Order;
 };
 
-export const models_ExchangeLoad = createModel<RootModel>()({
+export const models_Exchange = createModel<RootModel>()({
   state: {
     Exchange: {},
     exchangeLoaded: false,
@@ -190,12 +190,17 @@ export const models_ExchangeLoad = createModel<RootModel>()({
     // exchangeSelector(){
 
     // },
-    // filledOrdersLoadedSelector(){
-    //   // return createSelector
-    // },
+    filledOrdersLoadedSelector(){
+      return createSelector(
+        [slice, (rootState) => rootState.models_Exchange.filledLoaded],
+        (defaultState, filledLoaded) => {
+          return filledLoaded as boolean
+        }
+      )
+    },
     filledOrdersSelector(){
       return createSelector(
-        [slice, (rootState) => rootState.models_ExchangeLoad.filledOrders],
+        [slice, (rootState) => rootState.models_Exchange.filledOrders],
         (defaultState, orders) => {
           // Sort orders by date ascending for price comparison
           orders = orders.sort((a,b) => a.timestamp - b.timestamp)
@@ -210,8 +215,8 @@ export const models_ExchangeLoad = createModel<RootModel>()({
   }),
   effects: (dispatch) => ({
     async loadExchangeAsync(exchange: ExCon, state) {
-      dispatch.models_ExchangeLoad.loadExchange(exchange);
-      dispatch.models_ExchangeLoad.exLoaded(true);
+      dispatch.models_Exchange.loadExchange(exchange);
+      dispatch.models_Exchange.exLoaded(true);
     },
     async loadAllOrdersAsync(exchange: ExCon, state) {
       // Fetch cancelled orders with the "Cancel" event stream
@@ -222,8 +227,8 @@ export const models_ExchangeLoad = createModel<RootModel>()({
       // Format cancelled orders
       const cancelledOrders = cancelStream.map((event) => event.returnValues);
       // Add cancelled orders to the redux store
-      dispatch.models_ExchangeLoad.loadCancelled(cancelledOrders);
-      dispatch.models_ExchangeLoad.setCancelled(true);
+      dispatch.models_Exchange.loadCancelled(cancelledOrders);
+      dispatch.models_Exchange.setCancelled(true);
 
       // Fetch filled orders with the "Trade" event stream
       const tradeStream = await exchange.getPastEvents('Trade', {
@@ -233,8 +238,8 @@ export const models_ExchangeLoad = createModel<RootModel>()({
       // Format filled orders
       const filledOrders = tradeStream.map((event) => event.returnValues);
       // Add cancelled orders to the redux store
-      dispatch.models_ExchangeLoad.loadFilledOrders(filledOrders);
-      dispatch.models_ExchangeLoad.setFilled(true);
+      dispatch.models_Exchange.loadFilledOrders(filledOrders);
+      dispatch.models_Exchange.setFilled(true);
 
       // Load order stream
       const orderStream = await exchange.getPastEvents('Order', {
@@ -244,28 +249,28 @@ export const models_ExchangeLoad = createModel<RootModel>()({
       // Format order stream
       const allOrders = orderStream.map((event) => event.returnValues);
       // Add open orders to the redux store
-      dispatch.models_ExchangeLoad.loadAllOrders(allOrders);
-      dispatch.models_ExchangeLoad.setAllLoaded(true);
+      dispatch.models_Exchange.loadAllOrders(allOrders);
+      dispatch.models_Exchange.setAllLoaded(true);
     },
     // async subscribeToEventsAsync( state) {
     //   state.Exchange.events.Cancel({}, (error, event) => {
-    //     dispatch.models_ExchangeLoad.orderCancelled(event.returnValues));
+    //     dispatch.models_Exchange.orderCancelled(event.returnValues));
     //   })
     
     //   state.Exchange.events.Trade({}, (error, event) => {
-    //     dispatch.models_ExchangeLoad.orderFilled(event.returnValues));
+    //     dispatch.models_Exchange.orderFilled(event.returnValues));
     //   })
     
     //   state.Exchange.events.Deposit({}, (error, event) => {
-    //     dispatch.models_ExchangeLoad.balancesLoaded());
+    //     dispatch.models_Exchange.balancesLoaded());
     //   })
     
     //   state.Exchange.events.Withdraw({}, (error, event) => {
-    //     dispatch.models_ExchangeLoad.balancesLoaded());
+    //     dispatch.models_Exchange.balancesLoaded());
     //   })
     
     //   state.Exchange.events.Order({}, (error, event) => {
-    //     dispatch.models_ExchangeLoad.orderMade(event.returnValues));
+    //     dispatch.models_Exchange.orderMade(event.returnValues));
     //   })
     // },
   }),

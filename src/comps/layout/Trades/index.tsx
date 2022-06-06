@@ -17,16 +17,15 @@ const defaultProps = {
   children?: JSX.Element;
 };
 const selector = createStructuredSelector({
-  //  filledLoaded: (root) => root.models_ExchangeLoad.filledLoaded,
-  //  filledOrders: (root) => store.select.models_ExchangeLoad.filledOrdersSelector
+  // filledLoaded: (root) => root.models_Exchange.filledLoaded,
+  filledLoaded: store.select.models_Exchange.filledOrdersLoadedSelector,
+  filledOrders: store.select.models_Exchange.filledOrdersSelector,
 })
 
 export const Comps_layout_Trades = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
   const selected = useSelector((state: RootState) => selector(state, props));
-  var ordersFilled = props.ordersFilled
-  ordersFilled = useSelector(store.select.models_ExchangeLoad.filledOrdersSelector)
 
   return (
 
@@ -59,7 +58,7 @@ export const Comps_layout_Trades = (_props: typeof defaultProps) => {
                       </th>
                     </tr>
                   </thead>
-                  {selected.filledLoaded ? showFilledOrders(ordersFilled) : <Comps_misc_Spinner type="table" />}
+                  {selected.filledLoaded ? showFilledOrders(selected.filledOrders) : <Comps_misc_Spinner type="table" />}
                 </table>
                 <br />
               </div>

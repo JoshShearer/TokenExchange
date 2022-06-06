@@ -16,7 +16,7 @@ import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
 // import { RootState, Actions, dispatch, store } from '#src/models/store'
-// import { models_ExchangeLoad } from '../../../models/Exchange/index';
+// import { models_Exchange } from '../../../models/Exchange/index';
 
 const defaultProps = {
   idKey: 'default',
@@ -26,8 +26,8 @@ const defaultProps = {
 };
 
 const selector = createStructuredSelector({
-  exchange: (root) => root.models_ExchangeLoad.Exchange,
-  dataLoaded: (root) => root.models_ExchangeLoad.allLoaded,
+  exchange: (root) => root.models_Exchange.Exchange,
+  dataLoaded: (root) => root.models_Exchange.allLoaded,
 });
 
 export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
@@ -44,7 +44,7 @@ export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
   // );
   // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
   const loadBlockchainData = async () => {
-    await dispatch.models_ExchangeLoad.loadAllOrdersAsync(selected.exchange);
+    await dispatch.models_Exchange.loadAllOrdersAsync(selected.exchange);
     await subscribeToEvents(selected.exchange);
   };
 
