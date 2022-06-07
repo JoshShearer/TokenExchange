@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { Tab } from "@headlessui/react";
 
-// import useSelector from 'reselect';
-
 import { createStructuredSelector } from '#src/models/utils'
 import { useSelector } from '#src/models/hooks';
 
@@ -21,7 +19,7 @@ const defaultProps = {
 
 const selector = createStructuredSelector({
   filledLoaded: (root) => root.models_Exchange.filledLoaded,
-  showMyOpenOrders: (root) => root.models_Exchange.cancelledLoaded && root.models_Exchange.filledLoaded && root.models_Exchange.allLoaded && root.models_Exchange.orderCancelling,
+  showMyOpenOrders: (root) => root.models_Exchange.cancelledLoaded && root.models_Exchange.filledLoaded && root.models_Exchange.allLoaded && !root.models_Exchange.orderCancelling,
   myFilledOrders: store.select.models_Exchange.myFilledOrdersSelector,
   myOpenOrders: store.select.models_Exchange.myOpenOrdersSelector,
   exchange: (root) => root.models_Exchange.Exchange,

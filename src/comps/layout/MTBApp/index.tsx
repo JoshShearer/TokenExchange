@@ -53,18 +53,18 @@ export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
       <div className="sm:col-span-2 md:col-span-1 lg:col-span-1">
         <div>
           <div className="pb-4">
-            {/* <Comps_layout_Deposits /> */}
+            <Comps_layout_Deposits />
           </div>
           <div>
-            {/* <Comps_layout_Orders /> */}
+            <Comps_layout_Orders />
           </div>
         </div>
         <div>
-          {/* <Comps_layout_OrderBook /> */}
+          <Comps_layout_OrderBook />
         </div>
         <div className="col-span-2 ">
           <div className="pb-4">
-            {/* <Comps_layout_PriceChart /> */}
+            <Comps_layout_PriceChart />
           </div>
           <div>
             <Comps_layout_MyTransactions />

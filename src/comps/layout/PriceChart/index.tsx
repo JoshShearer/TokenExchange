@@ -3,15 +3,15 @@ const Chart = dynamic(() => import('react-apexcharts'), {ssr: false})
 import dynamic from 'next/dynamic';
 import { chartOptions } from './PriceChart.config'
 
-// import useSelector from 'reselect';
 
-// import { createStructureSelector } from '#src/models/utils'
-// import { userSelector } from '#src/models/hooks';
+import { createStructuredSelector } from '#src/models/utils'
+import { useSelector } from '#src/models/hooks';
 
 
-// import { RootState, Actions, dispatch, store } from '#src/models/store'
+import { RootState, Actions, dispatch, store } from '#src/models/store'
 
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
+import { models_Exchange } from '../../../models/Exchange/index';
 
 
 const defaultProps = {
@@ -20,26 +20,16 @@ const defaultProps = {
   idKey?: string;
   children?: JSX.Element;
 };
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
+const selector = createStructuredSelector({
+   priceChartLoaded: (root) => root.models_Exchange.filledLoaded,
+   priceChart: store.select.models_Exchange.priceChartSelector,
+})
 
 export const Comps_layout_PriceChart = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
+  const selected = useSelector((state) => selector(state, props));
   
-  // useEffect(() => {
-    
-  // },[]);
-
-  // const selected = useSelector((state) => selector(state, props));
-
-  // const selected = useSelector(
-  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
-  // );
-  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
-
-
   return (
     // <div className="w-full px-3 pt-3 ">
       <div className="w-full max-w-lg p-2 min-h-fit mx-auto bg-stone-700 rounded">
@@ -47,25 +37,13 @@ export const Comps_layout_PriceChart = (_props: typeof defaultProps) => {
           {/* <div className="relative"> */}
             <h2 className="text-2xl text-white">Price Chart</h2>
             <br/>
-            {props.priceChartLoaded ? showPriceChart(props.priceChart) : <Comps_misc_Spinner />}
+            {selected.priceChartLoaded ? showPriceChart(selected.priceChart) : <Comps_misc_Spinner />}
           </div>
         </div>
     //   </div>
     // </div>
   )
 };
-
-// export class Comps_layout_PriceChart extends React.PureComponent<Props> {
-// 	render() {
-// 		const { countState } = props
-// 		return <div>Comps_layout_PriceChart</div>
-// 	}
-// }
-
-// const selection = store.select((models) => ({
-//   total: models.cart.total,
-//   eligibleItems: models.cart.wouldGetFreeShipping,
-// }));
 
 const priceSymbol = (lastPriceChange) => {
   let output

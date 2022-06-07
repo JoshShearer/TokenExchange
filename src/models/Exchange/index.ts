@@ -1,11 +1,12 @@
 import { createModel, RematchDispatch } from '@rematch/core';
+import { get, groupBy } from 'lodash';
 import type { RootModel } from '#src/models/model';
 import type {
   Exchange as ExCon,
   Order,
 } from '../../../web3_eth/web3Types/Exchange';
 import _ from 'lodash';
-import { decorateFilledOrders, decorateMyFilledOrders, decorateMyOpenOrders } from "#src/models/model_overflow";
+import { decorateOrder, decorateFilledOrders, decorateMyFilledOrders, decorateMyOpenOrders, decorateOrderBookOrders, buildGraphData } from "#src/models/model_overflow";
 import { models_WebB } from '../WebB/index';
 
 
@@ -21,6 +22,8 @@ type defaultState = {
   //Operations
   orderCancelling: boolean;
   orderFilling: boolean;
+  ethBalanceLoaded: boolean;
+  tokBalanceLoaded: boolean;
   balancesLoading:boolean;
   etherBalance: String;
   tokenBalance: String;
@@ -28,8 +31,14 @@ type defaultState = {
   etherWithdrawAmount: String;
   tokenDepositAmount: String;
   tokenWithdrawAmount: String;
-  buyOrder: Order;
-  sellOrder: Order;
+  buyOrder: {
+    price: String,
+    amount: String
+  };
+  sellOrder: {
+    price: String,
+    amount: String
+  };
 };
 
 export const models_Exchange = createModel<RootModel>()({
@@ -45,15 +54,25 @@ export const models_Exchange = createModel<RootModel>()({
     //Operations
     orderCancelling:false,
     orderFilling: false,
+    ethBalanceLoaded: false,
+    tokBalanceLoaded: false,
     balancesLoading: false,
     etherBalance: "",
     tokenBalance: "",
+    exchangeEtherBalance: "",
+    exchangeTokenBalance: "",
     etherDepositAmount: "",
     etherWithdrawAmount: "",
     tokenDepositAmount: "",
     tokenWithdrawAmount: "",
-    buyOrder: {},
-    sellOrder: {}
+    buyOrder: {
+      price: "",
+      amount: ""
+    },
+    sellOrder: {
+      price: "",
+      amount: ""
+    }
     
   } as defaultState,
   reducers: {
@@ -119,13 +138,13 @@ export const models_Exchange = createModel<RootModel>()({
         orderCancelling: false,
         cancelledOrders: {
           ...state.cancelledOrders,
-          order
+          order,
         }
       };
     },
     setFilling(state, payload: boolean) {
       return {
-        orderFilling: payload
+        orderFilling: payload,
       }
     },
     orderFilled(state, order: Order) {
@@ -140,24 +159,38 @@ export const models_Exchange = createModel<RootModel>()({
         orderFilling: false,
         filledOrders: {
           ...state.filledOrders,
-          data
+          data,
         }
       }
     },
     BalancesLoading(state, payload: boolean) {
       return {
         ...state,
-        balancesLoading: payload
+        balancesLoading: payload,
       }
     },
-    exEthBalLoaded(state) {
+    exEthBalLoaded(state, payload: boolean) {
       return {
-
+        ...state,
+        ethBalanceLoaded: payload,
       }
     },
-    exTokenBalLoaded(state) {
+    exTokenBalLoaded(state, payload: boolean) {
       return {
-
+        ...state,
+        tokBalanceLoaded: payload,
+      }
+    },
+    loadEthBalance(state, payload: String) {
+      return {
+        ...state, 
+        etherBalance: payload,
+      }
+    },
+    loadTokBalance(state, payload: String) {
+      return {
+        ...state, 
+        tokenBalance: payload,
       }
     },
     orderMade(state, order: Order) {
@@ -185,6 +218,30 @@ export const models_Exchange = createModel<RootModel>()({
            making: false
          }
        }
+    },
+    etherDepositAmountChanged(state, amount: String){
+      return {
+        ...state,
+        etherDepositAmount: amount,
+      }
+    },
+    etherWithdrawAmountChanged(state, amount: String){
+     return {
+       ...state,
+       etherWithdrawtAmount: amount,
+     }
+   },
+    tokenDepositAmountChanged(state, amount: String){
+      return {
+        ...state,
+        tokenDepositAmount: amount,
+      }
+    },
+    tokenWithdrawAmountChanged(state, amount: String){
+      return {
+        ...state,
+        tokenWithdrawAmount: amount,
+      }
     }
   },
   selectors: (slice, createSelector) => ({
@@ -223,10 +280,62 @@ export const models_Exchange = createModel<RootModel>()({
           // Sort orders by date ascending for price comparison
           var orders = defaultState.filledOrders.filter((o) => o.user === account)
           // Decorate orders - add display attributes
-          orders = decorateMyOpenOrders(orders)
+          orders = decorateMyOpenOrders(orders, account)
           // Sort orders by date descending
           orders = orders.sort((a,b) => b.timestamp - a.timestamp)
           return orders as Array<Order>
+        }
+      )
+    },
+    priceChartSelector(){
+      return createSelector(
+        [slice, (rootState) => rootState.models_Exchange.filledOrders],
+        (defaultState, orders) => {
+          // Sort orders by date ascending for compare history
+          orders = orders.sort((a,b) => a.timestamp - b.timestamp)
+          // Decorate orders - add display attributes
+          orders = orders.map((o) => decorateOrder(o))
+          // Get last 2 order for final price & price change
+          let secondLastOrder, lastOrder
+          [secondLastOrder, lastOrder] = orders.slice(orders.length - 2, orders.length)
+          // get last order price
+          const lastPrice = get(lastOrder, 'tokenPrice', 0)
+          // get second last order price
+          const secondLastPrice = get(secondLastOrder, 'tokenPrice', 0)
+
+          return({
+            lastPrice,
+            lastPriceChange: (lastPrice >= secondLastPrice ? '+' : '-'),
+            series: [{
+              data: buildGraphData(orders)
+            }]
+          })
+        }
+      )
+    },
+    orderBookSelector(){
+      return createSelector(//This needs to be OpenOrders...not filled
+        [slice, (rootState) => rootState.models_Exchange.filledOrders],
+        (defaultState, orders) => {
+         // Decorate orders
+        orders = decorateOrderBookOrders(orders)
+        // Group orders by "orderType"
+        orders = groupBy(orders, 'orderType')
+        // Fetch buy orders
+        const buyOrders = get(orders, 'buy', [])
+        // Sort buy orders by token price
+        orders = {
+          ...orders,
+          buyOrders: buyOrders.sort((a,b) => b.tokenPrice - a.tokenPrice)
+        }
+        // Fetch sell orders
+        const sellOrders = get(orders, 'sell', [])
+        // Sort sell orders by token price
+        orders = {
+          ...orders,
+          sellOrders: sellOrders.sort((a,b) => b.tokenPrice - a.tokenPrice)
+        }
+        return orders
         }
       )
     },

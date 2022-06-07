@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
-// import useSelector from 'reselect';
+import React from 'react';
 
-// import { createStructureSelector } from '#src/models/utils'
-// import { userSelector } from '#src/models/hooks';
+import { createStructuredSelector } from '#src/models/utils'
+import { useSelector } from '#src/models/hooks';
+import { fillOrder } from '#src/models/model_overflow';
 
-
-// import { RootState, Actions, dispatch, store } from '#src/models/store'
+import { RootState, Actions, dispatch, store } from '#src/models/store'
 
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
-
-
 
 const defaultProps = {
   idKey: 'default',
@@ -17,25 +14,17 @@ const defaultProps = {
   idKey?: string;
   children?: JSX.Element;
 };
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
+const selector = createStructuredSelector({
+  showOrderBook: (root) => root.models_Exchange.cancelledLoaded && root.models_Exchange.filledLoaded && root.models_Exchange.allLoaded && !root.models_Exchange.orderFilling,
+  orderBook: store.select.models_Exchange.orderBookSelector,
+  exchange: (root) => root.models_Exchange.Exchange,
+  account: (root) => root.models_WebB.account,
+})
 
 export const Comps_layout_OrderBook = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
-  
-  // useEffect(() => {
-    
-  // },[]);
-
-  // const selected = useSelector((state) => selector(state, props));
-
-  // const selected = useSelector(
-  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
-  // );
-  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
-
+  const selected = useSelector((state) => selector(state, props));
 
   return (
 
@@ -46,7 +35,7 @@ export const Comps_layout_OrderBook = (_props: typeof defaultProps) => {
               <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"></div>
                 <table className=' min-w-full divide-y divide-grey-400'>
-                  {props.showOrderBook ? showOrderBook(props) : <Comps_misc_Spinner type='table' />}
+                  {selected.showOrderBook ? showOrderBook(selected) : <Comps_misc_Spinner type='table' />}
                 </table>
                 <br />
               </div>
@@ -56,20 +45,8 @@ export const Comps_layout_OrderBook = (_props: typeof defaultProps) => {
 )
 };
 
-// export class Comps_layout_OrderBook extends React.PureComponent<Props> {
-// 	render() {
-// 		const { countState } = props
-// 		return <div>Comps_layout_OrderBook</div>
-// 	}
-// }
-
-// const selection = store.select((models) => ({
-//   total: models.cart.total,
-//   eligibleItems: models.cart.wouldGetFreeShipping,
-// }));
-
 const renderOrder = (order, props) => {
-  const { dispatch, exchange, account } = props
+  const { exchange, account } = props
   const orderColor = `text-${order.orderTypeClass}-500`
   return (
 

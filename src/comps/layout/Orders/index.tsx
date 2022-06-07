@@ -2,13 +2,16 @@ import React, { useEffect } from 'react';
 import { Tab } from '@headlessui/react'
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 
-// import useSelector from 'reselect';
-
-// import { createStructureSelector } from '#src/models/utils'
-// import { userSelector } from '#src/models/hooks';
-
+import { createStructuredSelector } from '#src/models/utils'
+import { useSelector } from '#src/models/hooks';
 
 import { RootState, Actions, dispatch, store } from '#src/models/store'
+import { models_Exchange } from '../../../models/Exchange/index';
+
+import {
+  makeBuyOrder,
+  makeSellOrder
+} from '#src/models/model_overflow'
 
 const defaultProps = {
   idKey: 'default',
@@ -16,61 +19,39 @@ const defaultProps = {
   idKey?: string;
   children?: JSX.Element;
 };
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
+
+const selector = createStructuredSelector({
+  token: (root) => root.models_Token.Token,
+  web3: (root) => root.models_WebB.Web3Conn,
+  exchange: (root) => root.models_Exchange.Exchange,
+  account: (root) => root.models_WebB.account,
+  buyOrder: (root) => root.models_Exchange.buyOrder,
+  sellOrder: (root) => root.models_Exchange.sellOrder,
+  showForm: (root) => !root.models_Exchange.buyOrder.making && !root.models_Exchange.sellOrder.making,
+  showBuyTotal: (root) => root.models_Exchange.buyOrder.amount && root.models_Exchange.buyOrder.price,
+  showSellTotal: (root) => root.models_Exchange.sellOrder.amount && root.models_Exchange.sellOrder.price,
+})
 
 export const Comps_layout_Orders = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
-  
-  useEffect(() => {
-    
-  },[]);
-
-  const loadBlockchainData = async () => {
-    const { dispatch, web3, exchange, token, account } = props
-    await loadBalances(dispatch, web3, exchange, token, account)
-  }
+  const selected = useSelector((state) => selector(state, props));
 
     return (
       <div>
-        {props.showForm ? ShowForm(props) : <Comps_misc_Spinner />}
+        {selected.showForm ? ShowForm(selected) : <Comps_misc_Spinner />}
       </div>
     )
-  }
-
-  // const selected = useSelector((state) => selector(state, props));
-
-  // const selected = useSelector(
-  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
-  // );
-  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
-
-
-  
-
-
-// export class Comps_layout_Orders extends React.PureComponent<Props> {
-// 	render() {
-// 		const { countState } = this.props
-// 		return <div>Comps_layout_Orders</div>
-// 	}
-// }
-
-// const selection = store.select((models) => ({
-//   total: models.cart.total,
-//   eligibleItems: models.cart.wouldGetFreeShipping,
-// }));
+  }  
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 const ShowForm = (props) => {
+console.log("🚀 ~ file: index.tsx ~ line 53 ~ ShowForm ~ props", props)
 
   const {
-    dispatch,
     buyOrder,
     exchange,
     token,
@@ -78,9 +59,8 @@ const ShowForm = (props) => {
     account,
     sellOrder,
     showBuyTotal,
-    showSellTotal
+    showSellTotal      
   } = props
-
 
   return (
 
@@ -125,7 +105,7 @@ const ShowForm = (props) => {
                   <br />
                   <form onSubmit={(event) => {
                     event.preventDefault()
-                    makeBuyOrder(dispatch, exchange, token, web3, buyOrder, account)
+                    makeBuyOrder(orders.buyOrder, account)
                   }}>
                     <h2 className="text-white">Buy Amount (MTB)</h2>
                     <div className="sm:col-span-4">
@@ -133,7 +113,7 @@ const ShowForm = (props) => {
                         type="text"
                         name="Buy"
                         id="Buy"
-                        onChange={(e) => dispatch(buyOrderAmountChanged(e.target.value))}
+                        onChange={(e) => dispatch.models_Exchange.buyOrder.amount(e.target.value)}
                         placeholder=" Buy Amount"
                         className="block w-full text-white mt-1 bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
                       />
@@ -145,7 +125,7 @@ const ShowForm = (props) => {
                         type="text"
                         name="Buy"
                         id="Buy"
-                        onChange={(e) => dispatch(buyOrderPriceChanged(e.target.value))}
+                        onChange={(e) => dispatch.models_Exchange.buyOrder.price(e.target.value)}
                         placeholder=" Buy Price"
                         className="block w-full mt-1 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
                       />
@@ -166,7 +146,7 @@ const ShowForm = (props) => {
                   <br />
                   <form onSubmit={(event) => {
                     event.preventDefault()
-                    makeSellOrder(dispatch, exchange, token, web3, sellOrder, account)
+                    makeSellOrder(orders.sellOrder, account)
                   }}>
                     <h2 className="text-white">Sell Amount (MTB)</h2>
                     <div className="sm:col-span-4">
@@ -174,7 +154,7 @@ const ShowForm = (props) => {
                         type="text"
                         name="Sell"
                         id="Sell"
-                        onChange={(e) => dispatch(sellOrderAmountChanged(e.target.value))}
+                        onChange={(e) => dispatch.models_Exchange.sellOrder.amount(e.target.value)}
                         placeholder=" Sell Amount"
                         className="block w-full mt-1 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
                       />
@@ -186,7 +166,7 @@ const ShowForm = (props) => {
                         type="text"
                         name="Sell"
                         id="Sell"
-                        onChange={(e) => dispatch(sellOrderPriceChanged(e.target.value))}
+                        onChange={(e) => dispatch.models_Exchange.sellOrder.price(e.target.value)}
                         placeholder=" Sell Price"
                         className="block w-full mt-1 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
                       />

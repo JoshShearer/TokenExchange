@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { Tab } from '@headlessui/react'
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 
-// import useSelector from 'reselect';
-
-// import { createStructureSelector } from '#src/models/utils'
-// import { userSelector } from '#src/models/hooks';
-
+import { createStructuredSelector } from '#src/models/utils'
+import { useSelector } from '#src/models/hooks';
 
 import { RootState, Actions, dispatch, store } from '#src/models/store'
+
+import { loadBalances, depositEther, depositToken } from '#src/models/model_overflow';
 
 const defaultProps = {
   idKey: 'default',
@@ -16,20 +15,37 @@ const defaultProps = {
   idKey?: string;
   children?: JSX.Element;
 };
-// const selector = createStructuredSelector({
-//    item: (root) => root.stores,
-// })
+const selector = createStructuredSelector({
+    item: (root) => root.stores,
+    token: (root) => root.models_Token.Token,
+    web3: (root) => root.models_WebB.Web3Conn,
+    exchange: (root) => root.models_Exchange.Exchange,
+    account: (root) => root.models_WebB.account,
+    buyOrder: (root) => root.models_Exchange.buyOrder,
+    sellOrder: (root) => root.models_Exchange.sellOrder,
+    etherBalance: (root) => root.models_Exchange.etherBalance,
+    tokenBalance: (root) => root.models_Exchange.tokenBalance,
+    exchangeEtherBalance: (root) => root.models_Exchange.exchangeEtherBalance,
+    exchangeTokenBalance: (root) => root.models_Exchange.exchangeTokenBalance,
+    balancesLoading: (root) => root.models_Exchange.balancesLoading,
+    showForm: (root) => !root.models_Exchange.balancesLoading,
+    etherDepositAmount: (root) => root.models_Exchange.etherDepositAmount,
+    etherWithdrawAmount: (root) => root.models_Exchange.etherWithdrawAmount,
+    tokenDepositAmount: (root) => root.models_Exchange.tokenDepositAmount,
+    tokenWithdrawAmount: (root) => root.models_Exchange.tokenWithdrawAmount,
+})
 
 export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
+  const selected = useSelector((state) => selector(state, props));
 
-  
   useEffect(() => {
-    
-  },[]);
+    dispatch.models_Exchange.BalancesLoading(true)
+    loadBlockchainData();
+  }, []);
 
   const loadBlockchainData = async () => {
-    const { dispatch, web3, exchange, token, account } = props
+    const { web3, exchange, token, account } = selected
     await loadBalances(dispatch, web3, exchange, token, account)
   }
 
@@ -40,36 +56,12 @@ export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
     )
   }
 
-  // const selected = useSelector((state) => selector(state, props));
-
-  // const selected = useSelector(
-  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
-  // );
-  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
-
-
-  
-
-
-// export class Comps_layout_Orders extends React.PureComponent<Props> {
-// 	render() {
-// 		const { countState } = this.props
-// 		return <div>Comps_layout_Orders</div>
-// 	}
-// }
-
-// const selection = store.select((models) => ({
-//   total: models.cart.total,
-//   eligibleItems: models.cart.wouldGetFreeShipping,
-// }));
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 const showForm = (props) => {
   const {
-    dispatch,
     exchange,
     web3,
     account,
@@ -167,7 +159,6 @@ const showForm = (props) => {
                     onSubmit={(event) => {
                       event.preventDefault()
                       depositEther(
-                        dispatch,
                         exchange,
                         web3,
                         etherDepositAmount,
@@ -182,13 +173,11 @@ const showForm = (props) => {
                           name="Deposit"
                           id="Deposit"
                           onChange={(e) =>
-                            dispatch(
-                              etherDepositAmountChanged(
+                            dispatch.models_Exchange.etherDepositAmountChanged(
                                 e
                                   .target
                                   .value
                               )
-                            )
                           }
                           placeholder=" ETH Amount"
                           className="block h-8 w-full mt-1 bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-md"
@@ -225,7 +214,6 @@ const showForm = (props) => {
                     onSubmit={(event) => {
                       event.preventDefault()
                       depositToken(
-                        dispatch,
                         exchange,
                         web3,
                         token,
@@ -241,13 +229,11 @@ const showForm = (props) => {
                           name="Deposit"
                           id="Deposit"
                           onChange={(e) =>
-                            dispatch(
-                              tokenDepositAmountChanged(
+                            dispatch.models_Exchange.tokenDepositAmountChanged(
                                 e
                                   .target
                                   .value
                               )
-                            )
                           }
                           placeholder=" MTB Amount"
                           className="block h-8 w-full mt-1 bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-md"
@@ -313,12 +299,10 @@ const showForm = (props) => {
                           name="Withdraw"
                           id="Withdraw"
                           onChange={(e) =>
-                            dispatch(
-                              etherWithdrawAmountChanged(
+                            dispatch.models_Exchange.etherWithdrawAmountChanged(
                                 e.target
                                   .value
                               )
-                            )
                           }
                           placeholder=" ETH Amount"
                           className="block h-8 w-full mt-1 bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-md"
@@ -360,12 +344,10 @@ const showForm = (props) => {
                           name="Withdraw"
                           id="Withdraw"
                           onChange={(e) =>
-                            dispatch(
-                              tokenWithdrawAmountChanged(
+                            dispatch.models_Exchange.tokenWithdrawAmountChanged(
                                 e.target
                                   .value
                               )
-                            )
                           }
                           placeholder=" MTB Amount"
                           className="block h-8 w-full mt-1 bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-md"

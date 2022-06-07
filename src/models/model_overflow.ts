@@ -1,6 +1,6 @@
 import { RootState, Actions, dispatch } from '#src/models/store';
 import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from '../../web3_eth/test/helpers'
-
+import { groupBy, maxBy, minBy } from 'lodash';
 //TS Types
 import type { Exchange as ExCon, Order } from '../../web3_eth/web3Types/Exchange';
 import type { Token as Tokentype } from '../../web3_eth/web3Types/Token';
@@ -17,7 +17,6 @@ import moment from 'moment'
 export const web3Loader = async () => {
   if(typeof window.ethereum!=='undefined'){
     const web3 = new Web3(window.ethereum)
-    // console.log("🚀 ~ file: model_overflow.ts ~ line 20 ~ web3Loader ~ web3", web3)
     dispatch.models_WebB.loadWeb3Async(web3)
     return web3
   } else {
@@ -82,7 +81,31 @@ export const cancelOrder = (exchange, order, account) => {
   })
 }
 
-export const fillOrder = (dispatch, exchange, order, account) => {
+export const buildGraphData = (orders) => {
+  // Group the orders by hour for the graph
+  orders = groupBy(orders, (o) => moment.unix(o.timestamp).startOf('hour').format())
+  // Get each hour where data exists
+  const hours = Object.keys(orders)
+  // Build the graph series
+  const graphData = hours.map((hour) => {
+    // Fetch all the orders from current hour
+    const group = orders[hour]
+    // Calculate price values - open, high, low, close
+    const open = group[0] // first order
+    const high = maxBy(group, 'tokenPrice') // high price
+    const low = minBy(group, 'tokenPrice') // low price
+    const close = group[group.length - 1] // last order
+
+    return({
+      x: new Date(hour),
+      y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
+    })
+  })
+
+  return graphData
+}
+
+export const fillOrder = (exchange, order, account) => {
   exchange.methods.fillOrder(order.id).send({ from: account })
   .on('transactionHash', (hash) => {
      dispatch.models_Exchange.orderFilling()
@@ -93,11 +116,11 @@ export const fillOrder = (dispatch, exchange, order, account) => {
   })
 }
 
-export const loadBalances = async (dispatch, web3, exchange, token, account) => {
+export const loadBalances = async (web3, exchange, token, account) => {
   if(typeof account !== 'undefined') {
       // Ether balance in wallet
       const etherBalance = await web3.eth.getBalance(account)
-      dispatch.models_Exchange.etherBalanceLoaded(etherBalance)
+      dispatch.models_Exchange.ethBalanceLoaded(etherBalance)
 
       // Token balance in wallet
       const tokenBalance = await token.methods.balanceOf(account).call()
@@ -118,10 +141,10 @@ export const loadBalances = async (dispatch, web3, exchange, token, account) => 
     }
 }
 
-export const depositEther = (dispatch, exchange, web3, amount, account) => {
+export const depositEther = (exchange, web3, amount, account) => {
   exchange.methods.depositEther().send({ from: account,  value: web3.utils.toWei(amount, 'ether') })
   .on('transactionHash', (hash) => {
-    dispatch.models_Exchange.balancesLoading()
+    dispatch.models_Exchange.balancesLoading(true)
   })
   .on('error',(error) => {
     console.error(error)
@@ -129,10 +152,10 @@ export const depositEther = (dispatch, exchange, web3, amount, account) => {
   })
 }
 
-export const withdrawEther = (dispatch, exchange, web3, amount, account) => {
+export const withdrawEther = (exchange, web3, amount, account) => {
   exchange.methods.withdrawEther(web3.utils.toWei(amount, 'ether')).send({ from: account })
   .on('transactionHash', (hash) => {
-    dispatch.models_Exchange.balancesLoading()
+    dispatch.models_Exchange.balancesLoading(true)
   })
   .on('error',(error) => {
     console.error(error)
@@ -140,14 +163,14 @@ export const withdrawEther = (dispatch, exchange, web3, amount, account) => {
   })
 }
 
-export const depositToken = (dispatch, exchange, web3, token, amount, account) => {
+export const depositToken = (exchange, web3, token, amount, account) => {
   amount = web3.utils.toWei(amount, 'ether')
 
   token.methods.approve(exchange.options.address, amount).send({ from: account })
   .on('transactionHash', (hash) => {
     exchange.methods.depositToken(token.options.address, amount).send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.balancesLoading()
+      dispatch.models_Exchange.balancesLoading(false)
     })
     .on('error',(error) => {
       console.error(error)
@@ -156,10 +179,10 @@ export const depositToken = (dispatch, exchange, web3, token, amount, account) =
   })
 }
 
-export const withdrawToken = (dispatch, exchange, web3, token, amount, account) => {
+export const withdrawToken = (exchange, web3, token, amount, account) => {
   exchange.methods.withdrawToken(token.options.address, web3.utils.toWei(amount, 'ether')).send({ from: account })
   .on('transactionHash', (hash) => {
-    dispatch.models_Exchange.balancesLoading()
+    dispatch.models_Exchange.balancesLoading(false)
   })
   .on('error',(error) => {
     console.error(error)
@@ -167,7 +190,7 @@ export const withdrawToken = (dispatch, exchange, web3, token, amount, account) 
   })
 }
 
-export const makeBuyOrder = (dispatch, exchange, token, web3, order, account) => {
+export const makeBuyOrder = (exchange, web3, token, order, account) => {
   const tokenGet = token.options.address
   const amountGet = web3.utils.toWei(order.amount, 'ether')
   const tokenGive = ETHER_ADDRESS
@@ -175,7 +198,7 @@ export const makeBuyOrder = (dispatch, exchange, token, web3, order, account) =>
 
   exchange.methods.makeOrder(tokenGet, amountGet, tokenGive, amountGive).send({ from: account })
   .on('transactionHash', (hash) => {
-    dispatch.models_Exchange.buyOrderMaking()
+    dispatch.models_Exchange.buyOrderMaking(false)
   })
   .on('error',(error) => {
     console.error(error)
@@ -183,7 +206,10 @@ export const makeBuyOrder = (dispatch, exchange, token, web3, order, account) =>
   })
 }
 
-export const makeSellOrder = (dispatch, exchange, token, web3, order, account) => {
+export const makeSellOrder = (order, account) => {
+  exchange = dispatch.models_Exchange.Exchange
+  token = dispatch.models_Token.Token
+  web3 = dispatch.models_WebB.Web3Conn
   const tokenGet = ETHER_ADDRESS
   const amountGet = web3.utils.toWei((order.amount * order.price).toString(), 'ether')
   const tokenGive = token.options.address
@@ -213,7 +239,7 @@ export const decorateFilledOrders = (orders: Array<Order>) => {
   )
 }
 
-const decorateOrder = (order: Order) => {
+export const decorateOrder = (order: Order) => {
   let etherAmount
   let tokenAmount
 
@@ -308,7 +334,7 @@ const decorateMyOpenOrder = (order: Array<Order>, account: String) => {
   })
 }
 
-const decorateOrderBookOrders = (orders: Array<Order>) => {
+export const decorateOrderBookOrders = (orders: Array<Order>) => {
   return(
     orders.map((order) => {
       order = decorateOrder(order)
