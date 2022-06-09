@@ -3,14 +3,11 @@ import type { RootModel } from '#src/models/model';
 import Web3 from 'web3';
 import { Eth } from 'web3';
 import { RootState } from 'react-redux';
-import { models_Exchange } from '#src/models/Exchange';
-import { models_Token } from '../Token/index';
-
 
 type defaultState = {
-  account: string,
-  balance: string,
-  Web3Conn: Eth,
+  account: string;
+  balance: string;
+  Web3Conn: Eth;
 };
 
 export const models_WebB = createModel<RootModel>()({
@@ -23,20 +20,20 @@ export const models_WebB = createModel<RootModel>()({
     loadWeb3(state, payload: defaultState) {
       return {
         ...state,
-       Web3Conn: payload,
-      }
+        Web3Conn: payload,
+      };
     },
-    loadAcc(state, payload: string){
+    loadAcc(state, payload: string) {
       return {
         ...state,
-       account: payload,
-      }
+        account: payload,
+      };
     },
-    loadBal(state, payload: string){
+    loadBal(state, payload: string) {
       return {
         ...state,
         balance: payload,
-      }
+      };
     },
   },
   // selectors: (slice, createSelector) => ({
@@ -50,9 +47,9 @@ export const models_WebB = createModel<RootModel>()({
   //       }
   // }),
   effects: (dispatch) => ({
-    async loadWeb3Async(Web3: Eth, state) { 
-      const aData = await Web3.eth.getAccounts()
-      const account = aData[0]
+    async loadWeb3Async(Web3: Eth, state) {
+      const aData = await Web3.eth.getAccounts();
+      const account = aData[0];
       dispatch.models_WebB.loadAcc(account);
       dispatch.models_WebB.loadWeb3(Web3);
     },

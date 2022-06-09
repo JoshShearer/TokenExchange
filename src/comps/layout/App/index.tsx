@@ -6,57 +6,61 @@ import { Comps_layout_MTBApp } from '#src/Comps/layout/MTBApp';
 import {
   web3Loader,
   loadToken,
-  loadExchange
-} from '#src/models/model_overflow'
+  loadExchange,
+} from '#src/models/model_overflow';
 
-import { createStructuredSelector } from '#src/models/utils'
+import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
-
 const defaultProps = {
-  idKey: 'default', 
-  } as {
+  idKey: 'default',
+} as {
   idKey?: string;
   children?: JSX.Element;
 };
 
 const selector = createStructuredSelector({
-   contractsLoaded: (root) => root.models_Exchange.exchangeLoaded && root.models_Token.tokenLoaded
-})
+  contractsLoaded: (root) =>
+    root.models_Exchange.exchangeLoaded && root.models_Token.tokenLoaded,
+});
 
 export const Comps_layout_App = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
   useEffect(() => {
-    loadBlockchainData()
-  },[]);
-
+    loadBlockchainData();
+  }, []);
 
   const selected = useSelector((state) => selector(state, props));
-  
+
   const loadBlockchainData = async () => {
-    const web3 = await web3Loader()
-    const networkId = await web3.eth.net.getId()
-    const token = await loadToken(web3, networkId)
+    const web3 = await web3Loader();
+    const networkId = await web3.eth.net.getId();
+    const token = await loadToken(web3, networkId);
     if (!token) {
-      window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
-      return
+      window.alert(
+        'Token smart contract not detected on the current network. Please select another network with Metamask.'
+      );
+      return;
     }
-    const exchange = await loadExchange(web3, networkId)
+    const exchange = await loadExchange(web3, networkId);
     if (!exchange) {
-      window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask.')
-      return
+      window.alert(
+        'Exchange smart contract not detected on the current network. Please select another network with Metamask.'
+      );
+      return;
     }
-
-  }
-
+  };
 
   return (
     <div>
-      <Comps_layout_Navigation_Header/>
-      { selected.contractsLoaded ? <Comps_layout_MTBApp /> : <div className="content"></div> }
-      <Comps_layout_Navigation_Footer/>
+      <Comps_layout_Navigation_Header />
+      {selected.contractsLoaded ? (
+        <Comps_layout_MTBApp />
+      ) : (
+        <div className="content"></div>
+      )}
+      <Comps_layout_Navigation_Footer />
     </div>
-
-    )
+  );
 };

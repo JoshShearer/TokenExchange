@@ -2,18 +2,17 @@ import { createModel, RematchDispatch } from '@rematch/core';
 import type { RootModel } from '#src/models/model';
 import type { Token } from '../../../web3_eth/web3Types/Token';
 
-
 type defaultState = {
-  Token: Token,
-  tokenLoaded: boolean,
-  balance: String
+  Token: Token;
+  tokenLoaded: boolean;
+  balance: String;
 };
 
 export const models_Token = createModel<RootModel>()({
   state: {
-    Token : {},
+    Token: {},
     tokenLoaded: false,
-    balance: "",
+    balance: '',
   } as defaultState,
   reducers: {
     loadToken(state, payload: Token) {

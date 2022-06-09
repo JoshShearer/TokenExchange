@@ -1,13 +1,19 @@
 import React, { useEffect } from 'react';
-import { Tab } from '@headlessui/react'
+import { Tab } from '@headlessui/react';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 
-import { createStructuredSelector } from '#src/models/utils'
+import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
-import { RootState, Actions, dispatch, store } from '#src/models/store'
+import { RootState, Actions, dispatch, store } from '#src/models/store';
 
-import { loadBalances, depositEther, depositToken, withdrawEther, withdrawToken } from '#src/models/model_overflow';
+import {
+  loadBalances,
+  depositEther,
+  depositToken,
+  withdrawEther,
+  withdrawToken,
+} from '#src/models/model_overflow';
 
 const defaultProps = {
   idKey: 'default',
@@ -32,31 +38,32 @@ const selector = createStructuredSelector({
   etherWithdrawAmount: (root) => root.models_Exchange.etherWithdrawAmount,
   tokenDepositAmount: (root) => root.models_Exchange.tokenDepositAmount,
   tokenWithdrawAmount: (root) => root.models_Exchange.tokenWithdrawAmount,
-})
+});
 
 export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   const selected = useSelector((state) => selector(state, props));
 
   useEffect(() => {
-    dispatch.models_Exchange.BalancesLoading(true)
-    loadBlockchainData();
+    dispatch.models_Exchange.BalancesLoading(true);
+    // loadBlockchainData();
   }, []);
 
-  const loadBlockchainData = async () => {
-    const { web3, exchange, token, account } = selected
-    await loadBalances(web3, exchange, token, account)
-  }
+  // const loadBlockchainData = async () => {
+  //   const { web3, exchange, token, account } = selected
+  //   await loadBalances(web3, exchange, token, account)
+  // }
 
   return (
     <div>
-      {selected.showForm ? showForm(props) : <Comps_misc_Spinner />}
+      {/* {selected.showForm ? showForm(props) : <Comps_misc_Spinner />} */}
+      {showForm(props)}
     </div>
-  )
-}
+  );
+};
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(' ');
 }
 
 const showForm = (props) => {
@@ -73,16 +80,14 @@ const showForm = (props) => {
     tokenDepositAmount,
     etherWithdrawAmount,
     tokenWithdrawAmount,
-  } = props
+  } = props;
 
   return (
-
     <div className="w-full max-w-sm min-w-min mx-auto bg-stone-700 rounded">
       <div className="py-5 sm:p-6">
         <h2 className="text-2xl text-white">Balance</h2>
         <br />
-        <Tab.Group
-        >
+        <Tab.Group>
           <Tab.List className="flex p-1 space-x-1 bg-stone-500 rounded-lg">
             <Tab
               key="Deposit"
@@ -112,11 +117,10 @@ const showForm = (props) => {
             >
               Withdraw
             </Tab>
-
           </Tab.List>
           <Tab.Panels>
             <Tab.Panel>
-              <table className='table-auto'>
+              <table className="table-auto">
                 <thead>
                   <tr>
                     <th
@@ -141,28 +145,17 @@ const showForm = (props) => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="text-white">
-                      ETH
-                    </td>
-                    <td className="text-white">
-                      {etherBalance}
-                    </td>
-                    <td className="text-white">
-                      {exchangeEtherBalance}
-                    </td>
+                    <td className="text-white">ETH</td>
+                    <td className="text-white">{etherBalance}</td>
+                    <td className="text-white">{exchangeEtherBalance}</td>
                   </tr>
                 </tbody>
               </table>
 
               <form
                 onSubmit={(event) => {
-                  event.preventDefault()
-                  depositEther(
-                    exchange,
-                    web3,
-                    etherDepositAmount,
-                    account
-                  )
+                  event.preventDefault();
+                  depositEther(exchange, web3, etherDepositAmount, account);
                 }}
               >
                 <div className="grid grid-cols-5 mt-6 gap-y-6 gap-x-4 sm:grid-cols-12">
@@ -173,9 +166,7 @@ const showForm = (props) => {
                       id="Deposit"
                       onChange={(e) =>
                         dispatch.models_Exchange.etherDepositAmountChanged(
-                          e
-                            .target
-                            .value
+                          e.target.value
                         )
                       }
                       placeholder=" ETH Amount"
@@ -193,7 +184,7 @@ const showForm = (props) => {
                 </div>
               </form>
 
-              <table className='table-auto'>
+              <table className="table-auto">
                 <thead>
                   <tr>
                     <td className="text-white py-3.5  pr-3 text-left text-sm">
@@ -211,14 +202,14 @@ const showForm = (props) => {
 
               <form
                 onSubmit={(event) => {
-                  event.preventDefault()
+                  event.preventDefault();
                   depositToken(
                     exchange,
                     web3,
                     token,
                     tokenDepositAmount,
                     account
-                  )
+                  );
                 }}
               >
                 <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-12">
@@ -229,9 +220,7 @@ const showForm = (props) => {
                       id="Deposit"
                       onChange={(e) =>
                         dispatch.models_Exchange.tokenDepositAmountChanged(
-                          e
-                            .target
-                            .value
+                          e.target.value
                         )
                       }
                       placeholder=" MTB Amount"
@@ -275,22 +264,25 @@ const showForm = (props) => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="text-white">
-                      ETH
-                    </td>
-                    <td className="text-white">
-                      {etherBalance}
-                    </td>
-                    <td className="text-white">
-                      {exchangeEtherBalance}
-                    </td>
+                    <td className="text-white">ETH</td>
+                    <td className="text-white">{etherBalance}</td>
+                    <td className="text-white">{exchangeEtherBalance}</td>
                   </tr>
                 </tbody>
               </table>
-              <form className="row" onSubmit={(event) => {
-                event.preventDefault()
-                withdrawEther(dispatch, exchange, web3, etherWithdrawAmount, account)
-              }}>
+              <form
+                className="row"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  withdrawEther(
+                    dispatch,
+                    exchange,
+                    web3,
+                    etherWithdrawAmount,
+                    account
+                  );
+                }}
+              >
                 <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-12">
                   <div className="col-span-3 sm:col-span-7">
                     <input
@@ -299,8 +291,7 @@ const showForm = (props) => {
                       id="Withdraw"
                       onChange={(e) =>
                         dispatch.models_Exchange.etherWithdrawAmountChanged(
-                          e.target
-                            .value
+                          e.target.value
                         )
                       }
                       placeholder=" ETH Amount"
@@ -317,7 +308,7 @@ const showForm = (props) => {
                   </div>
                 </div>
               </form>
-              <table className='table-auto'>
+              <table className="table-auto">
                 <tbody>
                   <tr>
                     <td className="text-white py-3.5 pr-3 text-left text-sm">
@@ -332,10 +323,19 @@ const showForm = (props) => {
                   </tr>
                 </tbody>
               </table>
-              <form className="row" onSubmit={(event) => {
-                event.preventDefault()
-                withdrawToken(exchange, web3, token, tokenWithdrawAmount, account)
-              }}>
+              <form
+                className="row"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  withdrawToken(
+                    exchange,
+                    web3,
+                    token,
+                    tokenWithdrawAmount,
+                    account
+                  );
+                }}
+              >
                 <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-12">
                   <div className="col-span-3 sm:col-span-7">
                     <input
@@ -344,8 +344,7 @@ const showForm = (props) => {
                       id="Withdraw"
                       onChange={(e) =>
                         dispatch.models_Exchange.tokenWithdrawAmountChanged(
-                          e.target
-                            .value
+                          e.target.value
                         )
                       }
                       placeholder=" MTB Amount"
@@ -367,5 +366,5 @@ const showForm = (props) => {
         </Tab.Group>
       </div>
     </div>
-  )
-}
+  );
+};

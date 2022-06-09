@@ -17,7 +17,6 @@ const defaultProps = {
 };
 const selector = createStructuredSelector({
   filledLoaded: (root) => root.models_Exchange.filledLoaded,
-  // filledLoaded: store.select.models_Exchange.filledOrdersLoadedSelector,
   filledOrders: store.select.models_Exchange.filledOrdersSelector,
 });
 

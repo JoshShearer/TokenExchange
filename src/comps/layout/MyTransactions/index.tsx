@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { Tab } from "@headlessui/react";
+import { Tab } from '@headlessui/react';
 
-import { createStructuredSelector } from '#src/models/utils'
+import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
-import { RootState, Actions, dispatch, store } from '#src/models/store'
+import { RootState, Actions, dispatch, store } from '#src/models/store';
 import { cancelOrder } from '#src/models/model_overflow';
 
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
@@ -19,18 +19,21 @@ const defaultProps = {
 
 const selector = createStructuredSelector({
   filledLoaded: (root) => root.models_Exchange.filledLoaded,
-  showMyOpenOrders: (root) => root.models_Exchange.cancelledLoaded && root.models_Exchange.filledLoaded && root.models_Exchange.allLoaded && !root.models_Exchange.orderCancelling,
+  showMyOpenOrders: (root) =>
+    root.models_Exchange.cancelledLoaded &&
+    root.models_Exchange.filledLoaded &&
+    root.models_Exchange.allLoaded &&
+    !root.models_Exchange.orderCancelling,
   myFilledOrders: store.select.models_Exchange.myFilledOrdersSelector,
   myOpenOrders: store.select.models_Exchange.myOpenOrdersSelector,
   exchange: (root) => root.models_Exchange.Exchange,
   account: (root) => root.models_WebB.account,
   orderCancelling: (root) => root.models_Exchange.orderCancelling,
-})
+});
 
-function classNames(...classes:Array<String>) {
-  return classes.filter(Boolean).join(" ");
+function classNames(...classes: Array<String>) {
+  return classes.filter(Boolean).join(' ');
 }
-
 
 export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
@@ -103,7 +106,8 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
                           </th>
                         </tr>
                       </thead>
-                      {selected.filledLoaded ? (showMyFilledOrders(selected.myFilledOrders)
+                      {selected.filledLoaded ? (
+                        showMyFilledOrders(selected.myFilledOrders)
                       ) : (
                         <Comps_misc_Spinner type="table" />
                       )}
@@ -140,7 +144,8 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
                           </th>
                         </tr>
                       </thead>
-                      {selected.filledLoaded ? (showMyOpenOrders(selected)
+                      {selected.filledLoaded ? (
+                        showMyOpenOrders(selected)
                       ) : (
                         <Comps_misc_Spinner type="table" />
                       )}
@@ -190,7 +195,7 @@ const showMyFilledOrders = (props: Array<Order>) => {
 };
 
 const showMyOpenOrders = (props) => {
-  const { myOpenOrders, exchange, account }  = props;
+  const { myOpenOrders, exchange, account } = props;
 
   return (
     <tbody>
