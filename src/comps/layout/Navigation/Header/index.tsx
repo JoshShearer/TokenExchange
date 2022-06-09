@@ -74,7 +74,7 @@ export const Comps_layout_Navigation_Header = (_props: typeof defaultProps) => {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="joshshearer.org"
+                              href="https://www.joshshearer.org"
                               className={
                                 'block px-4 py-2 text-sm text-gray-700'
                               }
