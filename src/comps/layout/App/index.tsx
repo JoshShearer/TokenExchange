@@ -3,20 +3,15 @@ import { Comps_layout_Navigation_Header } from '#src/Comps/layout/Navigation/Hea
 import { Comps_layout_Navigation_Footer } from '#src/Comps/layout/Navigation/Footer';
 import { Comps_layout_MTBApp } from '#src/Comps/layout/MTBApp';
 
-import { RootState, Actions, dispatch } from '#src/models/store';
-
 import {
   web3Loader,
   loadToken,
   loadExchange
 } from '#src/models/model_overflow'
-// import useSelector from 'reselect';
 
 import { createStructuredSelector } from '#src/models/utils'
 import { useSelector } from '#src/models/hooks';
 
-
-// import { RootState, Actions, dispatch, store } from '#src/models/store'
 
 const defaultProps = {
   idKey: 'default', 
@@ -39,10 +34,6 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
 
   const selected = useSelector((state) => selector(state, props));
   
-  // const selected = useSelector(
-  //   (rootState: RootState) => rootState.model.statevar //capturing state slice (not internal selector)
-  // );
-  // const selected = useSelector(store.select.model.selectorFunction); //using state and selector (internal selector function)
   const loadBlockchainData = async () => {
     const web3 = await web3Loader()
     const networkId = await web3.eth.net.getId()
@@ -69,17 +60,3 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
 
     )
 };
-
-// export class Comps_layout_App extends React.PureComponent<Props> {
-// 	render() {
-// 		const { countState } = this.props
-// 		return <div>Comps_layout_App</div>
-// 	}
-// }
-
-// const selection = store.select((models) => ({
-//   total: models.cart.total,
-//   eligibleItems: models.cart.wouldGetFreeShipping,
-// }));
-
- 

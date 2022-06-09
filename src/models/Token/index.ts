@@ -5,13 +5,15 @@ import type { Token } from '../../../web3_eth/web3Types/Token';
 
 type defaultState = {
   Token: Token,
-  tokenLoaded: boolean
+  tokenLoaded: boolean,
+  balance: String
 };
 
 export const models_Token = createModel<RootModel>()({
   state: {
     Token : {},
     tokenLoaded: false,
+    balance: "",
   } as defaultState,
   reducers: {
     loadToken(state, payload: Token) {

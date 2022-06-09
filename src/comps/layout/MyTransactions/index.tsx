@@ -77,7 +77,7 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
           <Tab.Panels>
             <Tab.Panel>
               <div className="mt-8 flex flex-col">
-                <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="my-2 mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                   <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                     <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"></div>
                     <table className=" min-w-full divide-y divide-white">
@@ -114,7 +114,7 @@ export const Comps_layout_MyTransactions = (_props: typeof defaultProps) => {
             </Tab.Panel>
             <Tab.Panel>
               <div className="mt-8 flex flex-col">
-                <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="my-2 mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                   <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                     <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"></div>
                     <table className=" min-w-full divide-y divide-white">
@@ -209,9 +209,9 @@ const showMyOpenOrders = (props) => {
               </>
             )}
             <td
-              className="text-stone-500 cancel-order"
+              className="text-stone-500 cancel-order cursor-pointer"
               onClick={(e) => {
-                cancelOrder(dispatch, exchange, order, account);
+                cancelOrder(exchange, order, account);
               }}
             >
               X

@@ -33,11 +33,13 @@ type defaultState = {
   tokenWithdrawAmount: String;
   buyOrder: {
     price: String,
-    amount: String
+    amount: String,
+    making: String
   };
   sellOrder: {
     price: String,
-    amount: String
+    amount: String,
+    making: ""
   };
 };
 
@@ -67,11 +69,13 @@ export const models_Exchange = createModel<RootModel>()({
     tokenWithdrawAmount: "",
     buyOrder: {
       price: "",
-      amount: ""
+      amount: "",
+      making: ""
     },
     sellOrder: {
       price: "",
-      amount: ""
+      amount: "",
+      making: ""
     }
     
   } as defaultState,
@@ -192,6 +196,26 @@ export const models_Exchange = createModel<RootModel>()({
         ...state, 
         tokenBalance: payload,
       }
+    },
+    buyOrderMaking(state, payload) {
+      return {
+      ...state,
+      buyOrder : {
+        amount: null,
+        price: null,
+        making: true
+      }
+    }
+    },
+    sellOrderMaking(state, payload) {
+      return {
+      ...state,
+      sellOrder : {
+        amount: null,
+        price: null,
+        making: true
+      }
+    }
     },
     orderMade(state, order: Order) {
        // Prevent duplicate orders

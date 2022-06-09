@@ -15,8 +15,8 @@ type defaultState = {
 
 export const models_WebB = createModel<RootModel>()({
   state: {
-    account: 'unknown',
-    balance: 'empty',
+    account: '',
+    balance: '',
     Web3Conn: {},
   } as defaultState,
   reducers: {

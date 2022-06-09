@@ -107,34 +107,34 @@ console.log("🚀 ~ file: index.tsx ~ line 53 ~ ShowForm ~ props", props)
                     event.preventDefault()
                     makeBuyOrder(orders.buyOrder, account)
                   }}>
-                    <h2 className="text-white">Buy Amount (MTB)</h2>
-                    <div className="sm:col-span-4">
+                    <h2 className="text-white px-4">Buy Amount (MTB)</h2>
+                    <div className="sm:col-span-4 px-4">
                       <input
                         type="text"
                         name="Buy"
                         id="Buy"
                         onChange={(e) => dispatch.models_Exchange.buyOrder.amount(e.target.value)}
                         placeholder=" Buy Amount"
-                        className="block w-full text-white mt-1 bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
+                        className="block w-full text-white mt-1 px-4 bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
                       />
                     </div>
                     <br />
-                    <h2 className="text-white">Buy Price</h2>
-                    <div className="sm:col-span-4">
+                    <h2 className="text-white px-4">Buy Price</h2>
+                    <div className="sm:col-span-4 px-4">
                       <input
                         type="text"
                         name="Buy"
                         id="Buy"
                         onChange={(e) => dispatch.models_Exchange.buyOrder.price(e.target.value)}
                         placeholder=" Buy Price"
-                        className="block w-full mt-1 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
+                        className="block w-full mt-1 px-4 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
                       />
                     </div>
                     <br />
-                    <div className="w-full">
+                    <div className="w-full px-4">
                       <button
                         type="submit"
-                        className="w-full px-4 py-2 text-base font-medium text-white bg-stone-800 border border-transparent rounded-md shadow-sm hover:bg-stone-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="w-full py-2 text-base font-medium text-white bg-stone-800 border border-transparent rounded-md shadow-sm hover:bg-stone-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       >
                         Buy
                       </button>
@@ -148,31 +148,31 @@ console.log("🚀 ~ file: index.tsx ~ line 53 ~ ShowForm ~ props", props)
                     event.preventDefault()
                     makeSellOrder(orders.sellOrder, account)
                   }}>
-                    <h2 className="text-white">Sell Amount (MTB)</h2>
-                    <div className="sm:col-span-4">
+                    <h2 className="text-white px-4">Sell Amount (MTB)</h2>
+                    <div className="sm:col-span-4 px-4">
                       <input
                         type="text"
                         name="Sell"
                         id="Sell"
                         onChange={(e) => dispatch.models_Exchange.sellOrder.amount(e.target.value)}
                         placeholder=" Sell Amount"
-                        className="block w-full mt-1 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
+                        className="block w-full mt-1 px-4 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
                       />
                     </div>
                     <br />
-                    <h2 className="text-white">Sell Price</h2>
-                    <div className="sm:col-span-4">
+                    <h2 className="text-white px-4">Sell Price</h2>
+                    <div className="sm:col-span-4 px-4">
                       <input
                         type="text"
                         name="Sell"
                         id="Sell"
                         onChange={(e) => dispatch.models_Exchange.sellOrder.price(e.target.value)}
                         placeholder=" Sell Price"
-                        className="block w-full mt-1 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
+                        className="block w-full px-4 mt-1 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
                       />
                     </div>
                     <br />
-                    <div className="w-full">
+                    <div className="w-full px-4">
                       <button
                         type="submit"
                         className="w-full px-4 py-2 text-base font-medium text-white bg-stone-800 border border-transparent rounded-md shadow-sm hover:bg-stone-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

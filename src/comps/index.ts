@@ -11,3 +11,4 @@ export { Comps_layout_Orders } from '#src/Comps/layout/Orders';
 export { Comps_layout_PriceChart } from '#src/Comps/layout/PriceChart';
 export { Comps_layout_Trades } from '#src/Comps/layout/Trades';
 export { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
+export { Comps_misc_Tooltip } from '#src/Comps/misc/Tooltip';
