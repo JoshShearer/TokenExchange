@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { RootState, Actions, dispatch, store } from '#src/models/store';
 
@@ -16,7 +16,7 @@ const defaultProps = {
   children?: JSX.Element;
 };
 const selector = createStructuredSelector({
-  filledLoaded: (root) => root.models_Exchange.filledLoaded,
+  filledLoaded: (root) => root.models_Exchange.filledOrders.loaded,
   filledOrders: store.select.models_Exchange.filledOrdersSelector,
 });
 
@@ -31,7 +31,7 @@ export const Comps_layout_Trades = (_props: typeof defaultProps) => {
         <h2 className="text-2xl text-white">Trades</h2>
         <div className="my-2 mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            {/* <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"></div> */}
+            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"></div>
             <table className="min-w-fit divide-y divide-white">
               <thead>
                 <tr>

@@ -56,8 +56,8 @@ export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
 
   return (
     <div>
-      {/* {selected.showForm ? showForm(props) : <Comps_misc_Spinner />} */}
-      {showForm(props)}
+      {selected.showForm ? showForm(props) : <Comps_misc_Spinner />}
+      {/* {showForm(props)} */}
     </div>
   );
 };

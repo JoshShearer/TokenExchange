@@ -18,7 +18,7 @@ const defaultProps = {
 };
 
 const selector = createStructuredSelector({
-  filledLoaded: (root) => root.models_Exchange.filledLoaded,
+  filledLoaded: (root) => root.models_Exchange.filledOrders.loaded,
   showMyOpenOrders: (root) =>
     root.models_Exchange.cancelledLoaded &&
     root.models_Exchange.filledLoaded &&

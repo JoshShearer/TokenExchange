@@ -6,6 +6,7 @@ import type {
   Order,
 } from '../../../web3_eth/web3Types/Exchange';
 import _ from 'lodash';
+import { ContractEventEmitter } from '../../../web3_eth/web3Types/types';
 import {
   decorateOrder,
   decorateFilledOrders,
@@ -14,28 +15,35 @@ import {
   decorateOrderBookOrders,
   buildGraphData,
 } from '#src/models/model_overflow';
+import { string } from 'zod';
 
 type defaultState = {
   Exchange: ExCon;
   exchangeLoaded: boolean;
-  cancelledOrders: Array<Order>;
-  cancelledLoaded: boolean;
-  filledOrders: Array<Order>;
-  filledLoaded: boolean;
-  allOrders: Array<Order>;
-  allLoaded: boolean;
+  cancelledOrders: {
+    data: Array<Order>;
+    loaded: boolean;
+  };
+  filledOrders: {
+    data: Array<Order>;
+    loaded: boolean;
+  };
+  allOrders: {
+    data: Array<Order>;
+    loaded: boolean;
+  };
   //Operations
-  orderCancelling: boolean;
-  orderFilling: boolean;
-  ethBalanceLoaded: boolean;
-  tokBalanceLoaded: boolean;
-  balancesLoading: boolean;
-  etherBalance: String;
-  tokenBalance: String;
-  etherDepositAmount: String;
-  etherWithdrawAmount: String;
-  tokenDepositAmount: String;
-  tokenWithdrawAmount: String;
+  // orderCancelling: boolean;
+  // orderFilling: boolean;
+  // ethBalanceLoaded: boolean;
+  // tokBalanceLoaded: boolean;
+  // balancesLoading: boolean;
+  // etherBalance: String;
+  // tokenBalance: String;
+  // etherDepositAmount: String;
+  // etherWithdrawAmount: String;
+  // tokenDepositAmount: String;
+  // tokenWithdrawAmount: String;
   buyOrder: {
     price: String;
     amount: String;
@@ -48,30 +56,66 @@ type defaultState = {
   };
 };
 
+// export type decoTrade = ContractEventLog<{
+//   ...Order,
+//   userFill: string;
+//   user: string;
+//   tokenPrice: string;
+//   tokenPriceClass: string;
+//   etherAmount; string;
+//   formattedTimestamp: string;
+// }>;
+// export type decoTrans = ContractEventLog<{
+//   ...Order,
+//   user: string;
+//   orderType: string;
+//   tokenPrice: string;
+//   orderTypeClass: string;
+//   etherAmount; string;
+//   formattedTimestamp: string;
+// }>;
+// export type decoBook = ContractEventLog<{
+//   ...Order,
+//   user: string;
+//   tokenPrice: string;
+//   tokenAmount: string;
+//   orderType: string;
+//   orderTypeClass: string;
+//   orderFillAction: string;
+//   etherAmount; string;
+//   formattedTimestamp: string;
+// }>;
+
 export const models_Exchange = createModel<RootModel>()({
   state: {
     Exchange: {},
     exchangeLoaded: false,
-    cancelledOrders: [],
-    cancelledLoaded: false,
-    filledOrders: [],
-    filledLoaded: false,
-    allOrders: [],
-    allLoaded: false,
+    cancelledOrders: {
+      data: {},
+      loaded: false,
+    },
+    filledOrders: {
+      data: {},
+      loaded: false,
+    },
+    allOrders: {
+      data: {},
+      loaded: false,
+    },
     //Operations
-    orderCancelling: false,
-    orderFilling: false,
-    ethBalanceLoaded: false,
-    tokBalanceLoaded: false,
-    balancesLoading: false,
-    etherBalance: '',
-    tokenBalance: '',
-    exchangeEtherBalance: '',
-    exchangeTokenBalance: '',
-    etherDepositAmount: '',
-    etherWithdrawAmount: '',
-    tokenDepositAmount: '',
-    tokenWithdrawAmount: '',
+    // orderCancelling: false,
+    // orderFilling: false,
+    // ethBalanceLoaded: false,
+    // tokBalanceLoaded: false,
+    // balancesLoading: false,
+    // etherBalance: '',
+    // tokenBalance: '',
+    // exchangeEtherBalance: '',
+    // exchangeTokenBalance: '',
+    // etherDepositAmount: '',
+    // etherWithdrawAmount: '',
+    // tokenDepositAmount: '',
+    // tokenWithdrawAmount: '',
     buyOrder: {
       price: '',
       amount: '',
@@ -89,48 +133,64 @@ export const models_Exchange = createModel<RootModel>()({
       return {
         ...state,
         Exchange: payload,
+        exchangeLoaded: true,
       };
     },
     exLoaded(state, payload: boolean) {
       return {
         ...state,
-        exchangeLoaded: true,
+        exchangeLoaded: payload,
       };
     },
     loadAllOrders(state, payload: Array<Order>) {
       return {
         ...state,
-        allOrders: payload,
+        allOrders: {
+          data: payload,
+          loaded: true,
+        },
       };
     },
     setAllLoaded(state, payload: boolean) {
       return {
         ...state,
-        allLoaded: payload,
+        allOrders: {
+          loaded: payload,
+        },
       };
     },
     loadCancelled(state, payload: Array<Order>) {
       return {
         ...state,
-        cancelledOrders: payload,
+        cancelledOrders: {
+          data: payload,
+          loaded: true,
+        },
       };
     },
     setCancelled(state, payload: boolean) {
       return {
         ...state,
-        cancelledLoaded: payload,
+        cancelledOrders: {
+          loaded: payload,
+        },
       };
     },
     loadFilledOrders(state, payload: Array<Order>) {
       return {
         ...state,
-        filledOrders: payload,
+        filledOrders: {
+          data: payload,
+          loaded: true,
+        },
       };
     },
     setFilled(state, payload: boolean) {
       return {
         ...state,
-        filledLoaded: payload,
+        filledOrders: {
+          loaded: payload,
+        },
       };
     },
     //Blockchain events = State updates
@@ -279,8 +339,12 @@ export const models_Exchange = createModel<RootModel>()({
   selectors: (slice, createSelector) => ({
     filledOrdersSelector() {
       return createSelector(
-        [slice, (rootState) => rootState.models_Exchange.filledOrders],
+        [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
         (defaultState, orders) => {
+          console.log(
+            '🚀 ~ file: index.ts ~ line 345 ~ filledOrdersSelector ~ orders',
+            orders
+          );
           // Sort orders by date ascending for price comparison
           orders = orders.sort((a, b) => a.timestamp - b.timestamp);
           // Decorate the orders
@@ -296,7 +360,7 @@ export const models_Exchange = createModel<RootModel>()({
         [slice, (rootState) => rootState.models_WebB.account],
         (defaultState, account) => {
           // Sort orders by date ascending for price comparison
-          var orders = defaultState.filledOrders.filter(
+          var orders = defaultState.filledOrders.data.filter(
             (o) => o.user === account || o.userFill === account
           );
           // Sort by date ascending
@@ -312,7 +376,7 @@ export const models_Exchange = createModel<RootModel>()({
         [slice, (rootState) => rootState.models_WebB.account],
         (defaultState, account) => {
           // Sort orders by date ascending for price comparison
-          var orders = defaultState.filledOrders.filter(
+          var orders = defaultState.filledOrders.data.filter(
             (o) => o.user === account
           );
           // Decorate orders - add display attributes
@@ -325,7 +389,7 @@ export const models_Exchange = createModel<RootModel>()({
     },
     priceChartSelector() {
       return createSelector(
-        [slice, (rootState) => rootState.models_Exchange.filledOrders],
+        [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
         (defaultState, orders) => {
           // Sort orders by date ascending for compare history
           orders = orders.sort((a, b) => a.timestamp - b.timestamp);
@@ -357,7 +421,7 @@ export const models_Exchange = createModel<RootModel>()({
     orderBookSelector() {
       return createSelector(
         //This needs to be OpenOrders...not filled
-        [slice, (rootState) => rootState.models_Exchange.filledOrders],
+        [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
         (defaultState, orders) => {
           // Decorate orders
           orders = decorateOrderBookOrders(orders);
@@ -385,7 +449,6 @@ export const models_Exchange = createModel<RootModel>()({
   effects: (dispatch) => ({
     async loadExchangeAsync(exchange: ExCon, state) {
       dispatch.models_Exchange.loadExchange(exchange);
-      dispatch.models_Exchange.exLoaded(true);
     },
     async loadAllOrdersAsync(exchange: ExCon, state) {
       // Fetch cancelled orders with the "Cancel" event stream
@@ -395,10 +458,11 @@ export const models_Exchange = createModel<RootModel>()({
       });
       // Format cancelled orders
       const cancelledOrders = cancelStream.map((event) => event.returnValues);
+      console.log(
+        cancelledOrders
+      );
       // Add cancelled orders to the redux store
       dispatch.models_Exchange.loadCancelled(cancelledOrders);
-      dispatch.models_Exchange.setCancelled(true);
-
       // Fetch filled orders with the "Trade" event stream
       const tradeStream = await exchange.getPastEvents('Trade', {
         fromBlock: 0,
@@ -406,10 +470,11 @@ export const models_Exchange = createModel<RootModel>()({
       });
       // Format filled orders
       const filledOrders = tradeStream.map((event) => event.returnValues);
+      console.log(
+        filledOrders
+      );
       // Add cancelled orders to the redux store
       dispatch.models_Exchange.loadFilledOrders(filledOrders);
-      dispatch.models_Exchange.setFilled(true);
-
       // Load order stream
       const orderStream = await exchange.getPastEvents('Order', {
         fromBlock: 0,
@@ -417,9 +482,11 @@ export const models_Exchange = createModel<RootModel>()({
       });
       // Format order stream
       const allOrders = orderStream.map((event) => event.returnValues);
+      console.log(
+        allOrders
+      );
       // Add open orders to the redux store
       dispatch.models_Exchange.loadAllOrders(allOrders);
-      dispatch.models_Exchange.setAllLoaded(true);
     },
     // async subscribeToEventsAsync( state) {
     //   state.Exchange.events.Cancel({}, (error, event) => {

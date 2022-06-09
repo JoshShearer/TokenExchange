@@ -17,9 +17,9 @@ const defaultProps = {
 };
 const selector = createStructuredSelector({
   showOrderBook: (root) =>
-    root.models_Exchange.cancelledLoaded &&
-    root.models_Exchange.filledLoaded &&
-    root.models_Exchange.allLoaded &&
+    root.models_Exchange.cancelledOrders.loaded &&
+    root.models_Exchange.filledOrders.loaded &&
+    root.models_Exchange.allOrders.loaded &&
     !root.models_Exchange.orderFilling,
   orderBook: store.select.models_Exchange.orderBookSelector,
   exchange: (root) => root.models_Exchange.Exchange,
@@ -32,7 +32,7 @@ export const Comps_layout_OrderBook = (_props: typeof defaultProps) => {
   const selected = useSelector((state) => selector(state, props));
 
   return (
-    <div className="w-full max-w-sm mx-auto min-w-fit bg-stone-700 rounded">
+    <div className="w-full max-w-sm mx-auto bg-stone-700 rounded">
       <div className="py-5 px-4 sm:p-6">
         <h2 className="text-2xl text-white">Order Book</h2>
         <div className="my-2 mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -42,7 +42,7 @@ export const Comps_layout_OrderBook = (_props: typeof defaultProps) => {
               {selected.showOrderBook ? (
                 showOrderBook(selected)
               ) : (
-                <Comps_misc_Spinner type="table" />
+                <Comps_misc_Spinner  />
               )}
             </table>
             <br />

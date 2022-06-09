@@ -18,7 +18,7 @@ const defaultProps = {
   children?: JSX.Element;
 };
 const selector = createStructuredSelector({
-  priceChartLoaded: (root) => root.models_Exchange.filledLoaded,
+  priceChartLoaded: (root) => root.models_Exchange.filledOrders.loaded,
   priceChart: store.select.models_Exchange.priceChartSelector,
 });
 
@@ -28,10 +28,9 @@ export const Comps_layout_PriceChart = (_props: typeof defaultProps) => {
   const selected = useSelector((state) => selector(state, props));
 
   return (
-    // <div className="w-full px-3 pt-3 ">
     <div className="w-full max-w-lg p-2 min-h-fit mx-auto bg-stone-700 rounded">
       <div className="px-4 py-5 sm:p-6">
-        {/* <div className="relative"> */}
+        <div className="relative">
         <h2 className="text-2xl text-white">Price Chart</h2>
         <br />
         {selected.priceChartLoaded ? (
@@ -41,8 +40,7 @@ export const Comps_layout_PriceChart = (_props: typeof defaultProps) => {
         )}
       </div>
     </div>
-    //   </div>
-    // </div>
+     </div>
   );
 };
 
