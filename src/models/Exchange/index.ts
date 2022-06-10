@@ -1,5 +1,5 @@
 import { createModel, RematchDispatch } from '@rematch/core';
-import { get, groupBy } from 'lodash';
+import { defaults, get, groupBy, reject } from 'lodash';
 import type { RootModel } from '#src/models/model';
 import type {
   Exchange as ExCon,
@@ -8,6 +8,7 @@ import type {
 import _ from 'lodash';
 import { ContractEventEmitter } from '../../../web3_eth/web3Types/types';
 import {
+  openOrders,
   decorateOrder,
   decorateFilledOrders,
   decorateMyFilledOrders,
@@ -16,6 +17,7 @@ import {
   buildGraphData,
 } from '#src/models/model_overflow';
 import { string } from 'zod';
+import mod from 'zod/lib';
 
 type defaultState = {
   Exchange: ExCon;
@@ -399,8 +401,8 @@ export const models_Exchange = createModel<RootModel>()({
       const index = state.allOrders.data.findIndex(
         (orderS) => orderS.id === order.id //Needs updating with rematch?
       );
-      console.log("🚀 ~ file: index.ts ~ line 402 ~ orderMade ~ index", index)
-      let data
+      console.log('🚀 ~ file: index.ts ~ line 402 ~ orderMade ~ index', index);
+      let data;
       if (index === -1) {
         data = [...state.allOrders.data, order];
       } else {
@@ -414,7 +416,7 @@ export const models_Exchange = createModel<RootModel>()({
           data,
         },
         Orders: {
-          cancelling:false,
+          cancelling: false,
           filling: false,
           buyOrder: {
             ...state.Orders.buyOrder,
@@ -433,8 +435,8 @@ export const models_Exchange = createModel<RootModel>()({
         Debits: {
           ...state.Debits,
           Deposit: {
-          ...state.Debits.Deposit,
-          etherAmount: amount,
+            ...state.Debits.Deposit,
+            etherAmount: amount,
           },
         },
       };
@@ -445,8 +447,8 @@ export const models_Exchange = createModel<RootModel>()({
         Debits: {
           ...state.Debits,
           Withdraw: {
-          ...state.Debits.Withdraw,
-          etherAmount: amount,
+            ...state.Debits.Withdraw,
+            etherAmount: amount,
           },
         },
       };
@@ -454,11 +456,11 @@ export const models_Exchange = createModel<RootModel>()({
     tokenDepositAmountChanged(state, amount: String) {
       return {
         ...state,
-          Debits: {
+        Debits: {
           ...state.Debits,
           Deposit: {
-          ...state.Debits.Deposit,
-          tokenAmount: amount,
+            ...state.Debits.Deposit,
+            tokenAmount: amount,
           },
         },
       };
@@ -469,8 +471,8 @@ export const models_Exchange = createModel<RootModel>()({
         Debits: {
           ...state.Debits.Deposit,
           Withdraw: {
-          ...state.Debits.Withdraw,
-          tokenAmount: amount,
+            ...state.Debits.Withdraw,
+            tokenAmount: amount,
           },
         },
       };
@@ -487,6 +489,10 @@ export const models_Exchange = createModel<RootModel>()({
           orders = decorateFilledOrders(orders);
           // Sort orders by date descending for display
           orders = orders.sort((a, b) => b.timestamp - a.timestamp);
+          console.log(
+            '🚀 ~ file: index.ts ~ line 490 ~ filledOrdersSelector ~ orders',
+            orders
+          );
           return orders as Array<Order>;
         }
       );
@@ -503,6 +509,10 @@ export const models_Exchange = createModel<RootModel>()({
           orders = orders.sort((a, b) => a.timestamp - b.timestamp);
           // Decorate orders - add display attributes
           orders = decorateMyFilledOrders(orders, account);
+          console.log(
+            '🚀 ~ file: index.ts ~ line 507 ~ myFilledOrdersSelector ~ orders',
+            orders
+          );
           return orders as Array<Order>;
         }
       );
@@ -511,14 +521,22 @@ export const models_Exchange = createModel<RootModel>()({
       return createSelector(
         [slice, (rootState) => rootState.models_WebB.account],
         (defaultState, account) => {
-          // Sort orders by date ascending for price comparison
-          var orders = defaultState.filledOrders.data.filter(
-            (o) => o.user === account
+          const oOrders = openOrders(
+            defaultState.allOrders.data,
+            defaultState.filledOrders.data,
+            defaultState.cancelledOrders.data
           );
+
+          // Sort orders by date ascending for price comparison
+          var orders = oOrders.filter((o) => o.user === account);
           // Decorate orders - add display attributes
           orders = decorateMyOpenOrders(orders, account);
           // Sort orders by date descending
           orders = orders.sort((a, b) => b.timestamp - a.timestamp);
+          console.log(
+            '🚀 ~ file: index.ts ~ line 524 ~ myOpenOrdersSelector ~ orders',
+            orders
+          );
           return orders as Array<Order>;
         }
       );
@@ -559,8 +577,13 @@ export const models_Exchange = createModel<RootModel>()({
         //This needs to be OpenOrders...not filled
         [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
         (defaultState, orders) => {
+          const oOrders = openOrders(
+            defaultState.allOrders.data,
+            defaultState.filledOrders.data,
+            defaultState.cancelledOrders.data
+          );
           // Decorate orders
-          orders = decorateOrderBookOrders(orders);
+          orders = decorateOrderBookOrders(oOrders);
           // Group orders by "orderType"
           orders = groupBy(orders, 'orderType');
           // Fetch buy orders
@@ -577,6 +600,10 @@ export const models_Exchange = createModel<RootModel>()({
             ...orders,
             sellOrders: sellOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
           };
+          console.log(
+            '🚀 ~ file: index.ts ~ line 580 ~ orderBookSelector ~ orders',
+            orders
+          );
           return orders;
         }
       );

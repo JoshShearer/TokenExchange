@@ -7,7 +7,7 @@ import {
   formatBalance,
   tokens,
 } from '../../web3_eth/test/helpers';
-import { groupBy, maxBy, minBy } from 'lodash';
+import { groupBy, maxBy, minBy, reject } from 'lodash';
 //TS Types
 import type {
   Exchange as ExCon,
@@ -167,6 +167,17 @@ export const loadBalances = async (web3, exchange, token, account) => {
   } else {
     window.alert('Please login with MetaMask');
   }
+};
+
+export const openOrders = (all, filled, cancelled) => {
+
+  const openOrders = reject(all, (order) => {
+    const orderFilled = filled.some((o) => o.id === order.id);
+    const orderCancelled = cancelled.some((o) => o.id === order.id);
+    return orderFilled || orderCancelled;
+  });
+
+  return openOrders;
 };
 
 export const depositEther = (exchange, web3, amount, account) => {
