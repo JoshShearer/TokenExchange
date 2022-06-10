@@ -55,11 +55,13 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
   return (
     <div>
       <Comps_layout_Navigation_Header />
+
       {selected.contractsLoaded ? (
         <Comps_layout_MTBApp />
       ) : (
         <div className="content"></div>
       )}
+      
       <Comps_layout_Navigation_Footer />
     </div>
   );

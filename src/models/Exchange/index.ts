@@ -33,29 +33,42 @@ type defaultState = {
     loaded: boolean;
   };
   //Operations
-  // orderCancelling: boolean;
-  // orderFilling: boolean;
-  // ethBalanceLoaded: boolean;
-  // tokBalanceLoaded: boolean;
-  // balancesLoading: boolean;
-  // etherBalance: String;
-  // tokenBalance: String;
-  // etherDepositAmount: String;
-  // etherWithdrawAmount: String;
-  // tokenDepositAmount: String;
-  // tokenWithdrawAmount: String;
-  buyOrder: {
-    price: String;
-    amount: String;
-    making: String;
+  Balances: {
+    loading: boolean;
+    ether: {
+      loading: boolean;
+      Balance: string;
+    };
+    token: {
+      loading: boolean;
+      Balance: string;
+    };
   };
-  sellOrder: {
-    price: String;
-    amount: String;
-    making: '';
+  Debits: {
+    Deposit: {
+      etherAmount: string;
+      tokenAmount: string;
+    };
+    Withdraw: {
+      tokenAmount: string;
+      etherAmount: string;
+    };
+  };
+  Orders: {
+    cancelling: boolean;
+    filling: boolean;
+    buyOrder: {
+      price: string;
+      amount: string;
+      making: boolean;
+    };
+    sellOrder: {
+      price: string;
+      amount: string;
+      making: boolean;
+    };
   };
 };
-
 // export type decoTrade = ContractEventLog<{
 //   ...Order,
 //   userFill: string;
@@ -103,28 +116,40 @@ export const models_Exchange = createModel<RootModel>()({
       loaded: false,
     },
     //Operations
-    // orderCancelling: false,
-    // orderFilling: false,
-    // ethBalanceLoaded: false,
-    // tokBalanceLoaded: false,
-    // balancesLoading: false,
-    // etherBalance: '',
-    // tokenBalance: '',
-    // exchangeEtherBalance: '',
-    // exchangeTokenBalance: '',
-    // etherDepositAmount: '',
-    // etherWithdrawAmount: '',
-    // tokenDepositAmount: '',
-    // tokenWithdrawAmount: '',
-    buyOrder: {
-      price: '',
-      amount: '',
-      making: '',
+    Balances: {
+      loading: false,
+      ether: {
+        loaded: false,
+        Balance: '',
+      },
+      token: {
+        loaded: false,
+        Balance: '',
+      },
     },
-    sellOrder: {
-      price: '',
-      amount: '',
-      making: '',
+    Debits: {
+      Deposit: {
+        etherAmount: '',
+        tokenAmount: '',
+      },
+      Withdraw: {
+        tokenAmount: '',
+        etherAmount: '',
+      },
+    },
+    Orders: {
+      cancelling: false,
+      filling: false,
+      buyOrder: {
+        price: '',
+        amount: '',
+        making: false,
+      },
+      sellOrder: {
+        price: '',
+        amount: '',
+        making: false,
+      },
     },
   } as defaultState,
   reducers: {
@@ -155,6 +180,7 @@ export const models_Exchange = createModel<RootModel>()({
       return {
         ...state,
         allOrders: {
+          ...state.allOrders,
           loaded: payload,
         },
       };
@@ -172,6 +198,7 @@ export const models_Exchange = createModel<RootModel>()({
       return {
         ...state,
         cancelledOrders: {
+          ...state.cancelledOrders,
           loaded: payload,
         },
       };
@@ -189,108 +216,193 @@ export const models_Exchange = createModel<RootModel>()({
       return {
         ...state,
         filledOrders: {
+          ...state.filledOrders,
           loaded: payload,
         },
       };
     },
+
     //Blockchain events = State updates
     setCancelling(state, payload: boolean) {
       return {
         ...state,
-        orderCancelling: payload,
+        Orders: {
+          ...state.Orders,
+          cancelling: payload,
+        },
       };
     },
     orderCancelled(state, order: Order) {
       return {
         ...state,
-        orderCancelling: false,
+        Order: {
+          ...state.Orders,
+          cancelling: false,
+        },
         cancelledOrders: {
-          ...state.cancelledOrders,
+          ...state.cancelledOrders.data,
           order,
         },
       };
     },
     setFilling(state, payload: boolean) {
       return {
-        orderFilling: payload,
+        Orders: {
+          ...state.Orders,
+          filling: payload,
+        },
       };
     },
     orderFilled(state, order: Order) {
-      const index = state.filledOrders.findIndex(
-        (orders) => orders.id === order.id
+      const index = state.filledOrders.data.findIndex(
+        (orderS) => orderS.id === order.id
       );
       if (index === -1) {
-        const data = [...state.filledOrders, order];
+        const data = [...state.filledOrders.data, order];
       } else {
-        const data = state.filledOrders;
+        const data = state.filledOrders.data;
       }
       return {
         ...state,
-        orderFilling: false,
+        Orders: {
+          ...state.Orders,
+          filling: false,
+        },
         filledOrders: {
-          ...state.filledOrders,
-          data,
+          loaded: true,
+          data: {
+            ...state.filledOrders.data,
+            data,
+          },
         },
       };
     },
-    BalancesLoading(state, payload: boolean) {
+    balancesLoaded(state, payload: boolean) {
       return {
         ...state,
-        balancesLoading: payload,
-      };
-    },
-    exEthBalLoaded(state, payload: boolean) {
-      return {
-        ...state,
-        ethBalanceLoaded: payload,
-      };
-    },
-    exTokenBalLoaded(state, payload: boolean) {
-      return {
-        ...state,
-        tokBalanceLoaded: payload,
-      };
-    },
-    loadEthBalance(state, payload: String) {
-      return {
-        ...state,
-        etherBalance: payload,
-      };
-    },
-    loadTokBalance(state, payload: String) {
-      return {
-        ...state,
-        tokenBalance: payload,
-      };
-    },
-    buyOrderMaking(state, payload) {
-      return {
-        ...state,
-        buyOrder: {
-          amount: null,
-          price: null,
-          making: true,
+        Balances: {
+          ...state.Balances,
+          loading: false,
         },
       };
     },
-    sellOrderMaking(state, payload) {
+    balancesLoading(state, payload: boolean) {
       return {
         ...state,
-        sellOrder: {
-          amount: null,
-          price: null,
-          making: true,
+        Balances: {
+          ...state.Balances,
+          loading: true,
+        },
+      };
+    },
+    loadExEthBal(state, payload: String) {
+      return {
+        ...state,
+        Balances: {
+          ...state.Balances,
+          ether: {
+            loaded: true,
+            Balance: payload,
+          },
+        },
+      };
+    },
+    loadExTokBal(state, payload: String) {
+      return {
+        ...state,
+        Balances: {
+          ...state.Balances,
+          token: {
+            loaded: true,
+            Balance: payload,
+          },
+        },
+      };
+    },
+    buyOrderAmountChanged(state, payload: String) {
+      return {
+        ...state,
+        Orders: {
+          ...state.Orders,
+          buyOrder: {
+            ...state.Orders.buyOrder,
+            amount: payload,
+          },
+        },
+      };
+    },
+    buyOrderPriceChanged(state, payload: String) {
+      return {
+        ...state,
+        Orders: {
+          ...state.Orders,
+          buyOrder: {
+            ...state.Orders.buyOrder,
+            price: payload,
+          },
+        },
+      };
+    },
+    sellOrderAmountChanged(state, payload: String) {
+      return {
+        ...state,
+        Orders: {
+          ...state.Orders,
+          sellOrder: {
+            ...state.Orders.sellOrder,
+            amount: payload,
+          },
+        },
+      };
+    },
+    sellOrderPriceChanged(state, payload: String) {
+      return {
+        ...state,
+        Orders: {
+          ...state.Orders,
+          sellOrder: {
+            ...state.Orders.sellOrder,
+            price: payload,
+          },
+        },
+      };
+    },
+    buyOrderMaking(state, payload: String) {
+      return {
+        ...state,
+        Orders: {
+          ...state.Orders,
+          buyOrder: {
+            amount: null,
+            price: null,
+            making: true,
+          },
+        },
+      };
+    },
+    sellOrderMaking(state, payload: String) {
+      return {
+        ...state,
+        Orders: {
+          ...state.Orders,
+          sellOrder: {
+            amount: null,
+            price: null,
+            making: true,
+          },
         },
       };
     },
     orderMade(state, order: Order) {
+      console.log('🚀 ~ file: index.ts ~ line 385 ~ orderMade ~ order', order);
       // Prevent duplicate orders
-      index = state.allOrders.data.findIndex(
-        (order) => order.id === action.order.id
+      const index = state.allOrders.data.findIndex(
+        (orderS) => orderS.id === order.id //Needs updating with rematch?
       );
-
+      console.log("🚀 ~ file: index.ts ~ line 402 ~ orderMade ~ index", index)
+      let data
       if (index === -1) {
-        data = [...state.allOrders, order];
+        data = [...state.allOrders.data, order];
       } else {
         data = state.allOrders.data;
       }
@@ -301,38 +413,66 @@ export const models_Exchange = createModel<RootModel>()({
           ...state.allOrders,
           data,
         },
-        buyOrder: {
-          ...state.buyOrder,
-          making: false,
-        },
-        sellOrder: {
-          ...state.sellOrder,
-          making: false,
+        Orders: {
+          cancelling:false,
+          filling: false,
+          buyOrder: {
+            ...state.Orders.buyOrder,
+            making: false,
+          },
+          sellOrder: {
+            ...state.Orders.sellOrder,
+            making: false,
+          },
         },
       };
     },
     etherDepositAmountChanged(state, amount: String) {
       return {
         ...state,
-        etherDepositAmount: amount,
+        Debits: {
+          ...state.Debits,
+          Deposit: {
+          ...state.Debits.Deposit,
+          etherAmount: amount,
+          },
+        },
       };
     },
     etherWithdrawAmountChanged(state, amount: String) {
       return {
         ...state,
-        etherWithdrawtAmount: amount,
+        Debits: {
+          ...state.Debits,
+          Withdraw: {
+          ...state.Debits.Withdraw,
+          etherAmount: amount,
+          },
+        },
       };
     },
     tokenDepositAmountChanged(state, amount: String) {
       return {
         ...state,
-        tokenDepositAmount: amount,
+          Debits: {
+          ...state.Debits,
+          Deposit: {
+          ...state.Debits.Deposit,
+          tokenAmount: amount,
+          },
+        },
       };
     },
     tokenWithdrawAmountChanged(state, amount: String) {
       return {
         ...state,
-        tokenWithdrawAmount: amount,
+        Debits: {
+          ...state.Debits.Deposit,
+          Withdraw: {
+          ...state.Debits.Withdraw,
+          tokenAmount: amount,
+          },
+        },
       };
     },
   },
@@ -341,10 +481,6 @@ export const models_Exchange = createModel<RootModel>()({
       return createSelector(
         [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
         (defaultState, orders) => {
-          console.log(
-            '🚀 ~ file: index.ts ~ line 345 ~ filledOrdersSelector ~ orders',
-            orders
-          );
           // Sort orders by date ascending for price comparison
           orders = orders.sort((a, b) => a.timestamp - b.timestamp);
           // Decorate the orders
@@ -458,9 +594,6 @@ export const models_Exchange = createModel<RootModel>()({
       });
       // Format cancelled orders
       const cancelledOrders = cancelStream.map((event) => event.returnValues);
-      console.log(
-        cancelledOrders
-      );
       // Add cancelled orders to the redux store
       dispatch.models_Exchange.loadCancelled(cancelledOrders);
       // Fetch filled orders with the "Trade" event stream
@@ -470,9 +603,6 @@ export const models_Exchange = createModel<RootModel>()({
       });
       // Format filled orders
       const filledOrders = tradeStream.map((event) => event.returnValues);
-      console.log(
-        filledOrders
-      );
       // Add cancelled orders to the redux store
       dispatch.models_Exchange.loadFilledOrders(filledOrders);
       // Load order stream
@@ -482,9 +612,6 @@ export const models_Exchange = createModel<RootModel>()({
       });
       // Format order stream
       const allOrders = orderStream.map((event) => event.returnValues);
-      console.log(
-        allOrders
-      );
       // Add open orders to the redux store
       dispatch.models_Exchange.loadAllOrders(allOrders);
     },

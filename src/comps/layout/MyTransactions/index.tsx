@@ -20,15 +20,15 @@ const defaultProps = {
 const selector = createStructuredSelector({
   filledLoaded: (root) => root.models_Exchange.filledOrders.loaded,
   showMyOpenOrders: (root) =>
-    root.models_Exchange.cancelledLoaded &&
-    root.models_Exchange.filledLoaded &&
-    root.models_Exchange.allLoaded &&
-    !root.models_Exchange.orderCancelling,
+    root.models_Exchange.cancelledOrders.loaded &&
+    root.models_Exchange.filledOrders.loaded &&
+    root.models_Exchange.allOrders.loaded &&
+    root.models_Exchange.cancelledOrders.loaded,
   myFilledOrders: store.select.models_Exchange.myFilledOrdersSelector,
   myOpenOrders: store.select.models_Exchange.myOpenOrdersSelector,
   exchange: (root) => root.models_Exchange.Exchange,
   account: (root) => root.models_WebB.account,
-  orderCancelling: (root) => root.models_Exchange.orderCancelling,
+  orderCancelled: (root) => root.models_Exchange.orderCancelled,
 });
 
 function classNames(...classes: Array<String>) {

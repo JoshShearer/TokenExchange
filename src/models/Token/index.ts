@@ -27,6 +27,12 @@ export const models_Token = createModel<RootModel>()({
         tokenLoaded: payload,
       };
     },
+    loadBal(state, payload: String) {
+      return {
+        ...state, 
+        balance: payload,
+      }
+    }
   },
   // selectors: (slice, createSelector, hasProps) => ({
 

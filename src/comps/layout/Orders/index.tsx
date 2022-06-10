@@ -22,16 +22,16 @@ const selector = createStructuredSelector({
   web3: (root) => root.models_WebB.Web3Conn,
   exchange: (root) => root.models_Exchange.Exchange,
   account: (root) => root.models_WebB.account,
-  buyOrder: (root) => root.models_Exchange.buyOrder,
-  sellOrder: (root) => root.models_Exchange.sellOrder,
+  buyOrder: (root) => root.models_Exchange.Orders.buyOrder,
+  sellOrder: (root) => root.models_Exchange.Orders.sellOrder,
   showForm: (root) =>
-    !root.models_Exchange.buyOrder.making &&
-    !root.models_Exchange.sellOrder.making,
+    !root.models_Exchange.Orders.buyOrder.making &&
+    !root.models_Exchange.Orders.sellOrder.making,
   showBuyTotal: (root) =>
-    root.models_Exchange.buyOrder.amount && root.models_Exchange.buyOrder.price,
+    root.models_Exchange.Orders.buyOrder.amount && root.models_Exchange.Orders.buyOrder.price,
   showSellTotal: (root) =>
-    root.models_Exchange.sellOrder.amount &&
-    root.models_Exchange.sellOrder.price,
+    root.models_Exchange.Orders.sellOrder.amount &&
+    root.models_Exchange.Orders.sellOrder.price,
 });
 
 export const Comps_layout_Orders = (_props: typeof defaultProps) => {
@@ -49,7 +49,6 @@ function classNames(...classes) {
 }
 
 const ShowForm = (props) => {
-  console.log('🚀 ~ file: index.tsx ~ line 53 ~ ShowForm ~ props', props);
 
   const {
     buyOrder,
@@ -104,7 +103,7 @@ const ShowForm = (props) => {
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
-                  makeBuyOrder(orders.buyOrder, account);
+                  makeBuyOrder(exchange, token, web3, buyOrder, account);
                 }}
               >
                 <h2 className="text-white px-4">Buy Amount (MTB)</h2>
@@ -114,7 +113,7 @@ const ShowForm = (props) => {
                     name="Buy"
                     id="Buy"
                     onChange={(e) =>
-                      dispatch.models_Exchange.buyOrder.amount(e.target.value)
+                      dispatch.models_Exchange.buyOrderAmountChanged(e.target.value)
                     }
                     placeholder=" Buy Amount"
                     className="block w-full text-white mt-1 px-4 bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
@@ -128,7 +127,7 @@ const ShowForm = (props) => {
                     name="Buy"
                     id="Buy"
                     onChange={(e) =>
-                      dispatch.models_Exchange.buyOrder.price(e.target.value)
+                      dispatch.models_Exchange.buyOrderPriceChanged(e.target.value)
                     }
                     placeholder=" Buy Price"
                     className="block w-full mt-1 px-4 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
@@ -153,7 +152,7 @@ const ShowForm = (props) => {
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
-                  makeSellOrder(orders.sellOrder, account);
+                  makeSellOrder(exchange, token, web3, sellOrder, account);
                 }}
               >
                 <h2 className="text-white px-4">Sell Amount (MTB)</h2>
@@ -163,7 +162,7 @@ const ShowForm = (props) => {
                     name="Sell"
                     id="Sell"
                     onChange={(e) =>
-                      dispatch.models_Exchange.sellOrder.amount(e.target.value)
+                      dispatch.models_Exchange.sellOrderAmountChanged(e.target.value)
                     }
                     placeholder=" Sell Amount"
                     className="block w-full mt-1 px-4 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
@@ -177,7 +176,7 @@ const ShowForm = (props) => {
                     name="Sell"
                     id="Sell"
                     onChange={(e) =>
-                      dispatch.models_Exchange.sellOrder.price(e.target.value)
+                      dispatch.models_Exchange.sellOrderPriceChanged(e.target.value)
                     }
                     placeholder=" Sell Price"
                     className="block w-full px-4 mt-1 text-white bg-stone-500 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"

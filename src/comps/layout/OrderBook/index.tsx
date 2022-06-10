@@ -20,7 +20,7 @@ const selector = createStructuredSelector({
     root.models_Exchange.cancelledOrders.loaded &&
     root.models_Exchange.filledOrders.loaded &&
     root.models_Exchange.allOrders.loaded &&
-    !root.models_Exchange.orderFilling,
+    !root.models_Exchange.Orders.filling,
   orderBook: store.select.models_Exchange.orderBookSelector,
   exchange: (root) => root.models_Exchange.Exchange,
   account: (root) => root.models_WebB.account,
@@ -53,8 +53,8 @@ export const Comps_layout_OrderBook = (_props: typeof defaultProps) => {
   );
 };
 
-const renderOrder = (order, props) => {
-  const { exchange, account } = props;
+const renderOrder = (props) => {
+  const { exchange, account, order } = props;
   const orderColor = `text-${order.orderTypeClass}-500`;
   return (
     // <Tooltip tooltipMessage="{`Click here to ${order.orderFillAction}`}">
@@ -62,7 +62,7 @@ const renderOrder = (order, props) => {
     <tr
       key={order.id}
       className="order-book-order cursor-pointer"
-      onClick={(e) => fillOrder(dispatch, exchange, order, account)}
+      onClick={(e) => fillOrder(exchange, account, order)}
     >
       <td className="text-white">{order.tokenAmount}</td>
       {order.orderTypeClass === 'red' ? (
@@ -77,11 +77,11 @@ const renderOrder = (order, props) => {
 };
 
 const showOrderBook = (props) => {
-  const { orderBook } = props;
+  const { exchange, account, orderBook } = props;
 
   return (
     <tbody className="divide-y divide-gray-400">
-      {orderBook.sellOrders.map((order) => renderOrder(order, props))}
+      {orderBook.sellOrders.map((order) => renderOrder({exchange, account, order}))}
       <tr>
         <td scope="col" className="text-sm font-semibold text-white">
           MTB
@@ -94,7 +94,7 @@ const showOrderBook = (props) => {
         </td>
       </tr>
       <br />
-      {orderBook.buyOrders.map((order) => renderOrder(order, props))}
+      {orderBook.buyOrders.map((order) => renderOrder({exchange, account, order}))}
     </tbody>
   );
 };

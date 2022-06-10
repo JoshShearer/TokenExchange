@@ -93,7 +93,7 @@ export const cancelOrder = (exchange, order, account) => {
     .cancelOrder(order.id)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.orderCancelling();
+      dispatch.models_Exchange.orderCancelled();
     })
     .on('error', (error) => {
       console.log(error);
@@ -132,7 +132,7 @@ export const fillOrder = (exchange, order, account) => {
     .fillOrder(order.id)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.orderFilling();
+      dispatch.models_Exchange.orderFilling(true);
     })
     .on('error', (error) => {
       console.log(error);
@@ -144,23 +144,23 @@ export const loadBalances = async (web3, exchange, token, account) => {
   if (typeof account !== 'undefined') {
     // Ether balance in wallet
     const etherBalance = await web3.eth.getBalance(account);
-    dispatch.models_Exchange.ethBalanceLoaded(etherBalance);
+    dispatch.models_WebB.loadBal(etherBalance);
 
     // Token balance in wallet
     const tokenBalance = await token.methods.balanceOf(account).call();
-    dispatch.models_Exchange.tokenBalanceLoaded(tokenBalance);
+    dispatch.models_Token.loadBal(tokenBalance);
 
     // Ether balance in exchange
     const exchangeEtherBalance = await exchange.methods
       .balanceOf(ETHER_ADDRESS, account)
       .call();
-    dispatch.models_Exchange.exchangeEtherBalanceLoaded(exchangeEtherBalance);
+    dispatch.models_Exchange.loadExEthBal(exchangeEtherBalance);
 
     // Token balance in exchange
     const exchangeTokenBalance = await exchange.methods
       .balanceOf(token.options.address, account)
       .call();
-    dispatch.models_Exchange.exchangeTokenBalanceLoaded(exchangeTokenBalance);
+    dispatch.models_Exchange.loadExTokBal(exchangeTokenBalance);
 
     // Trigger all balances loaded
     dispatch.models_Exchange.balancesLoaded();
@@ -228,7 +228,7 @@ export const withdrawToken = (exchange, web3, token, amount, account) => {
     });
 };
 
-export const makeBuyOrder = (exchange, web3, token, order, account) => {
+export const makeBuyOrder = (exchange, token, web3, order, account) => {
   const tokenGet = token.options.address;
   const amountGet = web3.utils.toWei(order.amount, 'ether');
   const tokenGive = ETHER_ADDRESS;
@@ -241,7 +241,7 @@ export const makeBuyOrder = (exchange, web3, token, order, account) => {
     .makeOrder(tokenGet, amountGet, tokenGive, amountGive)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.buyOrderMaking(false);
+      dispatch.models_Exchange.buyOrderMaking();
     })
     .on('error', (error) => {
       console.error(error);
@@ -249,10 +249,7 @@ export const makeBuyOrder = (exchange, web3, token, order, account) => {
     });
 };
 
-export const makeSellOrder = (order, account) => {
-  exchange = dispatch.models_Exchange.Exchange;
-  token = dispatch.models_Token.Token;
-  web3 = dispatch.models_WebB.Web3Conn;
+export const makeSellOrder = (exchange, token, web3, order, account) => {
   const tokenGet = ETHER_ADDRESS;
   const amountGet = web3.utils.toWei(
     (order.amount * order.price).toString(),

@@ -6,6 +6,7 @@ import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
 import { RootState, Actions, dispatch, store } from '#src/models/store';
+import { formatBalance } from '../../../../web3_eth/helpers';
 
 import {
   loadBalances,
@@ -26,18 +27,16 @@ const selector = createStructuredSelector({
   web3: (root) => root.models_WebB.Web3Conn,
   exchange: (root) => root.models_Exchange.Exchange,
   account: (root) => root.models_WebB.account,
-  buyOrder: (root) => root.models_Exchange.buyOrder,
-  sellOrder: (root) => root.models_Exchange.sellOrder,
-  etherBalance: (root) => root.models_Exchange.etherBalance,
-  tokenBalance: (root) => root.models_Exchange.tokenBalance,
-  exchangeEtherBalance: (root) => root.models_Exchange.exchangeEtherBalance,
-  exchangeTokenBalance: (root) => root.models_Exchange.exchangeTokenBalance,
-  balancesLoading: (root) => root.models_Exchange.balancesLoading,
-  showForm: (root) => !root.models_Exchange.balancesLoading,
-  etherDepositAmount: (root) => root.models_Exchange.etherDepositAmount,
-  etherWithdrawAmount: (root) => root.models_Exchange.etherWithdrawAmount,
-  tokenDepositAmount: (root) => root.models_Exchange.tokenDepositAmount,
-  tokenWithdrawAmount: (root) => root.models_Exchange.tokenWithdrawAmount,
+  walletEtherBalance: (root) => formatBalance(root.models_WebB.balance),
+  walletTokenBalance: (root) => formatBalance(root.models_Token.balance),
+  exchangeEtherBalance: (root) => formatBalance(root.models_Exchange.Balances.ether.Balance),
+  exchangeTokenBalance: (root) => formatBalance(root.models_Exchange.Balances.token.Balance),
+  balancesLoading: (root) => root.models_Exchange.Balances.loading,
+  showForm: (root) => !root.models_Exchange.Balances.loading,
+  etherDepositAmount: (root) => root.models_Exchange.Debits.Deposit.etherAmount,
+  etherWithdrawAmount: (root) => root.models_Exchange.Debits.Withdraw.etherAmount,
+  tokenDepositAmount: (root) => root.models_Exchange.Debits.Deposit.tokenAmount,
+  tokenWithdrawAmount: (root) => root.models_Exchange.Debits.Withdraw.tokenAmount,
 });
 
 export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
@@ -45,19 +44,20 @@ export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
   const selected = useSelector((state) => selector(state, props));
 
   useEffect(() => {
-    dispatch.models_Exchange.BalancesLoading(true);
-    // loadBlockchainData();
+    dispatch.models_Exchange.balancesLoading(true);
+    loadBlockchainData();
   }, []);
 
-  // const loadBlockchainData = async () => {
-  //   const { web3, exchange, token, account } = selected
-  //   await loadBalances(web3, exchange, token, account)
-  // }
+  const loadBlockchainData = async () => {
+    const { web3, exchange, token, account } = selected
+    await loadBalances(web3, exchange, token, account)
+  }
 
   return (
     <div>
-      {selected.showForm ? showForm(props) : <Comps_misc_Spinner />}
+      {selected.showForm ? showForm(selected) : <Comps_misc_Spinner />}
       {/* {showForm(props)} */}
+      {/* <Comps_misc_Spinner /> */}
     </div>
   );
 };
@@ -71,12 +71,12 @@ const showForm = (props) => {
     exchange,
     web3,
     account,
-    etherBalance,
-    tokenBalance,
+    token,
+    walletEtherBalance,
+    walletTokenBalance,
     exchangeEtherBalance,
     exchangeTokenBalance,
     etherDepositAmount,
-    token,
     tokenDepositAmount,
     etherWithdrawAmount,
     tokenWithdrawAmount,
@@ -146,7 +146,7 @@ const showForm = (props) => {
                 <tbody>
                   <tr>
                     <td className="text-white">ETH</td>
-                    <td className="text-white">{etherBalance}</td>
+                    <td className="text-white">{walletEtherBalance}</td>
                     <td className="text-white">{exchangeEtherBalance}</td>
                   </tr>
                 </tbody>
@@ -191,7 +191,7 @@ const showForm = (props) => {
                       MTB
                     </td>
                     <td className="text-white py-3.5 pl-4 pr-3 text-left text-sm">
-                      {tokenBalance}
+                      {walletTokenBalance}
                     </td>
                     <td className="text-white py-3.5 pl-4 pr-3 text-left text-sm">
                       {exchangeTokenBalance}
@@ -265,7 +265,7 @@ const showForm = (props) => {
                 <tbody>
                   <tr>
                     <td className="text-white">ETH</td>
-                    <td className="text-white">{etherBalance}</td>
+                    <td className="text-white">{walletEtherBalance}</td>
                     <td className="text-white">{exchangeEtherBalance}</td>
                   </tr>
                 </tbody>
@@ -315,7 +315,7 @@ const showForm = (props) => {
                       MTB
                     </td>
                     <td className="text-white py-3.5 pl-4 pr-3 text-left text-sm">
-                      {tokenBalance}
+                      {walletTokenBalance}
                     </td>
                     <td className="text-white py-3.5 pl-4 pr-3 text-left text-sm">
                       {exchangeTokenBalance}
