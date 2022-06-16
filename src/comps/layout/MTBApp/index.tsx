@@ -26,7 +26,7 @@ const defaultProps = {
 };
 
 const selector = createStructuredSelector({
-  exchange: (root) => root.models_Exchange.Exchange,
+  exchange: (root) => root.models_Exchange.Exchange.data,
   showForm: (root) => root.models_Exchange.allOrders.loaded,
 });
 

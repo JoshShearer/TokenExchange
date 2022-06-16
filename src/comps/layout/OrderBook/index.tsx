@@ -22,7 +22,7 @@ const selector = createStructuredSelector({
     root.models_Exchange.allOrders.loaded &&
     !root.models_Exchange.Orders.filling,
   orderBook: store.select.models_Exchange.orderBookSelector,
-  exchange: (root) => root.models_Exchange.Exchange,
+  exchange: (root) => root.models_Exchange.Exchange.data,
   account: (root) => root.models_WebB.account,
 });
 

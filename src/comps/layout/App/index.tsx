@@ -21,7 +21,7 @@ const defaultProps = {
 
 const selector = createStructuredSelector({
   contractsLoaded: (root) =>
-    root.models_Exchange.exchangeLoaded && root.models_Token.tokenLoaded,
+    root.models_Exchange.Exchange.loaded && root.models_Token.tokenLoaded,
 });
 
 export const Comps_layout_App = (_props: typeof defaultProps) => {

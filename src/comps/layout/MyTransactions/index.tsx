@@ -26,7 +26,7 @@ const selector = createStructuredSelector({
     root.models_Exchange.cancelledOrders.loaded,
   myFilledOrders: store.select.models_Exchange.myFilledOrdersSelector,
   myOpenOrders: store.select.models_Exchange.myOpenOrdersSelector,
-  exchange: (root) => root.models_Exchange.Exchange,
+  exchange: (root) => root.models_Exchange.Exchange.data,
   account: (root) => root.models_WebB.account,
   orderCancelled: (root) => root.models_Exchange.orderCancelled,
 });

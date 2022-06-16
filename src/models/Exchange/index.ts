@@ -20,8 +20,10 @@ import { string } from 'zod';
 import mod from 'zod/lib';
 
 type defaultState = {
-  Exchange: ExCon;
-  exchangeLoaded: boolean;
+  Exchange: {
+    data: ExCon;
+    loaded: boolean;
+  };
   cancelledOrders: {
     data: Array<Order>;
     loaded: boolean;
@@ -103,8 +105,10 @@ type defaultState = {
 
 export const models_Exchange = createModel<RootModel>()({
   state: {
-    Exchange: {},
-    exchangeLoaded: false,
+    Exchange: {
+      data: {},
+      loaded: false,
+    },
     cancelledOrders: {
       data: {},
       loaded: false,
@@ -159,14 +163,19 @@ export const models_Exchange = createModel<RootModel>()({
     loadExchange(state, payload: ExCon) {
       return {
         ...state,
-        Exchange: payload,
-        exchangeLoaded: true,
+        Exchange: {
+          data: payload,
+          loaded: true,
+        },
       };
     },
     exLoaded(state, payload: boolean) {
       return {
         ...state,
-        exchangeLoaded: payload,
+        Exchange: {
+          ...state.Exchange,
+          loaded: payload,
+        },
       };
     },
     loadAllOrders(state, payload: Array<Order>) {
@@ -249,6 +258,7 @@ export const models_Exchange = createModel<RootModel>()({
     },
     setFilling(state, payload: boolean) {
       return {
+        ...state,
         Orders: {
           ...state.Orders,
           filling: payload,
@@ -256,14 +266,19 @@ export const models_Exchange = createModel<RootModel>()({
       };
     },
     orderFilled(state, order: Order) {
+      console.log("🚀 ~ file: index.ts ~ line 269 ~ orderFilled ~ order", order)
       const index = state.filledOrders.data.findIndex(
         (orderS) => orderS.id === order.id
       );
+      console.log("🚀 ~ file: index.ts ~ line 273 ~ orderFilled ~ index", index)
+      let data;
       if (index === -1) {
-        const data = [...state.filledOrders.data, order];
+        data = [...state.filledOrders.data, order];
       } else {
-        const data = state.filledOrders.data;
+        data = state.filledOrders.data;
       }
+      
+      console.log("🚀 ~ file: index.ts ~ line 277 ~ orderFilled ~ data", data)
       return {
         ...state,
         Orders: {
@@ -396,12 +411,10 @@ export const models_Exchange = createModel<RootModel>()({
       };
     },
     orderMade(state, order: Order) {
-      console.log('🚀 ~ file: index.ts ~ line 385 ~ orderMade ~ order', order);
       // Prevent duplicate orders
       const index = state.allOrders.data.findIndex(
         (orderS) => orderS.id === order.id //Needs updating with rematch?
       );
-      console.log('🚀 ~ file: index.ts ~ line 402 ~ orderMade ~ index', index);
       let data;
       if (index === -1) {
         data = [...state.allOrders.data, order];
@@ -489,10 +502,6 @@ export const models_Exchange = createModel<RootModel>()({
           orders = decorateFilledOrders(orders);
           // Sort orders by date descending for display
           orders = orders.sort((a, b) => b.timestamp - a.timestamp);
-          console.log(
-            '🚀 ~ file: index.ts ~ line 490 ~ filledOrdersSelector ~ orders',
-            orders
-          );
           return orders as Array<Order>;
         }
       );
@@ -509,10 +518,7 @@ export const models_Exchange = createModel<RootModel>()({
           orders = orders.sort((a, b) => a.timestamp - b.timestamp);
           // Decorate orders - add display attributes
           orders = decorateMyFilledOrders(orders, account);
-          console.log(
-            '🚀 ~ file: index.ts ~ line 507 ~ myFilledOrdersSelector ~ orders',
-            orders
-          );
+
           return orders as Array<Order>;
         }
       );
@@ -533,10 +539,7 @@ export const models_Exchange = createModel<RootModel>()({
           orders = decorateMyOpenOrders(orders, account);
           // Sort orders by date descending
           orders = orders.sort((a, b) => b.timestamp - a.timestamp);
-          console.log(
-            '🚀 ~ file: index.ts ~ line 524 ~ myOpenOrdersSelector ~ orders',
-            orders
-          );
+
           return orders as Array<Order>;
         }
       );
@@ -600,10 +603,7 @@ export const models_Exchange = createModel<RootModel>()({
             ...orders,
             sellOrders: sellOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
           };
-          console.log(
-            '🚀 ~ file: index.ts ~ line 580 ~ orderBookSelector ~ orders',
-            orders
-          );
+
           return orders;
         }
       );
@@ -642,26 +642,5 @@ export const models_Exchange = createModel<RootModel>()({
       // Add open orders to the redux store
       dispatch.models_Exchange.loadAllOrders(allOrders);
     },
-    // async subscribeToEventsAsync( state) {
-    //   state.Exchange.events.Cancel({}, (error, event) => {
-    //     dispatch.models_Exchange.orderCancelled(event.returnValues));
-    //   })
-
-    //   state.Exchange.events.Trade({}, (error, event) => {
-    //     dispatch.models_Exchange.orderFilled(event.returnValues));
-    //   })
-
-    //   state.Exchange.events.Deposit({}, (error, event) => {
-    //     dispatch.models_Exchange.balancesLoaded());
-    //   })
-
-    //   state.Exchange.events.Withdraw({}, (error, event) => {
-    //     dispatch.models_Exchange.balancesLoaded());
-    //   })
-
-    //   state.Exchange.events.Order({}, (error, event) => {
-    //     dispatch.models_Exchange.orderMade(event.returnValues));
-    //   })
-    // },
   }),
 });

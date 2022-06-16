@@ -127,7 +127,7 @@ export const buildGraphData = (orders) => {
   return graphData;
 };
 
-export const fillOrder = (exchange, order, account) => {
+export const fillOrder = (exchange, account, order) => {
   exchange.methods
     .fillOrder(order.id)
     .send({ from: account })
@@ -170,8 +170,10 @@ export const loadBalances = async (web3, exchange, token, account) => {
 };
 
 export const openOrders = (all, filled, cancelled) => {
+console.log("🚀 ~ file: model_overflow.ts ~ line 173 ~ openOrders ~ filled", filled)
 
   const openOrders = reject(all, (order) => {
+  console.log("🚀 ~ file: model_overflow.ts ~ line 176 ~ openOrders ~ order", order)
     const orderFilled = filled.some((o) => o.id === order.id);
     const orderCancelled = cancelled.some((o) => o.id === order.id);
     return orderFilled || orderCancelled;
