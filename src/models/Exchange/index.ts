@@ -21,7 +21,7 @@ import mod from 'zod/lib';
 
 type defaultState = {
   Exchange: {
-    data: ExCon;
+    data: {};
     loaded: boolean;
   };
   cancelledOrders: {
@@ -266,19 +266,25 @@ export const models_Exchange = createModel<RootModel>()({
       };
     },
     orderFilled(state, order: Order) {
-      console.log("🚀 ~ file: index.ts ~ line 269 ~ orderFilled ~ order", order)
+      console.log(
+        '🚀 ~ file: index.ts ~ line 269 ~ orderFilled ~ order',
+        order
+      );
       const index = state.filledOrders.data.findIndex(
         (orderS) => orderS.id === order.id
       );
-      console.log("🚀 ~ file: index.ts ~ line 273 ~ orderFilled ~ index", index)
+      console.log(
+        '🚀 ~ file: index.ts ~ line 273 ~ orderFilled ~ index',
+        index
+      );
       let data;
       if (index === -1) {
         data = [...state.filledOrders.data, order];
       } else {
         data = state.filledOrders.data;
       }
-      
-      console.log("🚀 ~ file: index.ts ~ line 277 ~ orderFilled ~ data", data)
+
+      console.log('🚀 ~ file: index.ts ~ line 277 ~ orderFilled ~ data', data);
       return {
         ...state,
         Orders: {
