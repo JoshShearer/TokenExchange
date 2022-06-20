@@ -3,7 +3,16 @@ import { createSelector } from 'reselect'
 import moment from 'moment'
 import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from '../../web3_eth/helpers'
 
-// TODO: Move me to helpers file
+import type {
+  Exchange as ExCon,
+  Order,
+} from '../../web3_eth/web3Types/Exchange';
+import type { Token as Tokentype } from '../../web3_eth/web3Types/Token';
+import { Eth } from 'web3';
+
+import Token from '../../web3_eth/abis/Token.json';
+import Exchange from '../../web3_eth/abis/Exchange.json';
+
 const account = state => get(state, 'web3.account')
 export const accountSelector = createSelector(account, a => a)
 
@@ -47,6 +56,7 @@ const filledOrders = state => get(state, 'exchange.filledOrders.data', [])
 export const filledOrdersSelector = createSelector(
   filledOrders,
   (orders) => {
+  console.log("🚀 ~ file: selectors.ts ~ line 62 ~ orders", orders)
     // Sort orders by date ascending for price comparison
     orders = orders.sort((a,b) => a.timestamp - b.timestamp)
     // Decorate the orders
@@ -188,6 +198,8 @@ export const myFilledOrdersSelector = createSelector(
   account,
   filledOrders,
   (account, orders) => {
+  console.log("🚀 ~ file: selectors.ts ~ line 204 ~ orders", orders)
+  console.log("🚀 ~ file: selectors.ts ~ line 204 ~ account", account)
     // Find our orders
     orders = orders.filter((o) => o.user === account || o.userFill === account)
     // Sort by date ascending

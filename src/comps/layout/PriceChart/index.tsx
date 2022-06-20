@@ -11,6 +11,8 @@ import { RootState, Actions, dispatch, store } from '#src/models/store';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { models_Exchange } from '../../../models/Exchange/index';
 
+import { priceChartSelector } from '#src/models/selectors';
+
 const defaultProps = {
   idKey: 'default',
 } as {
@@ -19,7 +21,7 @@ const defaultProps = {
 };
 const selector = createStructuredSelector({
   priceChartLoaded: (root) => root.models_Exchange.filledOrders.loaded,
-  priceChart: store.select.models_Exchange.priceChartSelector,
+  priceChart: (root) => priceChartSelector(root),
 });
 
 export const Comps_layout_PriceChart = (_props: typeof defaultProps) => {

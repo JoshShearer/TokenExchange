@@ -7,15 +7,15 @@ import type {
 } from '../../../web3_eth/web3Types/Exchange';
 import _ from 'lodash';
 import { ContractEventEmitter } from '../../../web3_eth/web3Types/types';
-import {
-  openOrders,
-  decorateOrder,
-  decorateFilledOrders,
-  decorateMyFilledOrders,
-  decorateMyOpenOrders,
-  decorateOrderBookOrders,
-  buildGraphData,
-} from '#src/models/model_overflow';
+// import {
+//   openOrders,
+//   decorateOrder,
+//   decorateFilledOrders,
+//   decorateMyFilledOrders,
+//   decorateMyOpenOrders,
+//   decorateOrderBookOrders,
+//   buildGraphData,
+// } from '#src/models/model_overflow';
 import { string } from 'zod';
 import mod from 'zod/lib';
 
@@ -491,124 +491,124 @@ export const models_Exchange = createModel<RootModel>()({
       };
     },
   },
-  selectors: (slice, createSelector) => ({
-    filledOrdersSelector() {
-      return createSelector(
-        [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
-        (defaultState, orders) => {
-          // Sort orders by date ascending for price comparison
-          orders = orders.sort((a, b) => a.timestamp - b.timestamp);
-          // Decorate the orders
-          orders = decorateFilledOrders(orders);
-          // Sort orders by date descending for display
-          orders = orders.sort((a, b) => b.timestamp - a.timestamp);
-          return orders as Array<Order>;
-        }
-      );
-    },
-    myFilledOrdersSelector() {
-      return createSelector(
-        [slice, (rootState) => rootState.models_WebB.account],
-        (defaultState, account) => {
-          // Sort orders by date ascending for price comparison
-          var orders = defaultState.filledOrders.data.filter(
-            (o) => o.user === account || o.userFill === account
-          );
-          // Sort by date ascending
-          orders = orders.sort((a, b) => a.timestamp - b.timestamp);
-          // Decorate orders - add display attributes
-          orders = decorateMyFilledOrders(orders, account);
+  // selectors: (slice, createSelector) => ({
+  //   filledOrdersSelector() {
+  //     return createSelector(
+  //       [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
+  //       (defaultState, orders) => {
+  //         // Sort orders by date ascending for price comparison
+  //         orders = orders.sort((a, b) => a.timestamp - b.timestamp);
+  //         // Decorate the orders
+  //         orders = decorateFilledOrders(orders);
+  //         // Sort orders by date descending for display
+  //         orders = orders.sort((a, b) => b.timestamp - a.timestamp);
+  //         return orders as Array<Order>;
+  //       }
+  //     );
+  //   },
+  //   myFilledOrdersSelector() {
+  //     return createSelector(
+  //       [slice, (rootState) => rootState.models_WebB.account],
+  //       (defaultState, account) => {
+  //         // Sort orders by date ascending for price comparison
+  //         var orders = defaultState.filledOrders.data.filter(
+  //           (o) => o.user === account || o.userFill === account
+  //         );
+  //         // Sort by date ascending
+  //         orders = orders.sort((a, b) => a.timestamp - b.timestamp);
+  //         // Decorate orders - add display attributes
+  //         orders = decorateMyFilledOrders(orders, account);
 
-          return orders as Array<Order>;
-        }
-      );
-    },
-    myOpenOrdersSelector() {
-      return createSelector(
-        [slice, (rootState) => rootState.models_WebB.account],
-        (defaultState, account) => {
-          const oOrders = openOrders(
-            defaultState.allOrders.data,
-            defaultState.filledOrders.data,
-            defaultState.cancelledOrders.data
-          );
+  //         return orders as Array<Order>;
+  //       }
+  //     );
+  //   },
+  //   myOpenOrdersSelector() {
+  //     return createSelector(
+  //       [slice, (rootState) => rootState.models_WebB.account],
+  //       (defaultState, account) => {
+  //         const oOrders = openOrders(
+  //           defaultState.allOrders.data,
+  //           defaultState.filledOrders.data,
+  //           defaultState.cancelledOrders.data
+  //         );
 
-          // Sort orders by date ascending for price comparison
-          var orders = oOrders.filter((o) => o.user === account);
-          // Decorate orders - add display attributes
-          orders = decorateMyOpenOrders(orders, account);
-          // Sort orders by date descending
-          orders = orders.sort((a, b) => b.timestamp - a.timestamp);
+  //         // Sort orders by date ascending for price comparison
+  //         var orders = oOrders.filter((o) => o.user === account);
+  //         // Decorate orders - add display attributes
+  //         orders = decorateMyOpenOrders(orders, account);
+  //         // Sort orders by date descending
+  //         orders = orders.sort((a, b) => b.timestamp - a.timestamp);
 
-          return orders as Array<Order>;
-        }
-      );
-    },
-    priceChartSelector() {
-      return createSelector(
-        [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
-        (defaultState, orders) => {
-          // Sort orders by date ascending for compare history
-          orders = orders.sort((a, b) => a.timestamp - b.timestamp);
-          // Decorate orders - add display attributes
-          orders = orders.map((o) => decorateOrder(o));
-          // Get last 2 order for final price & price change
-          let secondLastOrder, lastOrder;
-          [secondLastOrder, lastOrder] = orders.slice(
-            orders.length - 2,
-            orders.length
-          );
-          // get last order price
-          const lastPrice = get(lastOrder, 'tokenPrice', 0);
-          // get second last order price
-          const secondLastPrice = get(secondLastOrder, 'tokenPrice', 0);
+  //         return orders as Array<Order>;
+  //       }
+  //     );
+  //   },
+  //   priceChartSelector() {
+  //     return createSelector(
+  //       [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
+  //       (defaultState, orders) => {
+  //         // Sort orders by date ascending for compare history
+  //         orders = orders.sort((a, b) => a.timestamp - b.timestamp);
+  //         // Decorate orders - add display attributes
+  //         orders = orders.map((o) => decorateOrder(o));
+  //         // Get last 2 order for final price & price change
+  //         let secondLastOrder, lastOrder;
+  //         [secondLastOrder, lastOrder] = orders.slice(
+  //           orders.length - 2,
+  //           orders.length
+  //         );
+  //         // get last order price
+  //         const lastPrice = get(lastOrder, 'tokenPrice', 0);
+  //         // get second last order price
+  //         const secondLastPrice = get(secondLastOrder, 'tokenPrice', 0);
 
-          return {
-            lastPrice,
-            lastPriceChange: lastPrice >= secondLastPrice ? '+' : '-',
-            series: [
-              {
-                data: buildGraphData(orders),
-              },
-            ],
-          };
-        }
-      );
-    },
-    orderBookSelector() {
-      return createSelector(
-        //This needs to be OpenOrders...not filled
-        [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
-        (defaultState, orders) => {
-          const oOrders = openOrders(
-            defaultState.allOrders.data,
-            defaultState.filledOrders.data,
-            defaultState.cancelledOrders.data
-          );
-          // Decorate orders
-          orders = decorateOrderBookOrders(oOrders);
-          // Group orders by "orderType"
-          orders = groupBy(orders, 'orderType');
-          // Fetch buy orders
-          const buyOrders = get(orders, 'buy', []);
-          // Sort buy orders by token price
-          orders = {
-            ...orders,
-            buyOrders: buyOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
-          };
-          // Fetch sell orders
-          const sellOrders = get(orders, 'sell', []);
-          // Sort sell orders by token price
-          orders = {
-            ...orders,
-            sellOrders: sellOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
-          };
+  //         return {
+  //           lastPrice,
+  //           lastPriceChange: lastPrice >= secondLastPrice ? '+' : '-',
+  //           series: [
+  //             {
+  //               data: buildGraphData(orders),
+  //             },
+  //           ],
+  //         };
+  //       }
+  //     );
+  //   },
+  //   orderBookSelector() {
+  //     return createSelector(
+  //       //This needs to be OpenOrders...not filled
+  //       [slice, (rootState) => rootState.models_Exchange.filledOrders.data],
+  //       (defaultState, orders) => {
+  //         const oOrders = openOrders(
+  //           defaultState.allOrders.data,
+  //           defaultState.filledOrders.data,
+  //           defaultState.cancelledOrders.data
+  //         );
+  //         // Decorate orders
+  //         orders = decorateOrderBookOrders(oOrders);
+  //         // Group orders by "orderType"
+  //         orders = groupBy(orders, 'orderType');
+  //         // Fetch buy orders
+  //         const buyOrders = get(orders, 'buy', []);
+  //         // Sort buy orders by token price
+  //         orders = {
+  //           ...orders,
+  //           buyOrders: buyOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
+  //         };
+  //         // Fetch sell orders
+  //         const sellOrders = get(orders, 'sell', []);
+  //         // Sort sell orders by token price
+  //         orders = {
+  //           ...orders,
+  //           sellOrders: sellOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
+  //         };
 
-          return orders;
-        }
-      );
-    },
-  }),
+  //         return orders;
+  //       }
+  //     );
+  //   },
+  // }),
   effects: (dispatch) => ({
     async loadExchangeAsync(exchange: ExCon, state) {
       dispatch.models_Exchange.loadExchange(exchange);

@@ -7,6 +7,14 @@ import { useSelector } from '#src/models/hooks';
 
 import type { Order } from '../../../../web3_eth/web3Types/Exchange';
 
+import {
+  myFilledOrdersLoadedSelector,
+  myFilledOrdersSelector,
+  myOpenOrdersLoadedSelector,
+  myOpenOrdersSelector,
+  orderCancellingSelector
+} from '#src/models/selectors';
+
 const defaultProps = {
   ordersFilled: [],
   idKey: 'default',
@@ -17,7 +25,7 @@ const defaultProps = {
 };
 const selector = createStructuredSelector({
   filledLoaded: (root) => root.models_Exchange.filledOrders.loaded,
-  filledOrders: store.select.models_Exchange.filledOrdersSelector,
+  filledOrders: (root) => myFilledOrdersSelector(root),
 });
 
 export const Comps_layout_Trades = (_props: typeof defaultProps) => {

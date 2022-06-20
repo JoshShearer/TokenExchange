@@ -5,6 +5,11 @@ import { useSelector } from '#src/models/hooks';
 import { fillOrder } from '#src/models/model_overflow';
 
 import { RootState, Actions, dispatch, store } from '#src/models/store';
+import {
+  orderBookSelector,
+  orderBookLoadedSelector,
+  orderFillingSelector
+} from '#src/models/selectors'
 
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { Comps_misc_Tooltip } from '#src/Comps/misc/Tooltip';
@@ -15,13 +20,13 @@ const defaultProps = {
   idKey?: string;
   children?: JSX.Element;
 };
+
+
 const selector = createStructuredSelector({
   showOrderBook: (root) =>
-    root.models_Exchange.cancelledOrders.loaded &&
-    root.models_Exchange.filledOrders.loaded &&
-    root.models_Exchange.allOrders.loaded &&
-    !root.models_Exchange.Orders.filling,
-  orderBook: store.select.models_Exchange.orderBookSelector,
+    orderBookLoadedSelector(root) &&
+    !orderFillingSelector(root),
+  orderBook: (root) => orderBookSelector(root),
   exchange: (root) => root.models_Exchange.Exchange.data,
   account: (root) => root.models_WebB.account,
 });
