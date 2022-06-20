@@ -15,4 +15,4 @@ export const models: RootModel = {
   models_Exchange,
   models_Token,
   models_WebB,
-};
+}
