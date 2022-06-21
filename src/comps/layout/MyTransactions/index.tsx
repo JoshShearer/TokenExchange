@@ -3,6 +3,7 @@ import { Tab } from '@headlessui/react';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
+import { selectors_Orders_myFilledOrders } from '#src/selectors';
 
 import { RootState, Actions, dispatch, store } from '#src/models/store';
 import { cancelOrder } from '#src/models/model_overflow';
@@ -32,7 +33,7 @@ const selector = createStructuredSelector({
     !orderCancellingSelector(root),
   myFilledOrders: (root) => myFilledOrdersSelector(root),
   myOpenOrders: (root) => myOpenOrdersSelector(root),
-  exchange: (root) => root.models_Exchange.Exchange.data,
+  exchange: (root) => root.models_Exchange.Exchange.contract,
   account: (root) => root.models_WebB.account,
 });
 

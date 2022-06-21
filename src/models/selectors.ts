@@ -1,5 +1,5 @@
 import { get, groupBy, reject, maxBy, minBy } from 'lodash'
-import { createSelector } from 'reselect'
+import { createSelector } from '#src/models/utils'
 import moment from 'moment'
 import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from '../../web3_eth/helpers'
 
@@ -198,8 +198,6 @@ export const myFilledOrdersSelector = createSelector(
   account,
   filledOrders,
   (account, orders) => {
-  console.log("🚀 ~ file: selectors.ts ~ line 204 ~ orders", orders)
-  console.log("🚀 ~ file: selectors.ts ~ line 204 ~ account", account)
     // Find our orders
     orders = orders.filter((o) => o.user === account || o.userFill === account)
     // Sort by date ascending

@@ -4,16 +4,9 @@ import { RootState, Actions, dispatch, store } from '#src/models/store';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
+import { selectors_Orders_filledOrders } from '#src/selectors/Orders/filledOrders';
 
 import type { Order } from '../../../../web3_eth/web3Types/Exchange';
-
-import {
-  myFilledOrdersLoadedSelector,
-  myFilledOrdersSelector,
-  myOpenOrdersLoadedSelector,
-  myOpenOrdersSelector,
-  orderCancellingSelector
-} from '#src/models/selectors';
 
 const defaultProps = {
   ordersFilled: [],
@@ -23,15 +16,18 @@ const defaultProps = {
   idKey?: string;
   children?: JSX.Element;
 };
+
 const selector = createStructuredSelector({
   filledLoaded: (root) => root.models_Exchange.filledOrders.loaded,
-  filledOrders: (root) => myFilledOrdersSelector(root),
+  filledOrders: (root) => selectors_Orders_filledOrders(root),
 });
+
 
 export const Comps_layout_Trades = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
   const selected = useSelector((state: RootState) => selector(state, props));
+  console.log("🚀 ~ file: index.tsx ~ line 30 ~ selected", selected.filledOrders)
 
   return (
     <div className="w-full max-w-sm p-2 mx-auto bg-stone-700 rounded">

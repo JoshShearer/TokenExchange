@@ -5,23 +5,13 @@ import type {
   Exchange as ExCon,
   Order,
 } from '../../../web3_eth/web3Types/Exchange';
-import _ from 'lodash';
-import { ContractEventEmitter } from '../../../web3_eth/web3Types/types';
-// import {
-//   openOrders,
-//   decorateOrder,
-//   decorateFilledOrders,
-//   decorateMyFilledOrders,
-//   decorateMyOpenOrders,
-//   decorateOrderBookOrders,
-//   buildGraphData,
-// } from '#src/models/model_overflow';
+
 import { string } from 'zod';
 import mod from 'zod/lib';
 
 type defaultState = {
   Exchange: {
-    data: ExCon;
+    contract: ExCon;
     loaded: boolean;
   };
   cancelledOrders: {
@@ -106,19 +96,19 @@ type defaultState = {
 export const models_Exchange = createModel<RootModel>()({
   state: {
     Exchange: {
-      data: {},
+      contract: {} as ExCon,
       loaded: false,
     },
     cancelledOrders: {
-      data: {},
+      data: {} as Array<Order>,
       loaded: false,
     },
     filledOrders: {
-      data: {},
+      data: {} as Array<Order>,
       loaded: false,
     },
     allOrders: {
-      data: {},
+      data: {} as Array<Order>,
       loaded: false,
     },
     //Operations
@@ -639,6 +629,7 @@ export const models_Exchange = createModel<RootModel>()({
       });
       // Format order stream
       const allOrders = orderStream.map((event) => event.returnValues);
+      console.log("🚀 ~ file: index.ts ~ line 642 ~ loadAllOrdersAsync ~ allOrders", allOrders)
       // Add open orders to the redux store
       dispatch.models_Exchange.loadAllOrders(allOrders);
     },

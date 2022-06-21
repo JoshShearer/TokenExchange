@@ -20,7 +20,8 @@
     "validate:types": "tsc --noEmit"
   },
   "imports": {
-    "#src/*": "./src/*"
+    "#src/*": "./src/*",
+    "#web3/*": "./web3_eth/*"
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
