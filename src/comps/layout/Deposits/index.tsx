@@ -6,7 +6,7 @@ import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
 import { RootState, Actions, dispatch, store } from '#src/models/store';
-import { formatBalance } from '../../../../web3_eth/helpers';
+import { formatBalance } from '#web3/helpers';
 
 import {
   loadBalances,
@@ -14,7 +14,7 @@ import {
   depositToken,
   withdrawEther,
   withdrawToken,
-} from '#src/models/model_overflow';
+} from '#src/models/exchange_methods';
 
 const defaultProps = {
   idKey: 'default',
@@ -56,8 +56,6 @@ export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
   return (
     <div>
       {selected.showForm ? showForm(selected) : <Comps_misc_Spinner />}
-      {/* {showForm(props)} */}
-      {/* <Comps_misc_Spinner /> */}
     </div>
   );
 };

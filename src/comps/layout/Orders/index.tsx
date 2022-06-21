@@ -5,10 +5,9 @@ import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
-import { RootState, Actions, dispatch, store } from '#src/models/store';
-import { models_Exchange } from '../../../models/Exchange/index';
+import { dispatch } from '#src/models/store';
 
-import { makeBuyOrder, makeSellOrder } from '#src/models/model_overflow';
+import { makeBuyOrder, makeSellOrder } from '#src/models/exchange_methods';
 
 const defaultProps = {
   idKey: 'default',

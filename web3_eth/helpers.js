@@ -1,6 +1,6 @@
 export const ETHER_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const GREEN = 'success'
-export const RED = 'danger'
+export const GREEN = 'green'
+export const RED = 'red'
 
 export const DECIMALS = (10**18)
 

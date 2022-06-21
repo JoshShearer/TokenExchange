@@ -1,6 +1,7 @@
 import { createSelector, createStructuredSelector } from '#src/models/utils';
 import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from '#web3/helpers'
 import { selectors_Orders_decorateOrder } from '#src/selectors/Orders/decorateOrder';
+import type { Order } from 'web3_eth/web3Types/Exchange';
 
 const selected = createStructuredSelector({
   filledOrders: (root) => root.models_Exchange.filledOrders.data,
@@ -38,8 +39,11 @@ const decorateFilledOrder = (order, previousOrder) => {
   })  
 }
 
-const tokenPriceClass = (tokenPrice, orderId, previousOrder) => {
-  // Show green price if only one order exists
+const tokenPriceClass = (
+    tokenPrice: Number,
+    orderId: String,
+    previousOrder: Order
+  ) => {// Show green price if only one order exists
   if(previousOrder.id === orderId) {
     return GREEN
   }

@@ -2,15 +2,10 @@ import React from 'react';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
-import { fillOrder } from '#src/models/model_overflow';
+import { fillOrder } from '#src/models/exchange_methods';
 
-import { RootState, Actions, dispatch, store } from '#src/models/store';
-import {
-  orderBookSelector,
-  orderBookLoadedSelector,
-  orderFillingSelector
-} from '#src/models/selectors'
-
+import { selectors_Orders_OrderBookLoaded } from '#src/selectors/Orders/OrderBookLoaded';
+import { selectors_Orders_OrderBook } from '#src/selectors/Orders/OrderBook';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { Comps_misc_Tooltip } from '#src/Comps/misc/Tooltip';
 
@@ -23,11 +18,9 @@ const defaultProps = {
 
 
 const selector = createStructuredSelector({
-  showOrderBook: (root) =>
-    orderBookLoadedSelector(root) &&
-    !orderFillingSelector(root),
-  orderBook: (root) => orderBookSelector(root),
-  exchange: (root) => root.models_Exchange.Exchange.data,
+  showOrderBook: selectors_Orders_OrderBookLoaded,
+  orderBook: selectors_Orders_OrderBook,
+  exchange: (root) => root.models_Exchange.Exchange.contract,
   account: (root) => root.models_WebB.account,
 });
 

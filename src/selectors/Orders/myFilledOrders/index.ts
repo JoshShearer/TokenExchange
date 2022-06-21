@@ -1,5 +1,5 @@
 import { createSelector, createStructuredSelector } from '#src/models/utils';
-import { selectors_decorateOrder } from '../decorateOrder';
+import { selectors_Orders_decorateOrder } from '../decorateOrder';
 import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from '#web3/helpers'
 
 const selected = createStructuredSelector({
@@ -10,15 +10,12 @@ const selected = createStructuredSelector({
 export const selectors_Orders_myFilledOrders = createSelector(
   selected,
   ({ orders, account }) => {
-  console.log("🚀 ~ file: index.ts ~ line 13 ~ account", account)
-  console.log("🚀 ~ file: index.ts ~ line 13 ~ orders", orders)
     // Find our orders
     orders = orders.filter((o) => o.user === account || o.userFill === account)
     // Sort by date ascending
     orders = orders.sort((a,b) => a.timestamp - b.timestamp)
     // Decorate orders - add display attributes
     orders = decorateMyFilledOrders(orders, account)
-    console.log("🚀 ~ file: index.ts ~ line 21 ~ orders", orders)
     return orders
   }
 );
@@ -26,7 +23,7 @@ export const selectors_Orders_myFilledOrders = createSelector(
 const decorateMyFilledOrders = (orders, account) => {
   return(
     orders.map((order) => {
-      order = selectors_decorateOrder(order)
+      order = selectors_Orders_decorateOrder(order)
       order = decorateMyFilledOrder(order, account)
       return(order)
     })

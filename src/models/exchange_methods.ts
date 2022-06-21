@@ -1,11 +1,5 @@
 import { RootState, Actions, dispatch } from '#src/models/store';
-import {
-  ETHER_ADDRESS,
-  GREEN,
-  RED,
-  ether,
-  tokens,
-} from '../../web3_eth/test/helpers';
+import { ETHER_ADDRESS } from '../../web3_eth/test/helpers';
 //TS Types
 import type {
   Exchange as ExCon,

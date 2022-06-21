@@ -1,22 +1,18 @@
 import React, { useEffect } from 'react';
-// import { Comps_layout_Deposits } from '#src/Comps/layout/Deposits';
-// import { Comps_layout_Orders } from '#src/Comps/layout/Orders';
-// import { Comps_layout_OrderBook } from '#src/Comps/layout/Orderbook';
-// import { Comps_layout_PriceChart } from '#src/Comps/layout/PriceChart';
+import { Comps_layout_Deposits } from '#src/Comps/layout/Deposits';
+import { Comps_layout_Orders } from '#src/Comps/layout/Orders';
+import { Comps_layout_OrderBook } from '#src/Comps/layout/OrderBook';
+import { Comps_layout_PriceChart } from '#src/Comps/layout/PriceChart';
 import { Comps_layout_MyTransactions } from '#src/Comps/layout/MyTransactions';
 import { Comps_layout_Trades } from '#src/Comps/layout/Trades';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { RootState, Actions, dispatch } from '#src/models/store';
 
-import { subscribeToEvents } from '#src/models/model_overflow';
+import { subscribeToEvents } from '#src/models/exchange_methods';
 
-// import useSelector from 'reselect';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
-
-// import { RootState, Actions, dispatch, store } from '#src/models/store'
-// import { models_Exchange } from '../../../models/Exchange/index';
 
 const defaultProps = {
   idKey: 'default',
@@ -58,18 +54,18 @@ const showComps = () => {
       {/* <div className="sm:col-span-1 md:col-span-1 lg:col-span-1"> */}
         <div>
           <div className="pb-4">
-            {/* <Comps_layout_Deposits /> */}
+            <Comps_layout_Deposits />
           </div>
           <div>
-            {/* <Comps_layout_Orders /> */}
+            <Comps_layout_Orders />
           </div>
         </div>
         <div>
-          {/* <Comps_layout_OrderBook /> */}
+          <Comps_layout_OrderBook />
         </div>
         <div className="col-span-2 ">
           <div className="pb-4">
-            {/* <Comps_layout_PriceChart /> */}
+            <Comps_layout_PriceChart />
           </div>
           <div>
             <Comps_layout_MyTransactions />

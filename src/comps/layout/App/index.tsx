@@ -7,7 +7,7 @@ import {
   web3Loader,
   loadToken,
   loadExchange,
-} from '#src/models/model_overflow';
+} from '#src/models/exchange_methods';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';

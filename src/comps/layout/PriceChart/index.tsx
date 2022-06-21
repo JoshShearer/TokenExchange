@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import dynamic from 'next/dynamic';
 import { chartOptions } from './PriceChart.config';
+import { selectors_Orders_priceChart } from '#src/selectors/Orders/priceChart';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
@@ -21,7 +22,7 @@ const defaultProps = {
 };
 const selector = createStructuredSelector({
   priceChartLoaded: (root) => root.models_Exchange.filledOrders.loaded,
-  priceChart: (root) => priceChartSelector(root),
+  priceChart: selectors_Orders_priceChart,
 });
 
 export const Comps_layout_PriceChart = (_props: typeof defaultProps) => {

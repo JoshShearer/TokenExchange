@@ -27,7 +27,6 @@ export const Comps_layout_Trades = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
   const selected = useSelector((state: RootState) => selector(state, props));
-  console.log("🚀 ~ file: index.tsx ~ line 30 ~ selected", selected.filledOrders)
 
   return (
     <div className="w-full max-w-sm p-2 mx-auto bg-stone-700 rounded">
