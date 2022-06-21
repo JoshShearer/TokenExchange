@@ -7,6 +7,37 @@ import type {
   Order,
 } from '../../../web3_eth/web3Types/Exchange';
 
+// export type decoTrade = ContractEventLog<{
+//   ...Order,
+//   userFill: string;
+//   user: string;
+//   tokenPrice: string;
+//   tokenPriceClass: string;
+//   etherAmount; string;
+//   formattedTimestamp: string;
+// }>;
+// export type decoTrans = ContractEventLog<{
+//   ...Order,
+//   user: string;
+//   orderType: string;
+//   tokenPrice: string;
+//   orderTypeClass: string;
+//   etherAmount; string;
+//   formattedTimestamp: string;
+// }>;
+// export type decoBook = ContractEventLog<{
+//   ...Order,
+//   user: string;
+//   tokenPrice: string;
+//   tokenAmount: string;
+//   orderType: string;
+//   orderTypeClass: string;
+//   orderFillAction: string;
+//   etherAmount; string;
+//   formattedTimestamp: string;
+// }>;
+
+
 type defaultState = {
   Exchange: {
     contract: ExCon;
@@ -61,35 +92,6 @@ type defaultState = {
     };
   };
 };
-// export type decoTrade = ContractEventLog<{
-//   ...Order,
-//   userFill: string;
-//   user: string;
-//   tokenPrice: string;
-//   tokenPriceClass: string;
-//   etherAmount; string;
-//   formattedTimestamp: string;
-// }>;
-// export type decoTrans = ContractEventLog<{
-//   ...Order,
-//   user: string;
-//   orderType: string;
-//   tokenPrice: string;
-//   orderTypeClass: string;
-//   etherAmount; string;
-//   formattedTimestamp: string;
-// }>;
-// export type decoBook = ContractEventLog<{
-//   ...Order,
-//   user: string;
-//   tokenPrice: string;
-//   tokenAmount: string;
-//   orderType: string;
-//   orderTypeClass: string;
-//   orderFillAction: string;
-//   etherAmount; string;
-//   formattedTimestamp: string;
-// }>;
 
 export const models_Exchange = createModel<RootModel>()({
   state: {
