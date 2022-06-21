@@ -7,6 +7,12 @@ import { useSelector } from '#src/models/hooks';
 
 import { RootState, Actions, dispatch, store } from '#src/models/store';
 import { formatBalance } from '#web3/helpers';
+import { Token } from 'web3_eth/web3Types/Token';
+import type {
+  Exchange as ExCon,
+  Order,
+} from '../../web3_eth/web3Types/Exchange';
+import { Eth }  from 'web3';
 
 import {
   loadBalances,
@@ -23,20 +29,20 @@ const defaultProps = {
   children?: JSX.Element;
 };
 const selector = createStructuredSelector({
-  token: (root) => root.models_Token.Token,
-  web3: (root) => root.models_WebB.Web3Conn,
-  exchange: (root) => root.models_Exchange.Exchange.data,
-  account: (root) => root.models_WebB.account,
-  walletEtherBalance: (root) => formatBalance(root.models_WebB.balance),
-  walletTokenBalance: (root) => formatBalance(root.models_Token.balance),
-  exchangeEtherBalance: (root) => formatBalance(root.models_Exchange.Balances.ether.Balance),
-  exchangeTokenBalance: (root) => formatBalance(root.models_Exchange.Balances.token.Balance),
-  balancesLoading: (root) => root.models_Exchange.Balances.loading,
-  showForm: (root) => !root.models_Exchange.Balances.loading,
-  etherDepositAmount: (root) => root.models_Exchange.Debits.Deposit.etherAmount,
-  etherWithdrawAmount: (root) => root.models_Exchange.Debits.Withdraw.etherAmount,
-  tokenDepositAmount: (root) => root.models_Exchange.Debits.Deposit.tokenAmount,
-  tokenWithdrawAmount: (root) => root.models_Exchange.Debits.Withdraw.tokenAmount,
+  token: (root) => root.models_Token.Token as Token,
+  web3: (root) => root.models_WebB.Web3Conn as Eth,
+  exchange: (root) => root.models_Exchange.Exchange.contract as ExCon,
+  account: (root) => root.models_WebB.account as String,
+  walletEtherBalance: (root) => formatBalance(root.models_WebB.balance) as String,
+  walletTokenBalance: (root) => formatBalance(root.models_Token.balance) as String,
+  exchangeEtherBalance: (root) => formatBalance(root.models_Exchange.Balances.ether.Balance) as String,
+  exchangeTokenBalance: (root) => formatBalance(root.models_Exchange.Balances.token.Balance) as String,
+  balancesLoading: (root) => root.models_Exchange.Balances.loading as boolean,
+  showForm: (root) => !root.models_Exchange.Balances.loading as boolean,
+  etherDepositAmount: (root) => root.models_Exchange.Debits.Deposit.etherAmount as String,
+  etherWithdrawAmount: (root) => root.models_Exchange.Debits.Withdraw.etherAmount as String,
+  tokenDepositAmount: (root) => root.models_Exchange.Debits.Deposit.tokenAmount as String,
+  tokenWithdrawAmount: (root) => root.models_Exchange.Debits.Withdraw.tokenAmount as String,
 });
 
 export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
@@ -60,7 +66,7 @@ export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
   );
 };
 
-function classNames(...classes) {
+function classNames(...classes: Array<String>) {
   return classes.filter(Boolean).join(' ');
 }
 

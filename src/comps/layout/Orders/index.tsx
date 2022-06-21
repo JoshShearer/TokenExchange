@@ -43,7 +43,7 @@ export const Comps_layout_Orders = (_props: typeof defaultProps) => {
   );
 };
 
-function classNames(...classes) {
+function classNames(...classes: Array<String>) {
   return classes.filter(Boolean).join(' ');
 }
 

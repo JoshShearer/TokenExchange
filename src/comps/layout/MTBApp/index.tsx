@@ -6,7 +6,7 @@ import { Comps_layout_PriceChart } from '#src/Comps/layout/PriceChart';
 import { Comps_layout_MyTransactions } from '#src/Comps/layout/MyTransactions';
 import { Comps_layout_Trades } from '#src/Comps/layout/Trades';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
-import { RootState, Actions, dispatch } from '#src/models/store';
+import { dispatch } from '#src/models/store';
 
 import { subscribeToEvents } from '#src/models/exchange_methods';
 
