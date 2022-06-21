@@ -10,6 +10,8 @@ const selected = createStructuredSelector({
 export const selectors_Orders_openOrders = createSelector(
   selected,
   ({ all, filled, cancelled }) => {
+  console.log("🚀 ~ file: index.ts ~ line 13 ~ filled", filled)
+  console.log("🚀 ~ file: index.ts ~ line 13 ~ cancelled", cancelled)
     const openOrders = reject(all, (order) => {
       const orderFilled = filled.some((o) => o.id === order.id)
       const orderCancelled = cancelled.some((o) => o.id === order.id)

@@ -58,6 +58,36 @@ export const loadExchange = async (web3: Eth, networkId: Number) => {
   }
 };
 
+export const loadAllOrders = async (exchange: ExCon) => {
+  // Fetch cancelled orders with the "Cancel" event stream
+  const cancelStream = await exchange.getPastEvents('Cancel', {
+    fromBlock: 0,
+    toBlock: 'latest',
+  });
+  // Format cancelled orders
+  const cancelledOrders = cancelStream.map((event) => event.returnValues);
+  // Add cancelled orders to the redux store
+  dispatch.models_Exchange.loadCancelled(cancelledOrders);
+  // Fetch filled orders with the "Trade" event stream
+  const tradeStream = await exchange.getPastEvents('Trade', {
+    fromBlock: 0,
+    toBlock: 'latest',
+  });
+  // Format filled orders
+  const filledOrders = tradeStream.map((event) => event.returnValues);
+  // Add cancelled orders to the redux store
+  dispatch.models_Exchange.loadFilledOrders(filledOrders);
+  // Load order stream
+  const orderStream = await exchange.getPastEvents('Order', {
+    fromBlock: 0,
+    toBlock: 'latest',
+  });
+  // Format order stream
+  const allOrders = orderStream.map((event) => event.returnValues);
+  // Add open orders to the redux store
+  dispatch.models_Exchange.loadAllOrders(allOrders);
+}
+
 export const subscribeToEvents = async (exchange: ExCon) => {
   exchange.events.Cancel({}, (error, event) => {
     dispatch.models_Exchange.orderCancelled(event.returnValues);
@@ -85,7 +115,7 @@ export const cancelOrder = (exchange, order, account) => {
     .cancelOrder(order.id)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.orderCancelled();
+      dispatch.models_Exchange.setCancelling(true);
     })
     .on('error', (error) => {
       console.log(error);
@@ -98,7 +128,7 @@ export const fillOrder = (exchange, account, order) => {
     .fillOrder(order.id)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.orderFilling(true);
+      dispatch.models_Exchange.setFilling(true);
     })
     .on('error', (error) => {
       console.log(error);
@@ -140,7 +170,7 @@ export const depositEther = (exchange, web3, amount, account) => {
     .depositEther()
     .send({ from: account, value: web3.utils.toWei(amount, 'ether') })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.balancesLoading(true);
+      dispatch.models_Exchange.balancesLoading();
     })
     .on('error', (error) => {
       console.error(error);
@@ -153,7 +183,7 @@ export const withdrawEther = (exchange, web3, amount, account) => {
     .withdrawEther(web3.utils.toWei(amount, 'ether'))
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.balancesLoading(true);
+      dispatch.models_Exchange.balancesLoading();
     })
     .on('error', (error) => {
       console.error(error);
@@ -172,7 +202,7 @@ export const depositToken = (exchange, web3, token, amount, account) => {
         .depositToken(token.options.address, amount)
         .send({ from: account })
         .on('transactionHash', (hash) => {
-          dispatch.models_Exchange.balancesLoading(false);
+          dispatch.models_Exchange.balancesLoaded();
         })
         .on('error', (error) => {
           console.error(error);
@@ -186,7 +216,7 @@ export const withdrawToken = (exchange, web3, token, amount, account) => {
     .withdrawToken(token.options.address, web3.utils.toWei(amount, 'ether'))
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.balancesLoading(false);
+      dispatch.models_Exchange.balancesLoading();
     })
     .on('error', (error) => {
       console.error(error);

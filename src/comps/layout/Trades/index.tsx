@@ -9,10 +9,8 @@ import { selectors_Orders_filledOrders } from '#src/selectors/Orders/filledOrder
 import type { Order } from '../../../../web3_eth/web3Types/Exchange';
 
 const defaultProps = {
-  ordersFilled: [],
   idKey: 'default',
 } as {
-  ordersFilled: Array<Order>;
   idKey?: string;
   children?: JSX.Element;
 };

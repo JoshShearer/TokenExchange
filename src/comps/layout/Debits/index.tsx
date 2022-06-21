@@ -11,7 +11,7 @@ import { Token } from 'web3_eth/web3Types/Token';
 import type {
   Exchange as ExCon,
   Order,
-} from '../../web3_eth/web3Types/Exchange';
+} from '#web3/web3Types/Exchange';
 import { Eth }  from 'web3';
 
 import {
@@ -45,7 +45,7 @@ const selector = createStructuredSelector({
   tokenWithdrawAmount: (root) => root.models_Exchange.Debits.Withdraw.tokenAmount as String,
 });
 
-export const Comps_layout_Deposits = (_props: typeof defaultProps) => {
+export const Comps_layout_Debits = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   const selected = useSelector((state) => selector(state, props));
 
@@ -279,7 +279,6 @@ const showForm = (props) => {
                 onSubmit={(event) => {
                   event.preventDefault();
                   withdrawEther(
-                    dispatch,
                     exchange,
                     web3,
                     etherWithdrawAmount,

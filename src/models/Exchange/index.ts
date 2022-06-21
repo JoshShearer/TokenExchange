@@ -2,10 +2,11 @@ import { createModel, RematchDispatch } from '@rematch/core';
 import { defaults, get, groupBy, reject } from 'lodash';
 import type { RootModel } from '#src/models/model';
 import { patch } from '../patch';
+
 import type {
   Exchange as ExCon,
   Order,
-} from '../../../web3_eth/web3Types/Exchange';
+} from '#web3/web3Types/Exchange';
 
 // export type decoTrade = ContractEventLog<{
 //   ...Order,
@@ -36,7 +37,6 @@ import type {
 //   etherAmount; string;
 //   formattedTimestamp: string;
 // }>;
-
 
 type defaultState = {
   Exchange: {
@@ -129,8 +129,8 @@ export const models_Exchange = createModel<RootModel>()({
         tokenAmount: '',
       },
       Withdraw: {
-        tokenAmount: '',
         etherAmount: '',
+        tokenAmount: '',
       },
     },
     Orders: {
@@ -147,24 +147,15 @@ export const models_Exchange = createModel<RootModel>()({
         making: false,
       },
     },
-  } as defaultState,
+  } as unknown as defaultState,
   reducers: {
     //Initial Data Loading from Blockchain
     loadExchange(state, payload: ExCon) {
       return {
         ...state,
         Exchange: {
-          data: payload,
+          contract: payload,
           loaded: true,
-        },
-      };
-    },
-    exLoaded(state, payload: boolean) {
-      return {
-        ...state,
-        Exchange: {
-          ...state.Exchange,
-          loaded: payload,
         },
       };
     },
@@ -177,30 +168,12 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    setAllLoaded(state, payload: boolean) {
-      return {
-        ...state,
-        allOrders: {
-          ...state.allOrders,
-          loaded: payload,
-        },
-      };
-    },
     loadCancelled(state, payload: Array<Order>) {
       return {
         ...state,
         cancelledOrders: {
           data: payload,
           loaded: true,
-        },
-      };
-    },
-    setCancelled(state, payload: boolean) {
-      return {
-        ...state,
-        cancelledOrders: {
-          ...state.cancelledOrders,
-          loaded: payload,
         },
       };
     },
@@ -213,16 +186,6 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    setFilled(state, payload: boolean) {
-      return {
-        ...state,
-        filledOrders: {
-          ...state.filledOrders,
-          loaded: payload,
-        },
-      };
-    },
-
     //Blockchain events = State updates
     setCancelling(state, payload: boolean) {
       return {
@@ -236,7 +199,7 @@ export const models_Exchange = createModel<RootModel>()({
     orderCancelled(state, order: Order) {
       return {
         ...state,
-        Order: {
+        Orders: {
           ...state.Orders,
           cancelling: false,
         },
@@ -281,21 +244,21 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    balancesLoaded(state, payload: boolean) {
-      return {
-        ...state,
-        Balances: {
-          ...state.Balances,
-          loading: false,
-        },
-      };
-    },
-    balancesLoading(state, payload: boolean) {
+    balancesLoading(state) {
       return {
         ...state,
         Balances: {
           ...state.Balances,
           loading: true,
+        },
+      };
+    },
+    balancesLoaded(state) {
+      return {
+        ...state,
+        Balances: {
+          ...state.Balances,
+          loading: false,
         },
       };
     },
@@ -469,7 +432,7 @@ export const models_Exchange = createModel<RootModel>()({
       return {
         ...state,
         Debits: {
-          ...state.Debits.Deposit,
+          ...state.Debits,
           Withdraw: {
             ...state.Debits.Withdraw,
             tokenAmount: amount,
@@ -481,35 +444,6 @@ export const models_Exchange = createModel<RootModel>()({
   effects: (dispatch) => ({
     async loadExchangeAsync(exchange: ExCon, state) {
       dispatch.models_Exchange.loadExchange(exchange);
-    },
-    async loadAllOrdersAsync(exchange: ExCon, state) {
-      // Fetch cancelled orders with the "Cancel" event stream
-      const cancelStream = await exchange.getPastEvents('Cancel', {
-        fromBlock: 0,
-        toBlock: 'latest',
-      });
-      // Format cancelled orders
-      const cancelledOrders = cancelStream.map((event) => event.returnValues);
-      // Add cancelled orders to the redux store
-      dispatch.models_Exchange.loadCancelled(cancelledOrders);
-      // Fetch filled orders with the "Trade" event stream
-      const tradeStream = await exchange.getPastEvents('Trade', {
-        fromBlock: 0,
-        toBlock: 'latest',
-      });
-      // Format filled orders
-      const filledOrders = tradeStream.map((event) => event.returnValues);
-      // Add cancelled orders to the redux store
-      dispatch.models_Exchange.loadFilledOrders(filledOrders);
-      // Load order stream
-      const orderStream = await exchange.getPastEvents('Order', {
-        fromBlock: 0,
-        toBlock: 'latest',
-      });
-      // Format order stream
-      const allOrders = orderStream.map((event) => event.returnValues);
-      // Add open orders to the redux store
-      dispatch.models_Exchange.loadAllOrders(allOrders);
-    },
-  }),
+    }
+  })
 });
