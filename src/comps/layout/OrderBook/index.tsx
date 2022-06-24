@@ -2,10 +2,10 @@ import React from 'react';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
-import { fillOrder } from '#src/models/model_overflow';
+import { fillOrder } from '#src/models/exchange_methods';
 
-import { RootState, Actions, dispatch, store } from '#src/models/store';
-
+import { selectors_Orders_OrderBookLoaded } from '#src/selectors/Orders/OrderBookLoaded';
+import { selectors_Orders_OrderBook } from '#src/selectors/Orders/OrderBook';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { Comps_misc_Tooltip } from '#src/Comps/misc/Tooltip';
 
@@ -15,14 +15,12 @@ const defaultProps = {
   idKey?: string;
   children?: JSX.Element;
 };
+
+
 const selector = createStructuredSelector({
-  showOrderBook: (root) =>
-    root.models_Exchange.cancelledOrders.loaded &&
-    root.models_Exchange.filledOrders.loaded &&
-    root.models_Exchange.allOrders.loaded &&
-    !root.models_Exchange.Orders.filling,
-  orderBook: store.select.models_Exchange.orderBookSelector,
-  exchange: (root) => root.models_Exchange.Exchange.data,
+  showOrderBook: selectors_Orders_OrderBookLoaded,
+  orderBook: selectors_Orders_OrderBook,
+  exchange: (root) => root.models_Exchange.Exchange.contract,
   account: (root) => root.models_WebB.account,
 });
 
@@ -62,7 +60,7 @@ const renderOrder = (props) => {
     <tr
       key={order.id}
       className="order-book-order cursor-pointer"
-      onClick={(e) => fillOrder(exchange, account, order)}
+      onClick={() => fillOrder(exchange, account, order)}
     >
       <td className="text-white">{order.tokenAmount}</td>
       {order.orderTypeClass === 'red' ? (

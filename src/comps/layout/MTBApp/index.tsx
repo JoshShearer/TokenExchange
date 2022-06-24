@@ -1,22 +1,18 @@
 import React, { useEffect } from 'react';
-import { Comps_layout_Deposits } from '#src/Comps/layout/Deposits';
+import { Comps_layout_Debits } from '#src/Comps/layout/Debits';
 import { Comps_layout_Orders } from '#src/Comps/layout/Orders';
-import { Comps_layout_OrderBook } from '#src/Comps/layout/Orderbook';
+import { Comps_layout_OrderBook } from '#src/Comps/layout/OrderBook';
 import { Comps_layout_PriceChart } from '#src/Comps/layout/PriceChart';
 import { Comps_layout_MyTransactions } from '#src/Comps/layout/MyTransactions';
 import { Comps_layout_Trades } from '#src/Comps/layout/Trades';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
-import { RootState, Actions, dispatch } from '#src/models/store';
+import { dispatch } from '#src/models/store';
 
-import { subscribeToEvents } from '#src/models/model_overflow';
+import { loadAllOrders, subscribeToEvents } from '#src/models/exchange_methods';
 
-// import useSelector from 'reselect';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
-
-// import { RootState, Actions, dispatch, store } from '#src/models/store'
-// import { models_Exchange } from '../../../models/Exchange/index';
 
 const defaultProps = {
   idKey: 'default',
@@ -26,7 +22,7 @@ const defaultProps = {
 };
 
 const selector = createStructuredSelector({
-  exchange: (root) => root.models_Exchange.Exchange.data,
+  exchange: (root) => root.models_Exchange.Exchange.contract,
   showForm: (root) => root.models_Exchange.allOrders.loaded,
 });
 
@@ -41,7 +37,7 @@ export const Comps_layout_MTBApp = (_props: typeof defaultProps) => {
 
 
   const loadBlockchainData = async () => {
-    await dispatch.models_Exchange.loadAllOrdersAsync(selected.exchange);
+    await loadAllOrders(selected.exchange);
     await subscribeToEvents(selected.exchange);
   };
 
@@ -58,7 +54,7 @@ const showComps = () => {
       {/* <div className="sm:col-span-1 md:col-span-1 lg:col-span-1"> */}
         <div>
           <div className="pb-4">
-            <Comps_layout_Deposits />
+            <Comps_layout_Debits />
           </div>
           <div>
             <Comps_layout_Orders />

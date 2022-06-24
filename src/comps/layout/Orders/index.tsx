@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tab } from '@headlessui/react';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
-import { RootState, Actions, dispatch, store } from '#src/models/store';
-import { models_Exchange } from '../../../models/Exchange/index';
+import { dispatch } from '#src/models/store';
 
-import { makeBuyOrder, makeSellOrder } from '#src/models/model_overflow';
+import { makeBuyOrder, makeSellOrder } from '#src/models/exchange_methods';
 
 const defaultProps = {
   idKey: 'default',
@@ -20,7 +19,7 @@ const defaultProps = {
 const selector = createStructuredSelector({
   token: (root) => root.models_Token.Token,
   web3: (root) => root.models_WebB.Web3Conn,
-  exchange: (root) => root.models_Exchange.Exchange.data,
+  exchange: (root) => root.models_Exchange.Exchange.contract,
   account: (root) => root.models_WebB.account,
   buyOrder: (root) => root.models_Exchange.Orders.buyOrder,
   sellOrder: (root) => root.models_Exchange.Orders.sellOrder,
@@ -44,7 +43,7 @@ export const Comps_layout_Orders = (_props: typeof defaultProps) => {
   );
 };
 
-function classNames(...classes) {
+function classNames(...classes: Array<String>) {
   return classes.filter(Boolean).join(' ');
 }
 

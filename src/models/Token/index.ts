@@ -13,18 +13,13 @@ export const models_Token = createModel<RootModel>()({
     Token: {},
     tokenLoaded: false,
     balance: '',
-  } as defaultState,
+  } as unknown as defaultState,
   reducers: {
     loadToken(state, payload: Token) {
       return {
         ...state,
         Token: payload,
-      };
-    },
-    setTokenLoaded(state, payload: boolean) {
-      return {
-        ...state,
-        tokenLoaded: payload,
+        tokenLoaded:true,
       };
     },
     loadBal(state, payload: String) {
@@ -38,9 +33,8 @@ export const models_Token = createModel<RootModel>()({
 
   // }),
   effects: (dispatch) => ({
-    async loadTokenAsync(payload: Token, state) {
-      dispatch.models_Token.loadToken(payload);
-      dispatch.models_Token.setTokenLoaded(true);
-    },
+    // async loadTokenAsync(payload: Token, state) {
+    //   dispatch.models_Token.loadToken(payload);
+    // },
   }),
 });

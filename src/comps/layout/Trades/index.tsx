@@ -4,21 +4,22 @@ import { RootState, Actions, dispatch, store } from '#src/models/store';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
+import { selectors_Orders_filledOrders } from '#src/selectors/Orders/filledOrders';
 
 import type { Order } from '../../../../web3_eth/web3Types/Exchange';
 
 const defaultProps = {
-  ordersFilled: [],
   idKey: 'default',
 } as {
-  ordersFilled: Array<Order>;
   idKey?: string;
   children?: JSX.Element;
 };
+
 const selector = createStructuredSelector({
   filledLoaded: (root) => root.models_Exchange.filledOrders.loaded,
-  filledOrders: store.select.models_Exchange.filledOrdersSelector,
+  filledOrders: (root) => selectors_Orders_filledOrders(root),
 });
+
 
 export const Comps_layout_Trades = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };

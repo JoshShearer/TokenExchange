@@ -1,7 +1,7 @@
 /* CREDITOR_GENERATED */
 
 export { Comps_layout_App } from '#src/Comps/layout/App';
-export { Comps_layout_Deposits } from '#src/Comps/layout/Deposits';
+export { Comps_layout_Debits } from '#src/Comps/layout/Debits';
 export { Comps_layout_MTBApp } from '#src/Comps/layout/MTBApp';
 export { Comps_layout_MyTransactions } from '#src/Comps/layout/MyTransactions';
 export { Comps_layout_Navigation_Footer } from '#src/Comps/layout/Navigation/Footer';

@@ -1,13 +1,5 @@
-import { RootState, Actions, dispatch } from '#src/models/store';
-import {
-  ETHER_ADDRESS,
-  GREEN,
-  RED,
-  ether,
-  formatBalance,
-  tokens,
-} from '../../web3_eth/test/helpers';
-import { groupBy, maxBy, minBy, reject } from 'lodash';
+import { dispatch } from '#src/models/store';
+import { ETHER_ADDRESS } from '../../web3_eth/test/helpers';
 //TS Types
 import type {
   Exchange as ExCon,
@@ -34,13 +26,13 @@ export const web3Loader = async () => {
 };
 
 //Check for metamask before dispatching the token
-export const loadToken = async (web3: Eth, networkId: Number) => {
+export const loadToken = async (web3: Eth, networkId: number) => {
   try {
     const token = new web3.eth.Contract(
       Token.abi,
       Token.networks[networkId].address
     );
-    dispatch.models_Token.loadTokenAsync(token);
+    dispatch.models_Token.loadToken(token);
     return token;
   } catch (error) {
     console.log(
@@ -56,7 +48,7 @@ export const loadExchange = async (web3: Eth, networkId: Number) => {
       Exchange.abi,
       Exchange.networks[networkId].address
     );
-    dispatch.models_Exchange.loadExchangeAsync(exchange);
+    dispatch.models_Exchange.loadExchange(exchange);
     return exchange;
   } catch (error) {
     console.log(
@@ -66,21 +58,52 @@ export const loadExchange = async (web3: Eth, networkId: Number) => {
   }
 };
 
+export const loadAllOrders = async (exchange: ExCon) => {
+  // Fetch cancelled orders with the "Cancel" event stream
+  const cancelStream = await exchange.getPastEvents('Cancel', {
+    fromBlock: 0,
+    toBlock: 'latest',
+  });
+  // Format cancelled orders
+  const cancelledOrders = cancelStream.map((event) => event.returnValues);
+  // Add cancelled orders to the redux store
+  dispatch.models_Exchange.loadCancelled(cancelledOrders);
+  // Fetch filled orders with the "Trade" event stream
+  const tradeStream = await exchange.getPastEvents('Trade', {
+    fromBlock: 0,
+    toBlock: 'latest',
+  });
+  // Format filled orders
+  const filledOrders = tradeStream.map((event) => event.returnValues);
+  // Add cancelled orders to the redux store
+  dispatch.models_Exchange.loadFilledOrders(filledOrders);
+  // Load order stream
+  const orderStream = await exchange.getPastEvents('Order', {
+    fromBlock: 0,
+    toBlock: 'latest',
+  });
+  // Format order stream
+  const allOrders = orderStream.map((event) => event.returnValues);
+  // Add open orders to the redux store
+  dispatch.models_Exchange.loadAllOrders(allOrders);
+}
+
 export const subscribeToEvents = async (exchange: ExCon) => {
   exchange.events.Cancel({}, (error, event) => {
     dispatch.models_Exchange.orderCancelled(event.returnValues);
   });
 
   exchange.events.Trade({}, (error, event) => {
+
     dispatch.models_Exchange.orderFilled(event.returnValues);
   });
 
   exchange.events.Deposit({}, (error, event) => {
-    dispatch.models_Exchange.balancesLoading(false);
+    dispatch.models_Exchange.balancesLoaded();
   });
 
   exchange.events.Withdraw({}, (error, event) => {
-    dispatch.models_Exchange.balancesLoading(false);
+    dispatch.models_Exchange.balancesLoaded();
   });
 
   exchange.events.Order({}, (error, event) => {
@@ -93,7 +116,7 @@ export const cancelOrder = (exchange, order, account) => {
     .cancelOrder(order.id)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.orderCancelled();
+      dispatch.models_Exchange.setCancelling();
     })
     .on('error', (error) => {
       console.log(error);
@@ -101,38 +124,12 @@ export const cancelOrder = (exchange, order, account) => {
     });
 };
 
-export const buildGraphData = (orders) => {
-  // Group the orders by hour for the graph
-  orders = groupBy(orders, (o) =>
-    moment.unix(o.timestamp).startOf('hour').format()
-  );
-  // Get each hour where data exists
-  const hours = Object.keys(orders);
-  // Build the graph series
-  const graphData = hours.map((hour) => {
-    // Fetch all the orders from current hour
-    const group = orders[hour];
-    // Calculate price values - open, high, low, close
-    const open = group[0]; // first order
-    const high = maxBy(group, 'tokenPrice'); // high price
-    const low = minBy(group, 'tokenPrice'); // low price
-    const close = group[group.length - 1]; // last order
-
-    return {
-      x: new Date(hour),
-      y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice],
-    };
-  });
-
-  return graphData;
-};
-
 export const fillOrder = (exchange, account, order) => {
   exchange.methods
     .fillOrder(order.id)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.orderFilling(true);
+      dispatch.models_Exchange.setFilling();
     })
     .on('error', (error) => {
       console.log(error);
@@ -169,25 +166,12 @@ export const loadBalances = async (web3, exchange, token, account) => {
   }
 };
 
-export const openOrders = (all, filled, cancelled) => {
-console.log("🚀 ~ file: model_overflow.ts ~ line 173 ~ openOrders ~ filled", filled)
-
-  const openOrders = reject(all, (order) => {
-  console.log("🚀 ~ file: model_overflow.ts ~ line 176 ~ openOrders ~ order", order)
-    const orderFilled = filled.some((o) => o.id === order.id);
-    const orderCancelled = cancelled.some((o) => o.id === order.id);
-    return orderFilled || orderCancelled;
-  });
-
-  return openOrders;
-};
-
 export const depositEther = (exchange, web3, amount, account) => {
   exchange.methods
     .depositEther()
     .send({ from: account, value: web3.utils.toWei(amount, 'ether') })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.balancesLoading(true);
+      dispatch.models_Exchange.balancesLoading();
     })
     .on('error', (error) => {
       console.error(error);
@@ -200,7 +184,7 @@ export const withdrawEther = (exchange, web3, amount, account) => {
     .withdrawEther(web3.utils.toWei(amount, 'ether'))
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.balancesLoading(true);
+      dispatch.models_Exchange.balancesLoading();
     })
     .on('error', (error) => {
       console.error(error);
@@ -219,7 +203,7 @@ export const depositToken = (exchange, web3, token, amount, account) => {
         .depositToken(token.options.address, amount)
         .send({ from: account })
         .on('transactionHash', (hash) => {
-          dispatch.models_Exchange.balancesLoading(false);
+          dispatch.models_Exchange.balancesLoaded();
         })
         .on('error', (error) => {
           console.error(error);
@@ -233,7 +217,7 @@ export const withdrawToken = (exchange, web3, token, amount, account) => {
     .withdrawToken(token.options.address, web3.utils.toWei(amount, 'ether'))
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.balancesLoading(false);
+      dispatch.models_Exchange.balancesLoading();
     })
     .on('error', (error) => {
       console.error(error);
@@ -281,132 +265,4 @@ export const makeSellOrder = (exchange, token, web3, order, account) => {
       console.error(error);
       window.alert(`There was an error!`);
     });
-};
-
-//Prepare various orders for component displays
-export const decorateFilledOrders = (orders: Array<Order>) => {
-  // Track previous order to compare history
-  let previousOrder = orders[0];
-  return orders.map((order) => {
-    order = decorateOrder(order);
-    order = decorateFilledOrder(order, previousOrder);
-    previousOrder = order; // Update the previous order once it's decorated
-    return order;
-  });
-};
-
-export const decorateOrder = (order: Order) => {
-  let etherAmount;
-  let tokenAmount;
-
-  if (order.tokenGive === ETHER_ADDRESS) {
-    etherAmount = order.amountGive;
-    tokenAmount = order.amountGet;
-  } else {
-    etherAmount = order.amountGet;
-    tokenAmount = order.amountGive;
-  }
-
-  // Calculate token price to 5 decimal places
-  const precision = 100000;
-  let tokenPrice = etherAmount / tokenAmount;
-  tokenPrice = Math.round(tokenPrice * precision) / precision;
-
-  return {
-    ...order,
-    etherAmount: ether(etherAmount),
-    tokenAmount: tokens(tokenAmount),
-    tokenPrice,
-    formattedTimestamp: moment.unix(order.timestamp).format('h:mm:ss a M/D'),
-  };
-};
-
-const decorateFilledOrder = (order: Order, previousOrder: Order) => {
-  return {
-    ...order,
-    tokenPriceClass: tokenPriceClass(order.tokenPrice, order.id, previousOrder),
-  };
-};
-const tokenPriceClass = (
-  tokenPrice: Number,
-  orderId: String,
-  previousOrder: Order
-) => {
-  // Show green price if only one order exists
-  if (previousOrder.id === orderId) {
-    return GREEN;
-  }
-
-  // Show green price if order price higher than previous order
-  // Show red price if order price lower than previous order
-  if (previousOrder.tokenPrice <= tokenPrice) {
-    return GREEN; // success
-  } else {
-    return RED; // danger
-  }
-};
-
-export const decorateMyFilledOrders = (
-  orders: Array<Order>,
-  account: String
-) => {
-  return orders.map((order) => {
-    order = decorateOrder(order);
-    order = decorateMyFilledOrder(order, account);
-    return order;
-  });
-};
-
-const decorateMyFilledOrder = (order: Array<Order>, account: String) => {
-  const myOrder = order.user === account;
-
-  let orderType;
-  if (myOrder) {
-    orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell';
-  } else {
-    orderType = order.tokenGive === ETHER_ADDRESS ? 'sell' : 'buy';
-  }
-
-  return {
-    ...order,
-    orderType,
-    orderTypeClass: orderType === 'buy' ? GREEN : RED,
-    orderSign: orderType === 'buy' ? '+' : '-',
-  };
-};
-
-export const decorateMyOpenOrders = (orders: Array<Order>, account: String) => {
-  return orders.map((order: Order) => {
-    order = decorateOrder(order);
-    order = decorateMyOpenOrder(order, account);
-    return order;
-  });
-};
-
-const decorateMyOpenOrder = (order: Array<Order>, account: String) => {
-  let orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell';
-
-  return {
-    ...order,
-    orderType,
-    orderTypeClass: orderType === 'buy' ? GREEN : RED,
-  };
-};
-
-export const decorateOrderBookOrders = (orders: Array<Order>) => {
-  return orders.map((order) => {
-    order = decorateOrder(order);
-    order = decorateOrderBookOrder(order);
-    return order;
-  });
-};
-
-const decorateOrderBookOrder = (order: Order) => {
-  const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell';
-  return {
-    ...order,
-    orderType,
-    orderTypeClass: orderType === 'buy' ? GREEN : RED,
-    orderFillAction: orderType === 'buy' ? 'sell' : 'buy',
-  };
 };

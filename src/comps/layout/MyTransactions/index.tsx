@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tab } from '@headlessui/react';
 
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
+import { selectors_Orders_myFilledOrders } from '#src/selectors';
+import { selectors_Orders_myOpenOrders } from '#src/selectors/Orders/myOpenOrders';
 
-import { RootState, Actions, dispatch, store } from '#src/models/store';
-import { cancelOrder } from '#src/models/model_overflow';
+import { cancelOrder } from '#src/models/exchange_methods';
 
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { Order } from '../../../../web3_eth/web3Types/Exchange';
@@ -20,15 +21,12 @@ const defaultProps = {
 const selector = createStructuredSelector({
   filledLoaded: (root) => root.models_Exchange.filledOrders.loaded,
   showMyOpenOrders: (root) =>
-    root.models_Exchange.cancelledOrders.loaded &&
-    root.models_Exchange.filledOrders.loaded &&
-    root.models_Exchange.allOrders.loaded &&
-    root.models_Exchange.cancelledOrders.loaded,
-  myFilledOrders: store.select.models_Exchange.myFilledOrdersSelector,
-  myOpenOrders: store.select.models_Exchange.myOpenOrdersSelector,
-  exchange: (root) => root.models_Exchange.Exchange.data,
+    root.models_Exchange.Orders.cancelling &&
+    !root.models_Exchange.cancelledOrders.loaded,
+  myFilledOrders: (root) => selectors_Orders_myFilledOrders(root),
+  myOpenOrders: (root) => selectors_Orders_myOpenOrders(root),
+  exchange: (root) => root.models_Exchange.Exchange.contract,
   account: (root) => root.models_WebB.account,
-  orderCancelled: (root) => root.models_Exchange.orderCancelled,
 });
 
 function classNames(...classes: Array<String>) {
