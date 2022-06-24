@@ -60,7 +60,7 @@ const renderOrder = (props) => {
     <tr
       key={order.id}
       className="order-book-order cursor-pointer"
-      onClick={(e) => fillOrder(exchange, account, order)}
+      onClick={() => fillOrder(exchange, account, order)}
     >
       <td className="text-white">{order.tokenAmount}</td>
       {order.orderTypeClass === 'red' ? (

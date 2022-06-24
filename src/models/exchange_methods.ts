@@ -1,4 +1,4 @@
-import { RootState, Actions, dispatch } from '#src/models/store';
+import { dispatch } from '#src/models/store';
 import { ETHER_ADDRESS } from '../../web3_eth/test/helpers';
 //TS Types
 import type {
@@ -26,13 +26,13 @@ export const web3Loader = async () => {
 };
 
 //Check for metamask before dispatching the token
-export const loadToken = async (web3: Eth, networkId: Number) => {
+export const loadToken = async (web3: Eth, networkId: number) => {
   try {
     const token = new web3.eth.Contract(
       Token.abi,
       Token.networks[networkId].address
     );
-    dispatch.models_Token.loadTokenAsync(token);
+    dispatch.models_Token.loadToken(token);
     return token;
   } catch (error) {
     console.log(
@@ -48,7 +48,7 @@ export const loadExchange = async (web3: Eth, networkId: Number) => {
       Exchange.abi,
       Exchange.networks[networkId].address
     );
-    dispatch.models_Exchange.loadExchangeAsync(exchange);
+    dispatch.models_Exchange.loadExchange(exchange);
     return exchange;
   } catch (error) {
     console.log(
@@ -94,15 +94,16 @@ export const subscribeToEvents = async (exchange: ExCon) => {
   });
 
   exchange.events.Trade({}, (error, event) => {
+
     dispatch.models_Exchange.orderFilled(event.returnValues);
   });
 
   exchange.events.Deposit({}, (error, event) => {
-    dispatch.models_Exchange.balancesLoading(false);
+    dispatch.models_Exchange.balancesLoaded();
   });
 
   exchange.events.Withdraw({}, (error, event) => {
-    dispatch.models_Exchange.balancesLoading(false);
+    dispatch.models_Exchange.balancesLoaded();
   });
 
   exchange.events.Order({}, (error, event) => {
@@ -115,7 +116,7 @@ export const cancelOrder = (exchange, order, account) => {
     .cancelOrder(order.id)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.setCancelling(true);
+      dispatch.models_Exchange.setCancelling();
     })
     .on('error', (error) => {
       console.log(error);
@@ -128,7 +129,7 @@ export const fillOrder = (exchange, account, order) => {
     .fillOrder(order.id)
     .send({ from: account })
     .on('transactionHash', (hash) => {
-      dispatch.models_Exchange.setFilling(true);
+      dispatch.models_Exchange.setFilling();
     })
     .on('error', (error) => {
       console.log(error);

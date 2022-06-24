@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tab } from '@headlessui/react';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 

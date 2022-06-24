@@ -10,12 +10,15 @@ const selected = createStructuredSelector({
 export const selectors_Orders_filledOrders = createSelector(
   selected,
   ({ filledOrders }) => {
+  console.log("🚀 ~ file: index.ts ~ line 13 ~ filledOrders", filledOrders)
     // Sort orders by date ascending for price comparison
     let orders = filledOrders.sort((a,b) => a.timestamp - b.timestamp)
+    console.log("🚀 ~ file: index.ts ~ line 15 ~ orders", orders)
     // Decorate the orders
     orders = decorateFilledOrders(orders)
     // Sort orders by date descending for display
     orders = orders.sort((a,b) => b.timestamp - a.timestamp)
+    console.log("🚀 ~ file: index.ts ~ line 20 ~ orders", orders)
     return orders
   }
 );

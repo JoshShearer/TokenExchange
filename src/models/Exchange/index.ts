@@ -187,12 +187,12 @@ export const models_Exchange = createModel<RootModel>()({
       };
     },
     //Blockchain events = State updates
-    setCancelling(state, payload: boolean) {
+    setCancelling(state) {
       return {
         ...state,
         Orders: {
           ...state.Orders,
-          cancelling: payload,
+          cancelling: true,
         },
       };
     },
@@ -204,22 +204,23 @@ export const models_Exchange = createModel<RootModel>()({
           cancelling: false,
         },
         cancelledOrders: {
-          ...state.cancelledOrders.data,
-          order,
+          data: [state.cancelledOrders.data, order],
+          loaded:true,
         },
       };
     },
-    setFilling(state, payload: boolean) {
+    setFilling(state) {
       return {
         ...state,
         Orders: {
           ...state.Orders,
-          filling: payload,
+          filling: true,
         },
       };
     },
     orderFilled(state, order: Order) {
-      const index = state.filledOrders.data.findIndex(
+      //prevent duplicates
+      const index = state.filledOrders.data?.findIndex(
         (orderS) => orderS.id === order.id
       );
       let data;
@@ -237,10 +238,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
         filledOrders: {
           loaded: true,
-          data: {
-            ...state.filledOrders.data,
-            data,
-          },
+          data: data,
         },
       };
     },
@@ -442,8 +440,8 @@ export const models_Exchange = createModel<RootModel>()({
     },
   },
   effects: (dispatch) => ({
-    async loadExchangeAsync(exchange: ExCon, state) {
-      dispatch.models_Exchange.loadExchange(exchange);
-    }
+    // async loadExchangeAsync(exchange: ExCon, state) {
+    //   dispatch.models_Exchange.loadExchange(exchange);
+    // }
   })
 });
