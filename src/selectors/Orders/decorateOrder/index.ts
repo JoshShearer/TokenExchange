@@ -1,14 +1,15 @@
-import { ETHER_ADDRESS, GREEN, RED, ether, formatBalance, tokens } from '#web3/test/helpers'
+import { ETHER_ADDRESS, ether, tokens } from '#web3/test/helpers'
+import type { Order } from 'web3_eth/web3Types/Exchange';
 import moment from 'moment'
 
-export const selectors_Orders_decorateOrder = (order) => {
+export const selectors_Orders_decorateOrder = (order: Order) => {
   let etherAmount
   let tokenAmount
 
   if(order.tokenGive === ETHER_ADDRESS) {
     etherAmount = order.amountGive
     tokenAmount = order.amountGet
-  } else {
+  } else {  
     etherAmount = order.amountGet
     tokenAmount = order.amountGive
   }

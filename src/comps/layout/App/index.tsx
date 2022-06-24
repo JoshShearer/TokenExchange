@@ -35,6 +35,7 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
 
   const loadBlockchainData = async () => {
     const web3 = await web3Loader();
+    // @ts-ignore
     const networkId = await web3.eth.net.getId();
     const token = await loadToken(web3, networkId);
     if (!token) {
@@ -61,7 +62,7 @@ export const Comps_layout_App = (_props: typeof defaultProps) => {
       ) : (
         <div className="content"></div>
       )}
-      
+
       <Comps_layout_Navigation_Footer />
     </div>
   );

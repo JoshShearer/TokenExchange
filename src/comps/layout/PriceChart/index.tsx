@@ -7,12 +7,7 @@ import { selectors_Orders_priceChart } from '#src/selectors/Orders/priceChart';
 import { createStructuredSelector } from '#src/models/utils';
 import { useSelector } from '#src/models/hooks';
 
-import { RootState, Actions, dispatch, store } from '#src/models/store';
-
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
-import { models_Exchange } from '../../../models/Exchange/index';
-
-import { priceChartSelector } from '#src/models/selectors';
 
 const defaultProps = {
   idKey: 'default',

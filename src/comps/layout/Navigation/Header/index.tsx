@@ -8,10 +8,8 @@ import { createStructuredSelector } from '#src/models/utils'
 import { useSelector } from '#src/models/hooks';
 
 const defaultProps = {
-  account: 'empty',
   idKey: 'default',
 } as {
-  account: string;
   idKey?: string;
   children?: JSX.Element;
 };

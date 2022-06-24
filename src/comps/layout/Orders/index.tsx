@@ -112,6 +112,7 @@ const ShowForm = (props) => {
                     name="Buy"
                     id="Buy"
                     onChange={(e) =>
+                      // @ts-ignore
                       dispatch.models_Exchange.buyOrderAmountChanged(e.target.value)
                     }
                     placeholder=" Buy Amount"
@@ -126,6 +127,7 @@ const ShowForm = (props) => {
                     name="Buy"
                     id="Buy"
                     onChange={(e) =>
+                      // @ts-ignore
                       dispatch.models_Exchange.buyOrderPriceChanged(e.target.value)
                     }
                     placeholder=" Buy Price"
@@ -161,6 +163,7 @@ const ShowForm = (props) => {
                     name="Sell"
                     id="Sell"
                     onChange={(e) =>
+                      // @ts-ignore
                       dispatch.models_Exchange.sellOrderAmountChanged(e.target.value)
                     }
                     placeholder=" Sell Amount"
@@ -175,6 +178,7 @@ const ShowForm = (props) => {
                     name="Sell"
                     id="Sell"
                     onChange={(e) =>
+                      // @ts-ignore
                       dispatch.models_Exchange.sellOrderPriceChanged(e.target.value)
                     }
                     placeholder=" Sell Price"

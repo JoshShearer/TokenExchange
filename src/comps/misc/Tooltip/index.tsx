@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-export const Tooltip = ({
+
+export const Comps_misc_Tooltip = ({
   message,
   children,
 }: {

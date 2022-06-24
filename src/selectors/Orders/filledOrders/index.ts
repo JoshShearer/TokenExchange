@@ -23,7 +23,7 @@ export const selectors_Orders_filledOrders = createSelector(
   }
 );
 
-const decorateFilledOrders = (orders) => {
+const decorateFilledOrders = (orders: Array<Order>) => {
   // Track previous order to compare history
   let previousOrder = orders[0]
   return(
@@ -35,7 +35,7 @@ const decorateFilledOrders = (orders) => {
     })
   )
 }
-const decorateFilledOrder = (order, previousOrder) => {
+const decorateFilledOrder = (order: Order, previousOrder: Order) => {
   return({
     ...order,
     tokenPriceClass: tokenPriceClass(order.tokenPrice, order.id, previousOrder)

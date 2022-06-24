@@ -24,7 +24,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     // "strictInjectionParameters": false,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     // "strictTemplates": false,
     "incremental": true,
     "baseUrl": "./",

@@ -12,7 +12,7 @@ import type {
   Exchange as ExCon,
   Order,
 } from '#web3/web3Types/Exchange';
-import { Eth }  from 'web3';
+import type { Eth }  from 'web3';
 
 import {
   loadBalances,
@@ -50,7 +50,7 @@ export const Comps_layout_Debits = (_props: typeof defaultProps) => {
   const selected = useSelector((state) => selector(state, props));
 
   useEffect(() => {
-    dispatch.models_Exchange.balancesLoading(true);
+    dispatch.models_Exchange.balancesLoading();
     loadBlockchainData();
   }, []);
 
