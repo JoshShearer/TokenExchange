@@ -4,13 +4,12 @@ import { selectors_Orders_decorateOrder } from '#src/selectors/Orders/decorateOr
 import type { Order } from 'web3_eth/web3Types/Exchange';
 
 const selected = createStructuredSelector({
-  filledOrders: (root) => root.models_Exchange.filledOrders.data,
+  filledOrders: (root) => root.models_Exchange.filledOrders.data as Array<Order>,
 });
 
 export const selectors_Orders_filledOrders = createSelector(
   selected,
   ({ filledOrders }) => {
-  console.log("🚀 ~ file: index.ts ~ line 13 ~ filledOrders", filledOrders)
     // Sort orders by date ascending for price comparison
     let orders = filledOrders.sort((a,b) => a.timestamp - b.timestamp)
     console.log("🚀 ~ file: index.ts ~ line 15 ~ orders", orders)
@@ -18,7 +17,6 @@ export const selectors_Orders_filledOrders = createSelector(
     orders = decorateFilledOrders(orders)
     // Sort orders by date descending for display
     orders = orders.sort((a,b) => b.timestamp - a.timestamp)
-    console.log("🚀 ~ file: index.ts ~ line 20 ~ orders", orders)
     return orders
   }
 );

@@ -8,6 +8,13 @@ import { useSelector } from '#src/models/hooks';
 import { dispatch } from '#src/models/store';
 
 import { makeBuyOrder, makeSellOrder } from '#src/models/exchange_methods';
+import type {
+  Exchange as ExCon,
+  Order,
+} from '#web3/web3Types/Exchange';
+import type { Token } from '#web3/web3Types/Token'
+// @ts-ignore
+import { Eth } from 'web3';
 
 const defaultProps = {
   idKey: 'default',
@@ -33,6 +40,26 @@ const selector = createStructuredSelector({
     root.models_Exchange.Orders.sellOrder.price,
 });
 
+type selectorProp = {
+  token: Token, 
+  web3: Eth,
+  exchange: ExCon,
+  account: String,
+  buyOrder: {
+    price: string;
+    amount: string;
+    making: boolean;
+  };
+  sellOrder: {
+    price: string;
+    amount: string;
+    making: boolean;
+  };
+  showForm: boolean;
+  showBuyTotal: boolean;
+  showSellTotal: boolean;
+}
+
 export const Comps_layout_Orders = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
 
@@ -47,7 +74,7 @@ function classNames(...classes: Array<String>) {
   return classes.filter(Boolean).join(' ');
 }
 
-const ShowForm = (props) => {
+const ShowForm = (props: selectorProp) => {
 
   const {
     buyOrder,
@@ -144,7 +171,7 @@ const ShowForm = (props) => {
                   </button>
                 </div>
                 {showBuyTotal ? (
-                  <small>Total: {buyOrder.amount * buyOrder.price} ETH</small>
+                  <small>Total: {buyOrder.amount as any * (buyOrder.price as any)} ETH</small>
                 ) : null}
               </form>
             </Tab.Panel>
@@ -196,7 +223,7 @@ const ShowForm = (props) => {
                 </div>
                 {showSellTotal ? (
                   <div className="text-white">
-                    Total: {sellOrder.amount * sellOrder.price} ETH
+                    Total: {sellOrder.amount as any * (sellOrder.price as any)} ETH
                   </div>
                 ) : null}
               </form>

@@ -12,6 +12,7 @@ import type {
   Exchange as ExCon,
   Order,
 } from '#web3/web3Types/Exchange';
+// @ts-ignore
 import type { Eth }  from 'web3';
 
 import {
@@ -45,11 +46,29 @@ const selector = createStructuredSelector({
   tokenWithdrawAmount: (root) => root.models_Exchange.Debits.Withdraw.tokenAmount as String,
 });
 
+type selectorProp = {
+  token: Token,
+  web3: Eth,
+  exchange: ExCon,
+  account: String,
+  walletEtherBalance: String,
+  walletTokenBalance: String,
+  exchangeEtherBalance: String,
+  exchangeTokenBalance: String,
+  balancesLoading: boolean,
+  showForm: boolean,
+  etherDepositAmount: String,
+  etherWithdrawAmount: String,
+  tokenDepositAmount: String,
+  tokenWithdrawAmount: String,
+}
+
 export const Comps_layout_Debits = (_props: typeof defaultProps) => {
   const props = { ...defaultProps, ..._props };
   const selected = useSelector((state) => selector(state, props));
 
   useEffect(() => {
+    // @ts-ignore
     dispatch.models_Exchange.balancesLoading();
     loadBlockchainData();
   }, []);
@@ -70,7 +89,7 @@ function classNames(...classes: Array<String>) {
   return classes.filter(Boolean).join(' ');
 }
 
-const showForm = (props) => {
+const showForm = (props: selectorProp) => {
   const {
     exchange,
     web3,
@@ -169,6 +188,7 @@ const showForm = (props) => {
                       name="Deposit"
                       id="Deposit"
                       onChange={(e) =>
+                        // @ts-ignore
                         dispatch.models_Exchange.etherDepositAmountChanged(
                           e.target.value
                         )
@@ -223,6 +243,7 @@ const showForm = (props) => {
                       name="Deposit"
                       id="Deposit"
                       onChange={(e) =>
+                        // @ts-ignore
                         dispatch.models_Exchange.tokenDepositAmountChanged(
                           e.target.value
                         )
@@ -293,6 +314,7 @@ const showForm = (props) => {
                       name="Withdraw"
                       id="Withdraw"
                       onChange={(e) =>
+                        // @ts-ignore
                         dispatch.models_Exchange.etherWithdrawAmountChanged(
                           e.target.value
                         )
@@ -346,6 +368,7 @@ const showForm = (props) => {
                       name="Withdraw"
                       id="Withdraw"
                       onChange={(e) =>
+                        // @ts-ignore
                         dispatch.models_Exchange.tokenWithdrawAmountChanged(
                           e.target.value
                         )

@@ -9,6 +9,8 @@ import { selectors_Orders_OrderBook } from '#src/selectors/Orders/OrderBook';
 import { Comps_misc_Spinner } from '#src/Comps/misc/Spinner';
 import { Comps_misc_Tooltip } from '#src/Comps/misc/Tooltip';
 
+import type { Order,Exchange as ExCon } from '../../../../web3_eth/web3Types/Exchange';
+
 const defaultProps = {
   idKey: 'default',
 } as {
@@ -16,6 +18,33 @@ const defaultProps = {
   children?: JSX.Element;
 };
 
+type BSOrder = {
+    amountGet: String;
+    amountGive: String;
+    etherAmount: Number;
+    formattedTimestamp: String;
+    id: String;
+    orderFillAction: String;
+    orderType: String;
+    orderTypeClass: String;
+    timestamp: String;
+    tokenAmount: Number;
+    tokenGet: String;
+    tokenGive: String;
+    tokenPrice: Number;
+    user: String;
+}
+
+type selectorProps = {
+  showOrderBook: boolean,
+  orderBook: {
+    sellOrders: Array<BSOrder>,
+    buyOrders: Array<BSOrder>,
+  },
+  exchange: ExCon, 
+  account: String,
+  order: BSOrder, 
+};
 
 const selector = createStructuredSelector({
   showOrderBook: selectors_Orders_OrderBookLoaded,
@@ -51,7 +80,7 @@ export const Comps_layout_OrderBook = (_props: typeof defaultProps) => {
   );
 };
 
-const renderOrder = (props) => {
+const renderOrder = (props: selectorProps) => {
   const { exchange, account, order } = props;
   const orderColor = `text-${order.orderTypeClass}-500`;
   return (
@@ -74,12 +103,12 @@ const renderOrder = (props) => {
   );
 };
 
-const showOrderBook = (props) => {
+const showOrderBook = (props: selectorProps) => {
   const { exchange, account, orderBook } = props;
 
   return (
     <tbody className="divide-y divide-gray-400">
-      {orderBook.sellOrders.map((order) => renderOrder({exchange, account, order}))}
+      {orderBook.sellOrders.map((order: BSOrder) => renderOrder({exchange, account, order}))}
       <tr>
         <td scope="col" className="text-sm font-semibold text-white">
           MTB
@@ -92,7 +121,7 @@ const showOrderBook = (props) => {
         </td>
       </tr>
       <br />
-      {orderBook.buyOrders.map((order) => renderOrder({exchange, account, order}))}
+      {orderBook.buyOrders.map((order: BSOrder) => renderOrder({exchange, account, order}))}
     </tbody>
   );
 };
