@@ -1,13 +1,15 @@
 import { ETHER_ADDRESS, ether, tokens } from '#web3/test/helpers'
 import type { Order } from 'web3_eth/web3Types/Exchange';
 import moment from 'moment'
+import { ContractEventLog } from '#web3/web3Types/types';
+import { TypeOf } from 'zod';
 
 export const selectors_Orders_decorateOrder = (order: Order) => {
   let etherAmount
   let tokenAmount
 
   if(order.tokenGive === ETHER_ADDRESS) {
-    etherAmount = order.amountGive
+    etherAmount = order.amountGive 
     tokenAmount = order.amountGet
   } else {  
     etherAmount = order.amountGet
