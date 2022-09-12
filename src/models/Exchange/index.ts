@@ -150,7 +150,7 @@ export const models_Exchange = createModel<RootModel>()({
   } as unknown as defaultState,
   reducers: {
     //Initial Data Loading from Blockchain
-    loadExchange(state, payload: ExCon) {
+    loadExchange(state: defaultState, payload: ExCon) {
       return {
         ...state,
         Exchange: {
@@ -159,7 +159,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    loadAllOrders(state, payload: Array<Order>) {
+    loadAllOrders(state: defaultState, payload: Array<Order>) {
       return {
         ...state,
         allOrders: {
@@ -168,7 +168,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    loadCancelled(state, payload: Array<Order>) {
+    loadCancelled(state: defaultState, payload: Array<Order>) {
       return {
         ...state,
         cancelledOrders: {
@@ -177,7 +177,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    loadFilledOrders(state, payload: Array<Order>) {
+    loadFilledOrders(state: defaultState, payload: Array<Order>) {
       return {
         ...state,
         filledOrders: {
@@ -187,7 +187,7 @@ export const models_Exchange = createModel<RootModel>()({
       };
     },
     //Blockchain events = State updates
-    setCancelling(state) {
+    setCancelling(state: defaultState) {
       return {
         ...state,
         Orders: {
@@ -196,7 +196,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    orderCancelled(state, order: Order) {
+    orderCancelled(state: defaultState, order: Order) {
       return {
         ...state,
         Orders: {
@@ -209,7 +209,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    setFilling(state) {
+    setFilling(state: defaultState) {
       return {
         ...state,
         Orders: {
@@ -218,7 +218,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    orderFilled(state, order: Order) {
+    orderFilled(state: defaultState, order: Order) {
       //prevent duplicates
       const index = state.filledOrders.data?.findIndex(
         (orderS) => orderS.id === order.id
@@ -242,7 +242,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    balancesLoading(state) {
+    balancesLoading(state: defaultState) {
       return {
         ...state,
         Balances: {
@@ -251,7 +251,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    balancesLoaded(state) {
+    balancesLoaded(state: defaultState) {
       return {
         ...state,
         Balances: {
@@ -260,7 +260,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    loadExEthBal(state, payload: String) {
+    loadExEthBal(state: defaultState, payload: String) {
       return {
         ...state,
         Balances: {
@@ -272,7 +272,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    loadExTokBal(state, payload: String) {
+    loadExTokBal(state: defaultState, payload: String) {
       return {
         ...state,
         Balances: {
@@ -284,7 +284,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    buyOrderAmountChanged(state, payload: String) {
+    buyOrderAmountChanged(state: defaultState, payload: String) {
       return {
         ...state,
         Orders: {
@@ -296,7 +296,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    buyOrderPriceChanged(state, payload: String) {
+    buyOrderPriceChanged(state: defaultState, payload: String) {
       return {
         ...state,
         Orders: {
@@ -308,7 +308,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    sellOrderAmountChanged(state, payload: String) {
+    sellOrderAmountChanged(state: defaultState, payload: String) {
       return {
         ...state,
         Orders: {
@@ -320,7 +320,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    sellOrderPriceChanged(state, payload: String) {
+    sellOrderPriceChanged(state: defaultState, payload: String) {
       return {
         ...state,
         Orders: {
@@ -332,7 +332,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    buyOrderMaking(state, payload: String) {
+    buyOrderMaking(state: defaultState, payload: String) {
       return {
         ...state,
         Orders: {
@@ -345,7 +345,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    sellOrderMaking(state, payload: String) {
+    sellOrderMaking(state: defaultState, payload: String) {
       return {
         ...state,
         Orders: {
@@ -358,7 +358,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    orderMade(state, order: Order) {
+    orderMade(state: defaultState, order: Order) {
       // Prevent duplicate orders
       const index = state.allOrders.data.findIndex(
         (orderS) => orderS.id === order.id //Needs updating with rematch?
@@ -390,7 +390,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    etherDepositAmountChanged(state, amount: String) {
+    etherDepositAmountChanged(state: defaultState, amount: String) {
       return {
         ...state,
         Debits: {
@@ -402,7 +402,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    etherWithdrawAmountChanged(state, amount: String) {
+    etherWithdrawAmountChanged(state: defaultState, amount: String) {
       return {
         ...state,
         Debits: {
@@ -414,7 +414,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    tokenDepositAmountChanged(state, amount: String) {
+    tokenDepositAmountChanged(state: defaultState, amount: String) {
       return {
         ...state,
         Debits: {
@@ -426,7 +426,7 @@ export const models_Exchange = createModel<RootModel>()({
         },
       };
     },
-    tokenWithdrawAmountChanged(state, amount: String) {
+    tokenWithdrawAmountChanged(state: defaultState, amount: String) {
       return {
         ...state,
         Debits: {
